@@ -12,6 +12,7 @@
  */
 
 return [
+    // 'Zend\Db',
     // 'ZendDeveloperTools',
     'Zend\Hydrator',
     'Zend\Router',

@@ -2,10 +2,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.material.min.js"></script> -->
-
-<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css"/>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script> -->
-
 <style>
   /* Extjs */
   .x-grid-item {
@@ -23,104 +19,6 @@
     $('.parallax').parallax();
     $('.tabs').tabs();
     
-    Ext.tip.QuickTipManager.init();
-    var gridInativos = null, gridSugestoes = null;
-
-    createFormSugestao = function(emp, codItem, descricao, preco){
-      var win = Ext.create('Ext.window.Window', {
-        title: 'Sugerir preço de venda',
-        // height: 300,
-        width: 400,
-        layout: 'fit',
-        // bodyPadding: 10,
-        items: {
-          xtype: 'form',
-          layout: 'anchor',
-          bodyPadding: 10,
-          defaultType: 'textfield',
-          defaults: {
-              margin: '2 2 2 2',
-              anchor: '100%'
-          },
-          items: [
-            {
-              xtype: 'fieldcontainer',
-              labelWidth: 90,
-              anchor: '100%',
-              layout: 'hbox',
-              fieldLabel: null,
-              defaults: { xtype: 'textfield', hideLabel: true },
-              items: [
-                  {xtype: 'displayfield', name: 'emp', margin: '0 6 0 0', value: emp},
-                  {xtype: 'displayfield', name: 'codItem', value: codItem, margin: '0 6 0 0'},
-                  {xtype: 'displayfield', name: 'codItem', value: descricao},
-              ]
-            },
-            // { fieldLabel: 'Preço Atual', xtype: 'displayfield', value: preco},
-            { allowBlank: false, inputType: 'numberfield', xtype: 'numberfield', minValue: 0, decimalSeparator: ',', fieldLabel: 'Preço', name: 'preco', emptyText: 'Preço Ideal' },  
-            { allowBlank: true, fieldLabel: 'Comentário', name: 'comentario', maxLength: 100, emptyText: 'Informações adicionais da solicitação', xtype: 'textarea' }
-          ],
-          buttons: [
-            {
-              text: 'Cancelar',
-              handler: function() {
-                  this.up('form').getForm().reset();
-                  this.up('window').close();
-              }
-            }, 
-            {
-              text: 'Confirmar',
-              formBind: true, //only enabled once the form is valid
-              disabled: true,
-              handler: function() {
-                var me = this,
-                    notyType = 'success',
-                    notyText = 'Solicitação enviada com sucesso!',
-                    values = me.up('form').getForm().getValues();
-
-                Ext.Ajax.request({
-                    url: baseUrl +'/api/campanhainativo/sugerirpreco',
-                    method: 'POST',
-                    params: values,
-                    success: function (response) {
-                        var result = Ext.decode(response.responseText);
-                        // var type = 'alert';
-                        // me.getAnaliseformpanel().setLoading(false);
-                        // if (result.success) { type = 'accept'; me.getAnalisewindow().close(); }
-                        // me.getMainpanel().down('tabpanel').getActiveTab().getStore().load();
-                        // me.showMessage(type, result.msg);
-
-                        if(!result.success){
-                          notyType = 'error';
-                          notyText = result.msg;
-                        }
-
-                        new Noty({
-                          theme: 'relax',
-                          layout: 'bottomRight',
-                          type: notyType,
-                          timeout: 5000,
-                          text: notyText
-                        }).show();
-
-                        me.up('form').getForm().reset();
-                        me.up('window').close();
-                    }
-                });
-
-              }
-            }
-          ]
-        }
-      });
-      
-      win.show();
-
-      return win;
-    }
-
-    // Grid de sugestões enviadas 
-    
     // Ext.create('Ext.window.Window', {
     //   height: 300,
     //   width: 400,
@@ -132,44 +30,54 @@
     //   closable: false
     // }).show();
     
-    // Ext.define('JS.window.SugestaoForm', {
-    //     extend: 'Ext.data.Model',
-    //     fields: [
-    //         {name: 'COD_ITEM',  type: 'string'},
-    //         {name: 'DESCRICAO',  type: 'string'},
-    //         {name: 'MARCA',  type: 'string'},
-    //         {name: 'ESTOQUE',  type: 'integer'},
-    //         {name: 'PRECO',  type: 'number'},
-    //         {name: 'BONUS',  type: 'number'}
-    //     ]
-    // });
+    Ext.tip.QuickTipManager.init();
 
-    Ext.define('JS.model.ItemInativo', {
-      extend: 'Ext.data.Model',
-      fields: [
-        {name: 'codItem',  type: 'string'},
-        {name: 'descricao',  type: 'string'},
-        {name: 'marca',  type: 'string'},
-        {name: 'estoque',  type: 'integer'},
-        {name: 'preco',  type: 'number'},
-        {name: 'bonus',  type: 'number'}
-      ]
+    Ext.define('JS.window.SugestaoForm', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {name: 'COD_ITEM',  type: 'string'},
+            {name: 'DESCRICAO',  type: 'string'},
+            {name: 'MARCA',  type: 'string'},
+            {name: 'ESTOQUE',  type: 'integer'},
+            {name: 'PRECO',  type: 'number'},
+            {name: 'BONUS',  type: 'number'}
+        ]
     });
 
-    gridInativos = Ext.create('Ext.grid.Panel', {
-        requires: [ 'Ext.grid.column.Action' ],
+    Ext.define('JS.model.Item', {
+        extend: 'Ext.data.Model',
+        fields: [
+            {name: 'codItem',  type: 'string'},
+            {name: 'descricao',  type: 'string'},
+            {name: 'marca',  type: 'string'},
+            {name: 'estoque',  type: 'integer'},
+            {name: 'preco',  type: 'number'},
+            {name: 'bonus',  type: 'number'}
+        ]
+    });
+
+    Ext.create('Ext.grid.Panel', {
+        requires: [
+            'Ext.grid.column.Action'
+        ],
         renderTo: 'grid-itens',
-        id: 'grid-itens-inativos',
         minHeight: 350,
         height: Ext.getBody().getViewSize().height * 0.8,
         store: Ext.create('Ext.data.Store', {
-            model: 'JS.model.ItemInativo',
+            extend: 'Ext.data.Store',
+            model: 'JS.model.Item',
+
             autoLoad: true,
             pageSize: null,
+
             proxy: {
                 type: 'ajax',
                 url: baseUrl+'/api/campanhainativo/listaritensinativos',
-                reader: { type: 'json', rootProperty: 'data' }
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data',
+                    implicitIncludes: false
+                }
             }
         }),
         
@@ -192,8 +100,7 @@
                 text: 'Descrição',
                 flex: 1,
                 dataIndex: 'descricao'
-            }, 
-            {
+            }, {
                 text: 'Marca',
                 width: 180,
                 dataIndex: 'marca'
@@ -211,8 +118,7 @@
                 text: 'Bônus',
                 width: 90,
                 dataIndex: 'bonus'
-            }, 
-            {
+            }, {
                 xtype: 'actioncolumn',
                 width: 42,
                 // menuDisabled: true,
@@ -222,8 +128,7 @@
                     tooltip: 'Sugerir preço de venda',
                     iconCls: 'far fa-comment action-icon',
                     handler: function(view, rowIndex, colIndex, item, e, record, row){  
-                      // console.log(Ext.getCmp('grid-itens-inativos').getStore())
-                      createFormSugestao(record.get('emp'), record.get('codItem'), record.get('descricao'), record.get('preco'));
+                      alert(record.get('COD_ITEM'))
                     }
                 }]
             }
@@ -259,9 +164,9 @@
 
       <!--   Tabs   -->
       <ul class="tabs">
-          <li class="tab col"><a class="active" href="#tab-itens">Produtos</a></li>
-          <li class="tab col"><a class="active" href="#tab-sugestoes">Preços Sugeridos</a></li>
-          <li class="tab col"><a href="#tab-ganhos">Meus Ganhos</a></li>
+          <li class="tab col s2"><a class="active" href="#tab-itens">Produtos</a></li>
+          <li class="tab col s2"><a class="active" href="#tab-sugestoes">Preços Sugeridos</a></li>
+          <li class="tab col s2"><a href="#tab-ganhos">Meus Ganhos</a></li>
       </ul>
       
       <div id="tab-itens" class="">

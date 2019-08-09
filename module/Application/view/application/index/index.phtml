@@ -78,6 +78,10 @@
                     notyText = 'Solicitação enviada com sucesso!',
                     values = me.up('form').getForm().getValues();
 
+                    values.emp = emp
+                    values.codItem = codItem
+                    values.descricao = descricao
+
                 Ext.Ajax.request({
                     url: baseUrl +'/api/campanhainativo/sugerirpreco',
                     method: 'POST',
@@ -92,7 +96,7 @@
 
                         if(!result.success){
                           notyType = 'error';
-                          notyText = result.msg;
+                          notyText = result.message;
                         }
 
                         new Noty({
@@ -118,6 +122,65 @@
 
       return win;
     }
+
+    // // Ext.Ajax.cors = true;
+    // Ext.Ajax.request({
+    //     url: 'http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession',
+    //     // withCredentials: true,
+    //     //      useDefaultXhrHeader: false,
+    //     //      disableCaching: true,
+    //     // defaultHeaders: {
+    //     //     'Access-Control-Allow-Origin': '*',
+    //     //     'Access-Control-Allow-Credentials': true,
+    //     //     'Access-Control-Allow-Headers': 'Content-Type Authorization Accept X-Requested-With',
+    //     //     'Access-Control-Allow-Methods': 'OPTIONS, TRACE, GET, HEAD, POST, PUT'
+    //     // },
+    //     // method: 'GET',
+    //     method: 'GET',
+    //     // cors: true,
+    //     // useDefaultXhrHeader : false,
+    //     success: function (response) {
+    //         console.log(response)
+    //     }
+    // });
+
+  // var invocation = new XMLHttpRequest();
+  // var url = 'http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession';
+  // function callOtherDomain() {
+  //   if(invocation) {    
+  //     invocation.open('POST', url, true);
+  //     invocation.setRequestHeader('Access-Control-Allow-Origin', '*');
+  //     invocation.onreadystatechange = function(teste){
+  //       console.log(teste)
+  //     }
+  //     invocation.send(); 
+  //   }
+  // }
+
+  // callOtherDomain()
+
+//     Header set Access-Control-Allow-Origin "*"
+// Header set Access-Control-Allow-Headers "Content-Type Authorization Accept X-Requested-With"
+// Header set Access-Control-Allow-Methods "OPTIONS, TRACE, GET, HEAD, POST, PUT"
+// Header set Access-Control-Allow-Origin "https://www.google.com"
+
+    // jQuery.support.cors = true;
+    // $.ajax({
+    //     url: 'http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession2',
+    //     type: 'GET',
+    //     // crossDomain: true,
+    //     success: function(data) {
+    //         console.log(data);
+    //     }
+    // });
+    
+    // $.ajax({
+    //   url: "http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession2",
+    //   crossDomain: false,
+    //   success: function(data) {
+    //       console.log(data);
+    //   }
+    // });
 
     // Grid de sugestões enviadas 
     
@@ -229,11 +292,30 @@
             }
         ]
     });
+    
+    
+    // $('#iframe-session').bind('load', function () {
+    //   console.log($("#iframe-session").contents())
+    // });
+    
+    // $('#iframe-session').load(function() {
+    //     console.log($('#iframe-sessio')[0].contentWindow.$("html").html());
+    // });
+
+    // alert('teste')
 
   });
+
+  // var onIframeLoad = function(){
+  //   var e = document.getElementById("iframe-session");
+  //   console.log(e.contentWindow.document.body.innerHTML)
+      
+  // }
+
+  
 </script>
 
-<!-- <div id="index-banner" class="parallax-container">
+<div id="index-banner" class="parallax-container">
   <div class="section no-pad-bot">
     <div class="container">
       <br><br>
@@ -243,10 +325,6 @@
       </div>
     </div>
   </div>
-  <div class="parallax"><img src="img/background1.jpg" alt="É pra vender e faturar"></div>
-</div> -->
-
-<div id="index-banner" class="parallax-container">
   <div class="parallax"><img src="img/background1.jpg" alt="É pra vender e faturar"></div>
 </div>
 

@@ -4,7 +4,10 @@ use Zend\Hydrator\Strategy\StrategyInterface;
 
 class ValueStrategy implements StrategyInterface
 {
-    
+    public static function toValue($value){
+        return str_replace(",", ".", $value);
+    }
+
     public function extract($value)
     {
     	return str_replace(",", ".", $value);

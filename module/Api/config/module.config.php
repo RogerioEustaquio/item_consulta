@@ -26,6 +26,7 @@ return [
             ),
         ),
     ),
+    
     'router' => [
         'routes' => [
             'api-home' => [
@@ -56,11 +57,36 @@ return [
             ],
         ],
     ],
+
+    'controller_plugins' => array(
+        'invokables' => array(
+            'SessionPlugin' => 'Core\Mvc\Controller\Plugin\SessionPlugin',
+        )
+    ),
+
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,
         ],
     ],
+
+    // 'service_manager' => [
+    //     'factories' => [
+    //         'teste' => 1
+    //     ]
+    // ],
+
+    // 'service_manager' => [
+    //     'factories' => [
+    //         'EntityManager' => function(ServiceManager $sm){
+    //             $em = $sm->get('Doctrine\ORM\EntityManager');
+    //             $connection = $em->getConnection();
+    //             $connection->executeQuery("alter session set NLS_LANGUAGE='BRAZILIAN PORTUGUESE' NLS_DATE_FORMAT='DD/MM/RRRR HH24:MI:SS' NLS_NUMERIC_CHARACTERS = '.,'");
+    //             return $em;
+    //         },
+    //     ],
+    // ],
+
     'view_manager' => [
         'strategies' => array(
             'ViewJsonStrategy',

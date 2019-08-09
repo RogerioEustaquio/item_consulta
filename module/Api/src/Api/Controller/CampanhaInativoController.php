@@ -69,9 +69,31 @@ class CampanhaInativoController extends AbstractRestfulController
         $data = array();
         
         try {
+            $session = $this->SessionPlugin()->getSession();
+            $user = $session['info'];
+            $pEmp = $this->params()->fromPost('emp',null);
+            $pCodItem = $this->params()->fromPost('codItem',null);
+            $pPreco = ValueStrategy::toValue($this->params()->fromPost('preco',null));
+            $pComentario = $this->params()->fromPost('comentario',null);
             
+            if(!$pEmp || !$pCodItem || !$pPreco){
+                throw new \Exception('Erro ao salvar os dados.');
+            }
+            
+            $conn = $this->getConnection();
+            $conn->insert('xp_campanha_solicitacao', array(
+                'emp' => $pEmp,
+                'cod_item' => $pCodItem,
+                'data_solicitacao' => date('d/m/Y H:i:s'),
+                'id_funcionario' => $user->idFuncionario,
+                'email' => $user->email,
+                'preco' => $pPreco,
+                'comentario' => $pComentario,
+                'id_campanha_solicitacao_status' => 1
+            ));
+
             $this->setCallbackData($data);
-            
+
         } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());
         }

@@ -15,8 +15,19 @@ class AbstractRestfulController extends AbstractController
     protected $em = null;
     protected $callback = array('success' => true, 'message' => null, 'data' => array());
     
+    public function getServiceManager(){
+        
+    }
+
     public function getEntityManager(){
         return $this->getEvent()->getApplication()->getServiceManager()->get('Doctrine\ORM\EntityManager');
+    }
+
+    public function getConnection(){
+        $em = $this->getEntityManager();
+        $connection = $em->getConnection();
+        $connection->executeQuery("alter session set NLS_LANGUAGE='BRAZILIAN PORTUGUESE' NLS_DATE_FORMAT='DD/MM/RRRR HH24:MI:SS' NLS_NUMERIC_CHARACTERS = '.,'");
+        return $connection;
     }
     
     protected function getJsonParams(){

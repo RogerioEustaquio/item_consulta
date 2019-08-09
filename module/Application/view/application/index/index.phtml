@@ -88,11 +88,6 @@
                     params: values,
                     success: function (response) {
                         var result = Ext.decode(response.responseText);
-                        // var type = 'alert';
-                        // me.getAnaliseformpanel().setLoading(false);
-                        // if (result.success) { type = 'accept'; me.getAnalisewindow().close(); }
-                        // me.getMainpanel().down('tabpanel').getActiveTab().getStore().load();
-                        // me.showMessage(type, result.msg);
 
                         if(!result.success){
                           notyType = 'error';

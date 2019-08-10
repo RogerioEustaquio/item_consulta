@@ -17,6 +17,9 @@
 </style>
 
 <script>
+  
+  console.log(SESSION.info.idEmpresa === '20')
+
   $(function(){
 
     $('.sidenav').sidenav();
@@ -347,6 +350,10 @@
           Ext.getCmp('grid-itens-sugestoes').getStore().reload()
       }
     })
+
+    // Opção de selecionar lojas
+
+
     
   });
   
@@ -378,7 +385,7 @@
         <div id="grid-sugestoes"></div>
       </div> 
 
-      <!-- <div id="tab-ganhos" class="">Ganhos</div> -->
+      <div id="tab-ganhos" class=""></div>
 
     </div>
 

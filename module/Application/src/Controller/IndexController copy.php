@@ -53,9 +53,8 @@ class IndexController extends AbstractActionController
         if(!$session){
             return $this->redirect()->toUrl('http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession2?url=10.2.7.18/login');    
         }
-
-        $this->layout()->session = json_encode($session);
-        $view = new ViewModel();
+        
+        $view = new ViewModel(array('session' => json_encode($session)));
         return $view;
     }
 }

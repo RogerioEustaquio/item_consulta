@@ -202,7 +202,6 @@
             }
         ]
     }); 
-    
 
     Ext.define('JS.model.ItemInativo', {
       extend: 'Ext.data.Model',
@@ -299,7 +298,7 @@
 
         tbar: {
           items: [
-            { xtype: 'textfield', inputType: 'textfield', width: 200, emptyText: 'Buscar produto', 
+            { name: 'filterfield', xtype: 'textfield', inputType: 'textfield', width: 260, emptyText: 'Buscar por código, descrição ou marca', 
               listeners: {
                 change: function(field){
                   var value = Ext.util.Format.uppercase(field.getValue()),
@@ -327,7 +326,18 @@
                 }
               }
             },
-            { text: 'Consultar' }  
+            { 
+              tooltip: 'Limpar filtro',
+              iconCls: 'fa fa-filter',
+              handler: function(btn){
+                  var grid = Ext.getCmp('grid-itens-inativos'),
+                      toolbar = grid.down('toolbar'),
+                      filterField = toolbar.down('textfield[name=filterfield]')
+                      
+                  filterField.reset()
+                  grid.getStore().clearFilter()
+              }
+            }  
           ]  
         }
     });
@@ -342,6 +352,7 @@
   
 </script>
 
+<i class="fa fa-camera"></i>
 <div id="index-banner" class="parallax-container">
   <div class="parallax"><img src="img/background1.jpg" alt="É pra vender e faturar"></div>
 </div>

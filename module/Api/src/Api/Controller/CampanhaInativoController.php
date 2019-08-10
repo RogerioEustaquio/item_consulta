@@ -32,13 +32,73 @@ class CampanhaInativoController extends AbstractRestfulController
                  where pa.emp = 'AP'
                    and pa.curva_nbs = 'I'
                    and pa.estoque_qtde > 0
-                   and rownum <= 5
+                   and rownum <= 100
             ";
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $this->params()->fromQuery('empresa',null));
             // $stmt->bindValue(2, $this->params()->fromQuery('codItem',null));
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('estoque', new ValueStrategy);
+            $hydrator->addStrategy('preco', new ValueStrategy);
+            $hydrator->addStrategy('bonus', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarsugestoesenviadasAction()
+    {   
+        $data = array();
+        
+        try {
+            $em = $this->getEntityManager();
+            
+            $sql = "
+                select s.emp, s.cod_item, icx.descricao, to_char(data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao, 
+                        email, preco, s.id_campanha_solicitacao_status as id_status, t.descricao as status, icx.marca
+                from xp_campanha_solicitacao s,
+                        xp_campanha_solicitacao_status t,
+                        (select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca 
+                        from ms.tb_estoque e,
+                                ms.tb_item i,
+                                ms.tb_categoria c,
+                                ms.tb_item_categoria ic,
+                                ms.tb_marca m,
+                                ms.empresa em
+                        where e.id_item = i.id_item
+                            and e.id_categoria = c.id_categoria
+                            and e.id_item = ic.id_item
+                            and e.id_categoria = ic.id_categoria
+                            and ic.id_marca = m.id_marca
+                            and e.id_empresa = em.id_empresa) icx
+                where s.id_campanha_solicitacao_status = t.id_campanha_solicitacao_status
+                    and s.emp = icx.emp
+                    and s.cod_item = icx.cod_item
+                    and s.emp = ?
+                order by s.data_solicitacao desc
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(1, 'AP');
             $stmt->execute();
             $results = $stmt->fetchAll();
 

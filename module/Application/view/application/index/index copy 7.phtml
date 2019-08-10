@@ -121,8 +121,26 @@
         }
       });
       
+      var grid = Ext.getCmp('grid-itens-inativos')
       win.show();
-      
+      // win.alignTo(grid)
+      // win.alignTo(btn)
+
+      // console.log($(window).outerHeight())
+      // console.log(window.pageYOffset)
+      console.log(document.documentElement.scrollTop)
+      // console.log( win.height )
+      // win.setY(($(window).outerHeight()/2) - document.documentElement.scrollTop - (container.getSize().height/2) )
+
+      // var top  = window.pageYOffset || document.documentElement.scrollTop
+      //   , left = window.pageXOffset || document.documentElement.scrollLeft
+      //   , size = 300
+
+      //   win.setXY([
+      //       left+(size.width-me.getWidth())/2,
+      //       top+(size.height-me.getHeight())/2
+      //   ]);
+
       return win;
     }
 

@@ -295,7 +295,41 @@
                     }
                 }]
             }
-        ]
+        ],
+
+        tbar: {
+          items: [
+            { xtype: 'textfield', inputType: 'textfield', width: 200, emptyText: 'Buscar produto', 
+              listeners: {
+                change: function(field){
+                  var value = Ext.util.Format.uppercase(field.getValue()),
+                      store = Ext.getCmp('grid-itens-inativos').getStore(),
+                      filters = store.getFilters(),
+                      searchColumnIndexes = ['codItem', 'descricao', 'marca']
+
+                  
+                      var filter = new Ext.util.Filter({
+                          filterFn: function (record) {
+                            var found = false;
+
+                            searchColumnIndexes.forEach((columnIndex)=>{
+                              if (record.get(columnIndex) && record.get(columnIndex).indexOf(value) != -1) {
+                                  found = true;
+                              }
+                            })
+
+                            return found;
+                          }
+                      });
+
+                  store.clearFilter();
+                  store.filter(filter);
+                }
+              }
+            },
+            { text: 'Consultar' }  
+          ]  
+        }
     });
 
     $('ul.tabs').click(function(a) {

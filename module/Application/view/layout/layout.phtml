@@ -28,7 +28,7 @@
             ->appendFile($this->basePath('js/ext-6.2.0/locale-pt_BR.js'))
             ->appendFile($this->basePath('js/noty-3.1.4/noty.min.js'))
             ->appendScript("var SESSION = JSON.parse('".$this->session."')", $type = 'text/javascript')
-            ->appendScript("var baseUrl = '".$this->basePath()."'", $type = 'text/javascript')
+            ->appendScript("var BASEURL = '".$this->basePath()."'", $type = 'text/javascript')
         ?>
     </head>
     <body>

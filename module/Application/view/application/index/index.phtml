@@ -88,7 +88,7 @@
                     values.descricao = descricao
 
                 Ext.Ajax.request({
-                    url: baseUrl +'/api/campanhainativo/sugerirpreco',
+                    url: BASEURL +'/api/campanhainativo/sugerirpreco',
                     method: 'POST',
                     params: values,
                     success: function (response) {
@@ -154,7 +154,7 @@
             pageSize: null,
             proxy: {
                 type: 'ajax',
-                url: baseUrl+'/api/campanhainativo/listarsugestoesenviadas',
+                url: BASEURL+'/api/campanhainativo/listarsugestoesenviadas',
                 reader: { type: 'json', rootProperty: 'data' }
             }
         }),
@@ -230,7 +230,7 @@
             pageSize: null,
             proxy: {
                 type: 'ajax',
-                url: baseUrl+'/api/campanhainativo/listaritensinativos',
+                url: BASEURL+'/api/campanhainativo/listaritensinativos',
                 reader: { type: 'json', rootProperty: 'data' }
             }
         }),

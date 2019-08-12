@@ -29,7 +29,7 @@ class CampanhaInativoController extends AbstractRestfulController
             $sql = "
                 select emp, cod_item, descricao, marca, estoque_qtde as estoque, pa.preco 
                   from pricing.vm_produto_preco_analise pa
-                 where pa.emp = 'AP'
+                 where pa.emp = ?
                    and pa.curva_nbs = 'I'
                    and pa.estoque_qtde > 0
                    and rownum <= 100
@@ -37,7 +37,7 @@ class CampanhaInativoController extends AbstractRestfulController
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
-            // $stmt->bindValue(1, $this->params()->fromQuery('empresa',null));
+            $stmt->bindValue(1, $this->params()->fromQuery('empresa',null));
             // $stmt->bindValue(2, $this->params()->fromQuery('codItem',null));
             $stmt->execute();
             $results = $stmt->fetchAll();
@@ -98,7 +98,7 @@ class CampanhaInativoController extends AbstractRestfulController
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
-            $stmt->bindValue(1, 'AP');
+            $stmt->bindValue(1, $this->params()->fromQuery('empresa',null));
             $stmt->execute();
             $results = $stmt->fetchAll();
 

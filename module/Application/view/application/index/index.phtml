@@ -18,9 +18,19 @@
 
 <script>
   
-  console.log(SESSION.info.idEmpresa === '20')
+  // console.log(SESSION)
 
   $(function(){
+
+    // var appBody = Ext.getBody();
+    // Ext.create({
+    //     xtype: 'window'
+    // }).showBy(appBody, 't-t', [0, 0])
+
+    // Ext.create({
+    //     xtype: 'window',
+
+    // }).show()
 
     $('.sidenav').sidenav();
     $('.parallax').parallax();
@@ -155,6 +165,7 @@
             proxy: {
                 type: 'ajax',
                 url: BASEURL+'/api/campanhainativo/listarsugestoesenviadas',
+                extraParams: { empresa: SESSION.info.empresa },
                 reader: { type: 'json', rootProperty: 'data' }
             }
         }),
@@ -231,6 +242,7 @@
             proxy: {
                 type: 'ajax',
                 url: BASEURL+'/api/campanhainativo/listaritensinativos',
+                extraParams: { empresa: SESSION.info.empresa },
                 reader: { type: 'json', rootProperty: 'data' }
             }
         }),
@@ -344,8 +356,12 @@
           ]  
         }
     });
-
+    
     $('ul.tabs').click(function(a) {
+      if($(this).find('.active').attr('href') === '#tab-itens'){
+          Ext.getCmp('grid-itens-inativos').getStore().reload()
+      }
+
       if($(this).find('.active').attr('href') === '#tab-sugestoes'){
           Ext.getCmp('grid-itens-sugestoes').getStore().reload()
       }

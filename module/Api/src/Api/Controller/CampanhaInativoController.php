@@ -27,7 +27,8 @@ class CampanhaInativoController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             $sql = "
-                select emp, cod_item, descricao, marca, estoque_qtde as estoque, pa.preco 
+                select emp, cod_item, descricao, marca, estoque_qtde as estoque, pa.preco,
+                       round((decode(pa.fx_custo,'0-50',10,'51-100',8,'101-250',7,'251-500',6,'501-1000',5,5)/100) * pa.preco,2) as bonus
                   from pricing.vm_produto_preco_analise pa
                  where pa.emp = ?
                    and pa.curva_nbs = 'I'

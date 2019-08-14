@@ -27,13 +27,44 @@ class CampanhaInativoController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             $sql = "
-                select emp, cod_item, descricao, marca, estoque_qtde as estoque, pa.preco,
-                       round((decode(pa.fx_custo,'0-50',10,'51-100',8,'101-250',7,'251-500',6,'501-1000',5,5)/100) * pa.preco,2) as bonus
-                  from pricing.vm_produto_preco_analise pa
-                 where pa.emp = ?
-                   and pa.curva_nbs = 'I'
-                   and pa.estoque_qtde > 0
-                   and rownum <= 100
+                select e.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca,
+                        es.estoque, 
+                        es.custo_contabil,
+                        pi.perc_promocao as preco,
+                        round((decode(es.fx_custo,'0-50',10,'51-100',8,'101-250',7,'251-500',6,'501-1000',5,5)/100) * pi.perc_promocao, 
+                        (case when es.custo_contabil < 1 then 4 else 2 end) ) as bonus
+                from ms.tb_promocao p,
+                        ms.tb_promocao_item pi,
+                        ms.tb_item i,
+                        ms.tb_categoria c,
+                        ms.tb_item_categoria ic,
+                        ms.tb_marca m,
+                        ms.empresa e,
+                        (select id_empresa, id_item, id_categoria, estoque, custo_contabil,
+                                (case when custo_contabil <= 50 then '0-50'
+                                    when custo_contabil > 50 and custo_contabil <= 100  then '51-100'
+                                    when custo_contabil > 100 and custo_contabil <= 250  then '101-250'
+                                    when custo_contabil > 250 and custo_contabil <= 500  then '251-500'
+                                    when custo_contabil > 500 and custo_contabil <= 1000  then '501-1000'
+                                    when custo_contabil > 1000 and custo_contabil <= 5000  then '1001-5000'
+                                    when custo_contabil > 5000 and custo_contabil <= 10000  then '5001-10000'
+                                    when custo_contabil > 10000 then '10001-X'
+                                end) as fx_custo
+                        from ms.tb_estoque) es
+                where p.id_empresa = pi.id_empresa
+                    and p.id_promocao = pi.id_promocao
+                    and pi.id_item = i.id_item
+                    and pi.id_categoria = c.id_categoria
+                    and pi.id_item = ic.id_item 
+                    and pi.id_categoria = ic.id_categoria
+                    and ic.id_marca = m.id_marca 
+                    and pi.id_empresa = e.id_empresa
+                    and pi.id_empresa = es.id_empresa
+                    and pi.id_item = es.id_item
+                    and pi.id_categoria = es.id_categoria
+                    and p.descricao like 'Campanha% Inativos'
+                    and e.apelido = ?
+                  order by preco desc
             ";
             
             $conn = $em->getConnection();
@@ -74,7 +105,8 @@ class CampanhaInativoController extends AbstractRestfulController
             
             $sql = "
                 select s.emp, s.cod_item, icx.descricao, to_char(data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao, 
-                        email, preco, s.id_campanha_solicitacao_status as id_status, t.descricao as status, icx.marca
+                        replace(s.email, '@jspecas.com.br', '') as email, s.usuario,
+                        preco, s.id_campanha_solicitacao_status as id_status, t.descricao as status, icx.marca
                 from xp_campanha_solicitacao s,
                         xp_campanha_solicitacao_status t,
                         (select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca 
@@ -146,8 +178,9 @@ class CampanhaInativoController extends AbstractRestfulController
                 'emp' => $pEmp,
                 'cod_item' => $pCodItem,
                 'data_solicitacao' => date('d/m/Y H:i:s'),
-                'id_funcionario' => $user->idFuncionario,
-                'email' => $user->email,
+                'id_funcionario' => $user['idFuncionario'],
+                'usuario' => $user['usuarioSistema'],
+                'email' => $user['email'],
                 'preco' => $pPreco,
                 'comentario' => $pComentario,
                 'id_campanha_solicitacao_status' => 1

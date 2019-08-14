@@ -50,8 +50,31 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $session = $this->plugin('SessionPlugin')->getSession();
+        
+        if(isset($session['info']) & !isset($session['info']['empresa'])){
+            $em = $this->getEvent()->getApplication()->getServiceManager()->get('Doctrine\ORM\EntityManager');
+            $connection = $em->getConnection();
+            $sql = "
+                select apelido as emp
+                from ms.empresa
+                where id_empresa = ?
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(1, intval($session['info']['idEmpresa']));
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            if($results){
+                $session['info']['empresa'] = $results[0]['EMP'];
+                $_SESSION['info']['empresa'] = $results[0]['EMP'];
+            }
+            
+             
+        } 
+        
         if(!$session){
-            return $this->redirect()->toUrl('http://sistemas.jspecas.com.br/sistemas/public/login/index/getsession2?url=10.2.7.18/login');    
+            return $this->redirect()->toUrl('http://sistemas.jspecas.com.br/sistemas/public/login');    
         }
 
         $this->layout()->session = json_encode($session);

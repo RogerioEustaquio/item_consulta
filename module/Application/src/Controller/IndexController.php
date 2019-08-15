@@ -77,6 +77,14 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toUrl('http://sistemas.jspecas.com.br/sistemas/public/login');    
         }
 
+        if(isset($session['info'])){
+            $file = "./data/campanha-acessos.log";
+            $fp = fopen ("$file", "wb");
+            $content = Date('d/m/Y h:i:s') . ';' . $session['info']['empresa'] . ';' . $session['info']['usuarioSistema'] . ';' . $session['info']['nome'];
+            fwrite($fp, $content);
+            fclose($fp);
+        }
+
         $this->layout()->session = json_encode($session);
         $view = new ViewModel();
         return $view;

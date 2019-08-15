@@ -79,9 +79,9 @@ class IndexController extends AbstractActionController
 
         if(isset($session['info'])){
             $file = "./data/campanha-acessos.log";
-            $fp = fopen ("$file", "wb");
+            $fp = fopen("$file", "a+");
             $content = Date('d/m/Y h:i:s') . ';' . $session['info']['empresa'] . ';' . $session['info']['usuarioSistema'] . ';' . $session['info']['nome'];
-            fwrite($fp, $content);
+            fwrite($fp, $content."\n");
             fclose($fp);
         }
 

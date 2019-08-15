@@ -163,6 +163,11 @@ class CampanhaInativoController extends AbstractRestfulController
         
         try {
             $session = $this->SessionPlugin()->getSession();
+
+            if(!$session['info']){
+                throw new \Exception('Usuário não logado no agilize.');
+            }
+            
             $user = $session['info'];
             $pEmp = $this->params()->fromPost('emp',null);
             $pCodItem = $this->params()->fromPost('codItem',null);

@@ -177,7 +177,7 @@
         columns: [
             {
                 text: 'Empresa',
-                width: 42,
+                width: 44,
                 dataIndex: 'emp'
             }, 
             {
@@ -215,7 +215,12 @@
             {
                 text: 'Status',
                 width: 125,
-                dataIndex: 'status'
+                dataIndex: 'status',
+                renderer: function (v, metaData, record) {
+                    metaData.tdCls = (v === 'Aprovada') ? 'light-green accent-2' : '';
+
+                    return v;
+                }
             }
         ]
     }); 
@@ -262,7 +267,7 @@
         columns: [
             {
                 text: 'Empresa',
-                width: 42,
+                width: 44,
                 dataIndex: 'emp'
             }, 
             {
@@ -319,28 +324,30 @@
             { name: 'filterfield', xtype: 'textfield', inputType: 'textfield', width: 260, emptyText: 'Buscar por código, descrição ou marca', 
               listeners: {
                 change: function(field){
-                  var value = Ext.util.Format.uppercase(field.getValue()),
-                      store = Ext.getCmp('grid-itens-inativos').getStore(),
-                      filters = store.getFilters(),
-                      searchColumnIndexes = ['codItem', 'descricao', 'marca']
+                  setTimeout(() => {
+                    var value = Ext.util.Format.uppercase(field.getValue()),
+                        store = Ext.getCmp('grid-itens-inativos').getStore(),
+                        filters = store.getFilters(),
+                        searchColumnIndexes = ['codItem', 'descricao', 'marca']
 
-                  
-                      var filter = new Ext.util.Filter({
-                          filterFn: function (record) {
-                            var found = false;
+                    
+                        var filter = new Ext.util.Filter({
+                            filterFn: function (record) {
+                              var found = false;
 
-                            searchColumnIndexes.forEach((columnIndex)=>{
-                              if (record.get(columnIndex) && record.get(columnIndex).indexOf(value) != -1) {
-                                  found = true;
-                              }
-                            })
+                              searchColumnIndexes.forEach((columnIndex)=>{
+                                if (record.get(columnIndex) && record.get(columnIndex).indexOf(value) != -1) {
+                                    found = true;
+                                }
+                              })
 
-                            return found;
-                          }
-                      });
+                              return found;
+                            }
+                        });
 
-                  store.clearFilter();
-                  store.filter(filter);
+                    store.clearFilter();
+                    store.filter(filter);  
+                  }, 300);
                 }
               }
             },

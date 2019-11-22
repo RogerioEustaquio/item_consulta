@@ -1,6 +1,6 @@
 Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.solicitacaoalteracao',
+    alias: 'controller.pvsolicitacaoalteracao',
 
     control: {
         

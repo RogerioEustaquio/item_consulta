@@ -4,7 +4,8 @@ Ext.define('App.view.pvsolicitacao.Main', {
     requires: [
         'App.view.pvsolicitacao.AlteracaoGridPanel',
         'App.view.pvsolicitacao.CadastroGridPanel',
-        'App.view.pvsolicitacao.AlteracaoWindow'
+        'App.view.pvsolicitacao.AlteracaoWindow',
+        'App.view.pvsolicitacao.AlteracaoComentariosGridPanel'
     ],
     
     layout: 'fit',
@@ -13,11 +14,37 @@ Ext.define('App.view.pvsolicitacao.Main', {
             xtype: 'tabpanel',
             items: [
                 {
-                    xtype: 'pvsolicitacaoalteracaogridpanel'
+                    title: 'Alteração de Preço',
+                    // xtype: 'container',
+                    layout: 'border',
+                    items: [
+                        {
+                            region: 'center',
+                            xtype: 'pvsolicitacaoalteracaogridpanel',
+                            title: null,
+                            flex: 1
+                        },
+                        {
+                            region: 'east',
+                            xtype: 'tabpanel',
+                            width: 320,
+                            items: [
+                                {
+                                    xtype: 'pvsolicitacaoalteracaocomentariosgridpanel'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
-                    xtype: 'pvsolicitacaocadastrogridpanel'
+                    title: 'Cadastro de Preço'
                 }
+                // {
+                //     xtype: 'pvsolicitacaoalteracaogridpanel'
+                // },
+                // {
+                //     xtype: 'pvsolicitacaocadastrogridpanel'
+                // }
             ]
         }
     ]

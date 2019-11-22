@@ -6,26 +6,34 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         'App.view.pvsolicitacao.AlteracaoGridPanelController'
     ],
 
-    controller: 'solicitacaoalteracao',
+    controller: 'pvsolicitacaoalteracao',
 
     title: 'Alteração de Preço',
 
     tbar: {
         items: [
-            { 
-                tooltip: 'Nova Solicitação',
-                iconCls: 'fa fa-plus',
-                handler: function(btn){
-                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
-                    win.show();
-                }
-            },
-            { 
-                tooltip: 'Alterar Solicitação',
-                iconCls: 'fa fa-pencil-alt',
-                handler: function(btn){
-                    
-                }
+            {
+                xtype: 'toolbar',
+                ui: 'footer',
+                padding: 0,
+                items: [
+                    {
+                        tooltip: 'Nova Solicitação',
+                        iconCls: 'fa fa-plus',
+                        handler: function(btn){
+                            var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
+                            win.show();
+                        }
+                    },
+                    {
+                        disabled: true,
+                        tooltip: 'Alterar Solicitação',
+                        iconCls: 'fa fa-pencil-alt',
+                        handler: function(btn){
+                            
+                        }
+                    }
+                ]
             }
         ]
     },

@@ -9,6 +9,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
     controller: 'pvsolicitacaoalteracaocomentarios',
 
     title: 'Comentários',
+    hideHeaders: true,
 
     constructor: function(config) {
         var me = this,
@@ -17,8 +18,9 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
         Ext.define('App.model.pvsolicitacao.AlteracaoComentarios', {
             extend: 'Ext.data.Model',
             fields: [
-                { name: 'emp',  type: 'string' },
-                { name: 'codItem',  type: 'string' }
+                { name: 'usuario',  type: 'string' },
+                { name: 'mensagem',  type: 'string' },
+                { name: 'data', type: 'date', dateFormat: 'd/m/Y H:i:s' }
             ]
         });
     
@@ -26,28 +28,78 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
             store: Ext.create('Ext.data.Store', {
                 model: 'App.model.pvsolicitacao.AlteracaoComentarios',
                 pageSize: 50,
-                autoLoad: true,
+                autoLoad: false,
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/pvsolicitacao/listarsolicitacoes',
+                    url: BASEURL + '/api/pvsolicitacao/listarcomentarios',
                     timeout: 120000,
                     reader: { type: 'json', root: 'data' }
                 }
             }),
-        
+            
+            // header: false,
+
             columns: [
                 {
-                    text: 'Emp',
-                    width: 52,
-                    dataIndex: 'emp'
+                    
+                    text: 'Usuario',
+                    flex: 1,
+                    dataIndex: 'usuario',
+                    renderer: function(v) {
+                        return '<b>' + v + '</b>';
+                    }
                 }, 
         
                 {
-                    text: 'Código',
-                    width: 120,
-                    dataIndex: 'codigo'
+                    menuDisabled: true,
+                    text: 'Data',
+                    width: 130,
+                    dataIndex: 'data',
+                    renderer: Ext.util.Format.dateRenderer('d/m/Y H:i:s')
                 }
-            ]
+            ],
+
+            features: [{
+                ftype: 'rowbody',
+                getAdditionalData: function (data, idx, record, orig) {
+                    return {
+                        rowBody: '<span>' + record.get("mensagem") + '</span>',
+                        rowBodyCls: "grid-body-cls"
+                    };
+                }
+            }]
+
+            // plugins: {
+            //     rowexpander: {
+            //         rowBodyTpl: new Ext.XTemplate(
+            //             '<p><b>Company:</b> {name}</p>',
+            //             '<p><b>Change:</b> {change:this.formatChange}</p><br>',
+            //             '<p><b>Summary:</b> {desc}</p>',
+            //             {
+            //                 formatChange: function(v) {
+            //                     var color = v >= 0 ? 'green' : 'red';
+        
+            //                     return '<span style="color: ' + color + ';">' +
+            //                         Ext.util.Format.usMoney(v) + '</span>';
+            //                 }
+            //             })
+            //     }
+            // }
+
+            // plugins: [{
+            //     ptype: 'ux-rowexpander',
+            //     id: 'rowexpander'
+            // }]
+
+            // viewConfig: {
+            //     itemId: 'view',
+            //     plugins: [{
+            //         pluginId: 'preview',
+            //         ptype: 'preview',
+            //         bodyField: 'menagem',
+            //         expanded: true
+            //     }]
+            // }
         });
 
         me.callParent(arguments);

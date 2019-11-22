@@ -3,7 +3,9 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
     alias: 'controller.pvsolicitacaoalteracao',
 
     control: {
-        
+        'pvsolicitacaoalteracaogridpanel': {
+            select: 'onSelect'
+        }
     },
 
     init: function (view) {
@@ -15,6 +17,10 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
             view.getStore().load();
         });
 
+    },
+
+    onSelect: function(grid, selected){
+        App.app.fireEvent('pvsolicitacaoalteracaoprecoselect', selected);
     }
     
 });

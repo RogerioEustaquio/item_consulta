@@ -10,30 +10,51 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
 
     title: 'Alteração de Preço',
 
+    // tbar: {
+    //     items: [
+    //         {
+    //             xtype: 'toolbar',
+    //             ui: 'footer',
+    //             padding: 0,
+    //             items: [
+    //                 {
+    //                     tooltip: 'Nova Solicitação',
+    //                     iconCls: 'fa fa-plus',
+    //                     handler: function(btn){
+    //                         var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
+    //                         win.show();
+    //                     }
+    //                 },
+    //                 {
+    //                     disabled: true,
+    //                     tooltip: 'Alterar Solicitação',
+    //                     iconCls: 'fa fa-pencil-alt',
+    //                     handler: function(btn){
+                            
+    //                     }
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // },
+
     tbar: {
         items: [
             {
-                xtype: 'toolbar',
-                ui: 'footer',
-                padding: 0,
-                items: [
-                    {
-                        tooltip: 'Nova Solicitação',
-                        iconCls: 'fa fa-plus',
-                        handler: function(btn){
-                            var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
-                            win.show();
-                        }
-                    },
-                    {
-                        disabled: true,
-                        tooltip: 'Alterar Solicitação',
-                        iconCls: 'fa fa-pencil-alt',
-                        handler: function(btn){
-                            
-                        }
-                    }
-                ]
+                tooltip: 'Nova Solicitação',
+                iconCls: 'fa fa-plus',
+                handler: function(btn){
+                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
+                    win.show();
+                }
+            },
+            {
+                disabled: true,
+                tooltip: 'Alterar Solicitação',
+                iconCls: 'fa fa-pencil-alt',
+                handler: function(btn){
+                    
+                }
             }
         ]
     },
@@ -45,6 +66,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         Ext.define('App.model.pvsolicitacao.SolicitacaoAlteracao', {
             extend: 'Ext.data.Model',
             fields: [
+                { name: 'idSolicitacao',  type: 'integer' },
                 { name: 'emp',  type: 'string' },
                 { name: 'codItem',  type: 'string' },
                 { name: 'descricao',  type: 'string' },
@@ -123,8 +145,20 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         
                 {
                     text: 'Status',
-                    width: 140,
-                    dataIndex: 'status'
+                    width: 90,
+                    dataIndex: 'status',
+                    renderer: function (value, metaData, record) {
+                        var idSolicitacaoStatus = record.get('idSolicitacaoStatus');
+
+                            if (idSolicitacaoStatus === 2)
+                                metaData.tdCls = 'x-grid-cell-green-border';
+                            if (idSolicitacaoStatus === 3)
+                                metaData.tdCls = 'x-grid-cell-yellow-border';
+                            if (idSolicitacaoStatus === 4)
+                                metaData.tdCls = 'x-grid-cell-red-border';
+
+                        return value;
+                    }
                 }
             ]
         });

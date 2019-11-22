@@ -34,7 +34,8 @@ class PvSolicitacaoController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             $sql = "
-                 select e.apelido as emp, i.cod_item||c.descricao as codigo, 
+                 select s.id_solicitacao, 
+                        e.apelido as emp, i.cod_item||c.descricao as codigo, 
                         i.descricao, m.descricao as marca, s.usuario_solicitacao, 
                         to_char(s.data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao,
                         s.id_solicitacao_status, ss.descricao as status, s.preco_de, s.preco_para
@@ -66,6 +67,70 @@ class PvSolicitacaoController extends AbstractRestfulController
             $hydrator->addStrategy('data_solicitacao', new ValueStrategy);
             $hydrator->addStrategy('preco_de', new ValueStrategy);
             $hydrator->addStrategy('preco_para', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarcomentariosAction()
+    {   
+        $data = array();
+        
+        try {
+
+            $pSolicitacao = $this->params()->fromQuery('solicitacao',null);
+
+            $em = $this->getEntityManager();
+            
+            $sql = "
+                 select o.id_solicitacao,
+                        o.preco_de,
+                        o.preco_para,
+                        o.preco_confirmado,
+                        o.data_solicitacao,
+                        o.usuario_solicitacao,
+                        o.data_alteracao,
+                        o.usuario_alteracao,
+                        c.id_comentario, 
+                        c.id_solicitacao_status,
+                        c.data as data_comentario, 
+                        to_char(c.data, 'DD/MM/RRRR HH24:MI:SS') as data, 
+                        c.usuario, 
+                        c.comentario,
+                        decode(c.id_solicitacao_status,1,'Solicitação' || ' de ' || o.preco_de || ' para ' || o.preco_para, s.descricao) || ' ' || c.comentario as mensagem
+                   from xp_pv_solicitacao_comentario c, 
+                        xp_pv_solicitacao_status s,
+                        xp_pv_solicitacao o
+                  where c.id_solicitacao_status = s.id_solicitacao_status
+                    and c.id_solicitacao = o.id_solicitacao
+                    and c.id_solicitacao = ?
+                  order by data_comentario desc
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(1, $pSolicitacao);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            // $hydrator->addStrategy('data_solicitacao', new ValueStrategy);
+            // $hydrator->addStrategy('preco_de', new ValueStrategy);
+            // $hydrator->addStrategy('preco_para', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);

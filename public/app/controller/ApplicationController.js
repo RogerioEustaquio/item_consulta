@@ -2,7 +2,7 @@ Ext.define('App.controller.ApplicationController', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'App.view.SolicitacaoMain'
+        'App.view.pvsolicitacao.Main'
     ],
     
     getViewport: function(){
@@ -55,11 +55,11 @@ Ext.define('App.controller.ApplicationController', {
         var me = this,
             viewport = me.getViewport(),
             viewportCard = viewport.down('#applicationcard'),
-            card = viewport.down('#solicitacao');
+            card = viewport.down('#pvsolicitacaomain');
             
         if(!card){
             card = viewportCard.add({
-                xtype: 'solicitacaomain'
+                xtype: 'pvsolicitacaomain'
             });
         };
         

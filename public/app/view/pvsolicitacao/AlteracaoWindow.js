@@ -1,6 +1,6 @@
-Ext.define('App.view.SolicitacaoAlteracaoWindow', {
+Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
     extend: 'Ext.window.Window',
-    xtype: 'solicitacaoalteracaowindow',
+    xtype: 'pvsolicitacaoalteracaowindow',
     requires: [
         
     ],

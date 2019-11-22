@@ -1,10 +1,9 @@
-Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
+Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
     extend: 'Ext.grid.Panel',
-    xtype: 'solicitacaoalteracaogridpanel',
+    xtype: 'pvsolicitacaoalteracaogridpanel',
 
     requires: [
-        'App.model.SolicitacaoAlteracao',
-        'App.view.SolicitacaoAlteracaoGridPanelController'
+        'App.view.pvsolicitacao.AlteracaoGridPanelController'
     ],
 
     controller: 'solicitacaoalteracao',
@@ -17,7 +16,7 @@ Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
                 tooltip: 'Nova Solicitação',
                 iconCls: 'fa fa-plus',
                 handler: function(btn){
-                    var win = Ext.create('App.view.SolicitacaoAlteracaoWindow');
+                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
                     win.show();
                 }
             },
@@ -35,7 +34,7 @@ Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
         var me = this,
             utilFormat = Ext.create('Ext.ux.util.Format');
 
-        Ext.define('App.model.SolicitacaoAlteracao', {
+        Ext.define('App.model.pvsolicitacao.SolicitacaoAlteracao', {
             extend: 'Ext.data.Model',
             fields: [
                 { name: 'emp',  type: 'string' },
@@ -53,7 +52,7 @@ Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
     
         Ext.applyIf(me, {
             store: Ext.create('Ext.data.Store', {
-                model: 'App.model.SolicitacaoAlteracao',
+                model: 'App.model.pvsolicitacao.SolicitacaoAlteracao',
                 pageSize: 50,
                 // remoteSort: true,
                 // sorters: [{ property: 'vendaM6', direction: 'DESC' }],

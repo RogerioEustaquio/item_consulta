@@ -1,6 +1,6 @@
-Ext.define('App.view.SolicitacaoCadastroGridPanel', {
+Ext.define('App.view.pvsolicitacao.CadastroGridPanel', {
     extend: 'Ext.grid.Panel',
-    xtype: 'solicitacaocadastrogridpanel',
+    xtype: 'pvsolicitacaocadastrogridpanel',
 
     title: 'Cadastro de Preço',
 

@@ -53,6 +53,10 @@ class AbstractRestfulController extends AbstractController
 
     protected function setCallbackError($message){
         $this->callback['success'] = false;
+        $this->setMessage($message);
+    }
+
+    protected function setMessage($message){
         $this->callback['message'] = $message;
     }
     

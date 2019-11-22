@@ -35,6 +35,28 @@ return [
                 ]
             ],
 
+            'app-admin' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/admin',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'admin',
+                    ],
+                ]
+            ],
+
+            'app-home-teste' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/teste',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'index2',
+                    ],
+                ]
+            ],
+
             'app-login' => [
                 'type' => Literal::class,
                 'options' => [
@@ -59,27 +81,13 @@ return [
                     ],
                 ],
             ],
-
-            'app-performance' => [
-                'type' => Segment::class,
-                'options' => [
-                    'route'    => '/performance[/:action]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
-                    ),
-                    'defaults' => [
-                        'controller' => Controller\PerformanceController::class,
-                        'action' => 'index',
-                    ],
-                ],
-            ]
             
         ],
     ],
 
     'view_helpers' => array(
         'invokables' => array(
-            'nav' => View\Helper\Navigation::class,
+            
         ),
     ),
     
@@ -91,10 +99,6 @@ return [
         'exception_template'       => 'error/index',
         'template_map' => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-            'navigation' => __DIR__ . '/../view/layout/components/navigation.phtml',
-            
-            'admin-navigation' => __DIR__ . '/../view/layout/components/admin-navigation.phtml',
-            
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',

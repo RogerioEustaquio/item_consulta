@@ -30,6 +30,9 @@ class Module
             'factories' => [
                 __NAMESPACE__ . '\Service\ClienteService' => Service\ClienteServiceFactory::class,
             ],
+			'invokables' => array(
+                'ExcelService' => 'Api\Service\ExcelService',
+            ),
         ];
     }
     

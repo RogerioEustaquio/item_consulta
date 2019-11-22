@@ -178,9 +178,9 @@ class CampanhaInativoController extends AbstractRestfulController
                 'emp' => $pEmp,
                 'cod_item' => $pCodItem,
                 'data_solicitacao' => date('d/m/Y H:i:s'),
-                'id_funcionario' => $user['idFuncionario'],
-                'usuario' => $user['usuarioSistema'],
-                'email' => $user['email'],
+                'id_funcionario' => $user->idFuncionario,
+                'usuario' => $user->usuarioSistema,
+                'email' => $user->email,
                 'preco' => $pPreco,
                 'comentario' => $pComentario,
                 'id_campanha_solicitacao_status' => 1
@@ -268,29 +268,18 @@ class CampanhaInativoController extends AbstractRestfulController
             
                 $teste = $row['aplicacao'];
 
-                $phpExcel->getActiveSheet()->setCellValue('B'.$rowLine, $row['codItem'])
+                $phpExcel->getActiveSheet()->setCellValue('A'.$rowLine, $i+1)
+                                        ->setCellValue('B'.$rowLine, $row['codItem'])
                                         ->setCellValue('C'.$rowLine, $row['descricao'])
                                         ->setCellValue('D'.$rowLine, $row['marca'])
                                         ->setCellValue('E'.$rowLine, $row['estoque'])
                                         ->setCellValue('F'.$rowLine, $row['preco'])
                                         ->setCellValue('G'.$rowLine, $row['partNumber'])
-                                        //->setCellValueExplicit('H'.$rowLine, $row['aplicacao'], \PHPExcel_Cell_DataType::TYPE_STRING)
-                                        ->setCellValue('H'.$rowLine, ' ');
+                                        ->setCellValueExplicit('H'.$rowLine, $row['aplicacao'], \PHPExcel_Cell_DataType::TYPE_STRING);
                                         // ->setCellValueExplicit('H'.$rowLine, preg_replace('/\\s\\s+/', ' ', $row['aplicacao'])), /PHPExcel_Cell_DataType::TYPE_STRING);
                                             //   ->setCellValue('E'.$row, '=C'.$row.'*D'.$row);
 
         }
-
-        $styleArray = [
-            'borders' => [
-                'allborders' => [
-                    'style' => \PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => ['rgb' => 'a6a6a6'],
-                ],
-            ],
-        ];
-        
-        $phpExcel->getActiveSheet()->getStyle('B9:G'.$rowLine)->applyFromArray($styleArray);
 	
         $objWriter = $sm->get('ExcelService')->createWriter($phpExcel, 'Excel5');
         // $objWriter->save(getcwd() . '/teste.xls');

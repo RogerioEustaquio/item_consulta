@@ -40,7 +40,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                         fields: [{ name: 'coditem' }, { name: 'descricao' }],
                         proxy: {
                             type: 'ajax',
-                            url: BASEURL + '/api/precosolicitacao/listarprodutos',
+                            url: BASEURL + '/api/pvsolicitacao/listarprodutos',
                             reader: { type: 'json', root: 'data' },
                             extraParams: {
                                 emp: 'RE'
@@ -161,7 +161,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                         me.up('window').setLoading({msg: '<b>Salvando os dados...</b>'});
 
                         Ext.Ajax.request({
-                            url: BASEURL +'/api/precosolicitacao/enviarsolicitacao',
+                            url: BASEURL +'/api/pvsolicitacao/enviarsolicitacao',
                             method: 'POST',
                             params: values,
                             success: function (response) {

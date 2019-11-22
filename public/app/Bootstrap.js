@@ -4,7 +4,12 @@ Ext.application({
     name: 'App',
     appFolder: 'app',
 
+    paths: {
+        'Ext.ux': 'app/ux'
+    },
+
     requires: [
+        'Ext.ux.util.Format',
         'App.view.Viewport'
     ],
     

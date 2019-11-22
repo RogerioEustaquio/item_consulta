@@ -32,7 +32,8 @@ Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
     },
 
     constructor: function(config) {
-        var me = this;
+        var me = this,
+            utilFormat = Ext.create('Ext.ux.util.Format');
 
         Ext.define('App.model.SolicitacaoAlteracao', {
             extend: 'Ext.data.Model',
@@ -102,13 +103,15 @@ Ext.define('App.view.SolicitacaoAlteracaoGridPanel', {
                 {
                     text: 'De',
                     width: 110,
-                    dataIndex: 'precoDe'
+                    dataIndex: 'precoDe',
+                    renderer: function (v) { return utilFormat.Value(v); }
                 },
         
                 {
                     text: 'Para',
                     width: 110,
-                    dataIndex: 'precoPara'
+                    dataIndex: 'precoPara',
+                    renderer: function (v) { return utilFormat.Value(v); }
                 },
         
                 {

@@ -11,7 +11,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
     init: function (view) {
 
         // Ouvinto do evento de nova solicitação
-        App.app.on('solicitacaoalteracaoenviada', function(data = []){
+        App.app.on('pvsolicitacaoalteracaoenviada', function(data = []){
 
             // Recarrega o grid
             view.getStore().load();

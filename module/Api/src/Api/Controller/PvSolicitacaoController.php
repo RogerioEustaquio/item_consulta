@@ -19,6 +19,46 @@ class PvSolicitacaoController extends AbstractRestfulController
         
     }
 
+    public function listarempresasAction()
+    {   
+        $data = array();
+        
+        try {
+
+            $em = $this->getEntityManager();
+            
+            $sql = "
+                select id_empresa, apelido as nome from ms.empresa 
+                 where id_matriz = 1 
+                   and id_empresa not in (26, 20, 11, 28)
+                 order by apelido
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
     public function listarsolicitacoesAction()
     {   
         $data = array();

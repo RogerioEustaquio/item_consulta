@@ -10,20 +10,42 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
 
     title: 'Alteração de Preço',
 
+    // tbar: {
+    //     items: [
+    //         {
+    //             xtype: 'toolbar',
+    //             ui: 'footer',
+    //             padding: 0,
+    //             items: [
+    //                 {
+    //                     tooltip: 'Nova Solicitação',
+    //                     iconCls: 'fa fa-plus',
+    //                     handler: function(btn){
+    //                         var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
+    //                         win.show();
+    //                     }
+    //                 },
+    //                 {
+    //                     disabled: true,
+    //                     tooltip: 'Alterar Solicitação',
+    //                     iconCls: 'fa fa-pencil-alt',
+    //                     handler: function(btn){
+                            
+    //                     }
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // },
+
     tbar: {
         items: [
             {
                 disabled: true,
                 tooltip: 'Nova Solicitação',
                 iconCls: 'fa fa-plus',
-                itemId: 'novasolicitacao',
                 handler: function(btn){
-                    var empresa = btn.up('grid').down('toolbar').down('combobox[name=empresa]').getValue();
-                    
-                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow', {
-                        empresa: empresa
-                    });
-
+                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow');
                     win.show();
                 }
             },
@@ -39,7 +61,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
             {
                 width: 70,
                 xtype: 'combobox',
-                name: 'empresa',
+                name: 'produto',
                 store: Ext.data.Store({
                     fields: [{ name: 'coditem' }, { name: 'descricao' }],
                     proxy: {
@@ -51,13 +73,12 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                 queryParam: 'codigo',
                 queryMode: 'remote',
                 displayField: 'nome',
-                valueField: 'nome',
+                valueField: 'idEmpresa',
                 emptyText: 'Emp',
                 forceSelection: true,
                 listeners: {
                     select: function ( combo, record, ) {
-                        // Ativa o botao de nova solicitacao
-                        combo.up('toolbar').down('#novasolicitacao').enable();
+                        
                     }
                 }
             }
@@ -136,7 +157,6 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         
                 {
                     text: 'De',
-                    align: 'right',
                     width: 110,
                     dataIndex: 'precoDe',
                     renderer: function (v) { return utilFormat.Value(v); }
@@ -144,7 +164,6 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         
                 {
                     text: 'Para',
-                    align: 'right',
                     width: 110,
                     dataIndex: 'precoPara',
                     renderer: function (v) { return utilFormat.Value(v); }
@@ -152,7 +171,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
         
                 {
                     text: 'Status',
-                    width: 86,
+                    width: 90,
                     dataIndex: 'status',
                     renderer: function (value, metaData, record) {
                         var idSolicitacaoStatus = record.get('idSolicitacaoStatus');

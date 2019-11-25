@@ -2,8 +2,17 @@ Ext.define('App.controller.ApplicationController', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'App.view.pvsolicitacao.Main'
+        'App.view.pvsolicitacao.Main',
+        'App.view.pvsolicitacaocadastro.Main'
     ],
+
+    control: {
+        // '#mastermenu > menuitem': {
+        //     click: function(item){
+        //         console.log(item)
+        //     }
+        // }
+    },
     
     getViewport: function(){
         return App.getApplication().getMainView();
@@ -23,11 +32,16 @@ Ext.define('App.controller.ApplicationController', {
     
     routes: {
         'login': { action: 'loginAction' },
-        'solicitacao': { action: 'solicitacaoAction' }
+        'pvsolicitacaoalteracao': { action: 'pvsolicitacaoalteracaoAction' },
+        'pvsolicitacaocadastro': { action: 'pvsolicitacaocadastroAction' }
     },
     
     init: function() {
         var me = this;
+
+        App.app.on('menumasterclick', function(item){
+            me.redirectTo(item);
+        });
 
         me.mainAction();
     },
@@ -44,26 +58,61 @@ Ext.define('App.controller.ApplicationController', {
         
         // Adiciona o card
         viewport.add({
-            itemId: 'applicationcard',
+            itemId: 'applicationtabs',
             region: 'center',
-            xtype: 'container',
-            layout: 'card'
+            xtype: 'tabpanel',
+            layout: 'fit'
         });
     },
     
-    solicitacaoAction: function(){
+    pvsolicitacaoalteracaoAction: function(){
         var me = this,
             viewport = me.getViewport(),
-            viewportCard = viewport.down('#applicationcard'),
-            card = viewport.down('#pvsolicitacaomain');
+            viewportTabs = viewport.down('#applicationtabs'),
+            xtype = 'pvsolicitacaoalteracaomain',
+            tab = viewportTabs.down(xtype);
+
+            console.log(xtype)
+            console.log(tab)
             
-        if(!card){
-            card = viewportCard.add({
-                xtype: 'pvsolicitacaomain'
+        if(!tab){
+            tab = viewportTabs.add({
+                closable: true,
+                xtype: xtype,
+                listeners: {
+                    destroy: function(){
+                        me.redirectTo('home');
+                    }
+                }
             });
         };
         
-        viewportCard.setActiveItem(card);
+        viewportTabs.setActiveItem(tab);
+    },
+
+    pvsolicitacaocadastroAction: function(){
+        var me = this,
+            viewport = me.getViewport(),
+            viewportTabs = viewport.down('#applicationtabs'),
+            xtype = 'pvsolicitacaocadastromain',
+            tab = viewportTabs.down(xtype);
+
+            console.log(xtype)
+            console.log(tab)
+
+        if(!tab){
+            tab = viewportTabs.add({
+                closable: true,
+                xtype: xtype,
+                listeners: {
+                    destroy: function(){
+                        me.redirectTo('home');
+                    }
+                }
+            });
+        };
+        
+        viewportTabs.setActiveItem(tab);
     }
     
 });

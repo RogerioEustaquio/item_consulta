@@ -1,6 +1,6 @@
 Ext.define('App.view.pvsolicitacao.Main', {
     extend: 'Ext.Container',
-    xtype: 'pvsolicitacaomain',
+    xtype: 'pvsolicitacaoalteracaomain',
     requires: [
         'App.view.pvsolicitacao.AlteracaoGridPanel',
         'App.view.pvsolicitacao.CadastroGridPanel',
@@ -8,43 +8,31 @@ Ext.define('App.view.pvsolicitacao.Main', {
         'App.view.pvsolicitacao.AlteracaoComentariosGridPanel'
     ],
     
+    title: 'Alteração de Preço',
+
     layout: 'fit',
     items: [
         {
-            xtype: 'tabpanel',
+            // title: 'Alteração de Preço',
+            xtype: 'container',
+            layout: 'border',
             items: [
                 {
-                    title: 'Alteração de Preço',
-                    // xtype: 'container',
-                    layout: 'border',
-                    items: [
-                        {
-                            region: 'center',
-                            xtype: 'pvsolicitacaoalteracaogridpanel',
-                            title: null,
-                            flex: 1
-                        },
-                        {
-                            region: 'east',
-                            xtype: 'tabpanel',
-                            width: 320,
-                            items: [
-                                {
-                                    xtype: 'pvsolicitacaoalteracaocomentariosgridpanel'
-                                }
-                            ]
-                        }
-                    ]
+                    region: 'center',
+                    xtype: 'pvsolicitacaoalteracaogridpanel',
+                    title: null,
+                    flex: 1
                 },
                 {
-                    title: 'Cadastro de Preço'
+                    region: 'east',
+                    xtype: 'tabpanel',
+                    width: 320,
+                    items: [
+                        {
+                            xtype: 'pvsolicitacaoalteracaocomentariosgridpanel'
+                        }
+                    ]
                 }
-                // {
-                //     xtype: 'pvsolicitacaoalteracaogridpanel'
-                // },
-                // {
-                //     xtype: 'pvsolicitacaocadastrogridpanel'
-                // }
             ]
         }
     ]

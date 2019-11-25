@@ -93,6 +93,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                 { name: 'marca',  type: 'string' },
                 { name: 'precoDe',  type: 'number' },
                 { name: 'precoPara',  type: 'number' },
+                { name: 'precoConfirmado',  type: 'number' },
                 { name: 'idSolicitacaoStatus',  type: 'integer' },
                 { name: 'status',  type: 'string' },
                 { name: 'usuarioSolicitacao',  type: 'string' },
@@ -163,6 +164,17 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                     width: 110,
                     dataIndex: 'precoPara',
                     renderer: function (v) { return utilFormat.Value(v); }
+                },
+
+                {
+                    text: 'Final',
+                    align: 'right',
+                    width: 110,
+                    dataIndex: 'precoConfirmado',
+                    renderer: function (v) { 
+                        if(v)
+                        return utilFormat.Value(v); 
+                    }
                 },
         
                 {

@@ -85,7 +85,8 @@ class PvSolicitacaoController extends AbstractRestfulController
                         e.apelido as emp, i.cod_item||c.descricao as codigo, 
                         i.descricao, m.descricao as marca, s.usuario_solicitacao, 
                         to_char(s.data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao,
-                        s.id_solicitacao_status, ss.descricao as status, s.preco_de, s.preco_para
+                        s.id_solicitacao_status, ss.descricao as status, 
+                        s.preco_de, s.preco_para, s.preco_confirmado
                    from xp_pv_solicitacao s,
                         xp_pv_solicitacao_status ss,
                         ms.empresa e,
@@ -124,6 +125,7 @@ class PvSolicitacaoController extends AbstractRestfulController
             $hydrator->addStrategy('data_solicitacao', new ValueStrategy);
             $hydrator->addStrategy('preco_de', new ValueStrategy);
             $hydrator->addStrategy('preco_para', new ValueStrategy);
+            $hydrator->addStrategy('preco_confirmado', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);

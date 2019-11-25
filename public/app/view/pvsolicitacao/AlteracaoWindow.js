@@ -108,7 +108,12 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                             // labelWidth: 80,
                             decimalSeparator: ',', 
                             fieldLabel: 'Preço Ideal', 
-                            name: 'preco'
+                            name: 'preco',
+                            listeners: {
+                                mousedown: function(field){
+                                    //console.log(field)
+                                }
+                            }
                         },
         
                         {
@@ -170,7 +175,9 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                             text: 'Cancelar',
                             action: 'cancelar',
                             handler: function() {
-                                
+                                var me = this;
+                                me.up('form').getForm().reset();
+                                me.up('window').close();
                             }
                         }
                     ]

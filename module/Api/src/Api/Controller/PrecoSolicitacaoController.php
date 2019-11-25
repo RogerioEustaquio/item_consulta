@@ -109,7 +109,8 @@ class PrecoSolicitacaoController extends AbstractRestfulController
                          ms.tb_marca m,
                          
                          (select id_empresa, id_item, id_categoria, preco_venda as preco  
-                            from ms.tb_tab_preco_valor where id_tab_preco = 1) pv
+                            from ms.tb_tab_preco_valor where id_tab_preco = 1
+                           where nvl(preco_venda,0) > 0) pv
                                            
                    where es.id_empresa = e.id_empresa
                      and es.id_item = ic.id_item

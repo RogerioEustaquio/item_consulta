@@ -21,7 +21,8 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                     var empresa = btn.up('grid').down('toolbar').down('combobox[name=empresa]').getValue();
                     
                     var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow', {
-                        empresa: empresa
+                        empresa: empresa,
+                        btnRef: btn
                     });
 
                     win.show();

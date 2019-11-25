@@ -6,6 +6,7 @@ Ext.define('App.controller.ApplicationController', {
         'App.view.pvsolicitacaocadastro.Main'
     ],
 
+
     control: {
         // '#mastermenu > menuitem': {
         //     click: function(item){
@@ -66,39 +67,20 @@ Ext.define('App.controller.ApplicationController', {
     },
     
     pvsolicitacaoalteracaoAction: function(){
-        var me = this,
-            viewport = me.getViewport(),
-            viewportTabs = viewport.down('#applicationtabs'),
-            xtype = 'pvsolicitacaoalteracaomain',
-            tab = viewportTabs.down(xtype);
-
-            console.log(xtype)
-            console.log(tab)
-            
-        if(!tab){
-            tab = viewportTabs.add({
-                closable: true,
-                xtype: xtype,
-                listeners: {
-                    destroy: function(){
-                        me.redirectTo('home');
-                    }
-                }
-            });
-        };
-        
-        viewportTabs.setActiveItem(tab);
+        var me = this;
+        me.addMasterTab('pvsolicitacaoalteracaomain');
     },
 
     pvsolicitacaocadastroAction: function(){
+        var me = this;
+        me.addMasterTab('pvsolicitacaocadastromain');
+    },
+
+    addMasterTab: function(xtype){
         var me = this,
             viewport = me.getViewport(),
             viewportTabs = viewport.down('#applicationtabs'),
-            xtype = 'pvsolicitacaocadastromain',
             tab = viewportTabs.down(xtype);
-
-            console.log(xtype)
-            console.log(tab)
 
         if(!tab){
             tab = viewportTabs.add({

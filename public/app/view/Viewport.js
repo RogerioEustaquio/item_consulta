@@ -24,7 +24,6 @@ Ext.define('App.view.Viewport', {
                             text: 'Alteração de Preço',
                             name: 'pvsolicitacaoalteracao',
                             handler: function(){
-                                console.log('click')
                                 App.app.fireEvent('menumasterclick', 'pvsolicitacaoalteracao');
                             }
                         },
@@ -32,7 +31,6 @@ Ext.define('App.view.Viewport', {
                             text: 'Cadastro de Preço',
                             name: 'pvsolicitacaocadastro',
                             handler: function(){
-                                console.log('click')
                                 App.app.fireEvent('menumasterclick', 'pvsolicitacaocadastro');
                             }
                         },
@@ -42,5 +40,4 @@ Ext.define('App.view.Viewport', {
             ]
         }
     ]
-
 });

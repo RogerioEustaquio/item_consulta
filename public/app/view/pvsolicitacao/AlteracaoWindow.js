@@ -13,6 +13,9 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
     modal: true,
     empresa: null,
 
+    // referência inicial de criação da janela
+    btnRef: null,
+
     constructor: function(config) {
         var me = this;
 
@@ -25,7 +28,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
 
     initComponent: function() {
         var me = this;
-        
+
         me.setTitle(me.title + ' ' + me.empresa)
 
         Ext.applyIf(me, {
@@ -133,12 +136,14 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                             formBind: true, 
                             disabled: true,
                             handler: function() {
-        
+
                                 var me = this,
                                     notyType = 'success',
                                     notyText = 'Solicitação enviada com sucesso!',
                                     values = me.up('form').getForm().getValues();
                                 
+                                var gridReload = me.up('window').btnRef.up('grid');
+
                                 me.up('window').setLoading({msg: '<b>Salvando os dados...</b>'});
         
                                 Ext.Ajax.request({
@@ -165,7 +170,8 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                                         me.up('window').close();
         
                                         // Evento de envio
-                                        App.app.fireEvent('pvsolicitacaoalteracaoenviada', values);
+                                        // App.app.fireEvent('pvsolicitacaoalteracaoenviada', values);
+                                        gridReload.getStore().reload();
         
                                     }
                                 });

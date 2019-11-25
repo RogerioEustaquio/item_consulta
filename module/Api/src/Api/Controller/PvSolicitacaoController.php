@@ -29,9 +29,16 @@ class PvSolicitacaoController extends AbstractRestfulController
             
             $sql = "
                 select id_empresa, apelido as nome from ms.empresa 
-                 where id_matriz = 1 
-                   and id_empresa not in (26, 20, 11, 28)
-                 order by apelido
+                where id_matriz = 1 
+                and id_empresa = 20
+
+                union all
+                select * from (
+                    select id_empresa, apelido as nome from ms.empresa 
+                    where id_matriz = 1 
+                    and id_empresa not in (26, 11, 28, 27, 20)
+                    order by apelido
+                )
             ";
             
             $conn = $em->getConnection();
@@ -65,11 +72,11 @@ class PvSolicitacaoController extends AbstractRestfulController
         
         try {
 
-            // $pEmp = $this->params()->fromQuery('emp',null);
+            $pEmp = $this->params()->fromQuery('emp',null);
 
-            // if(!$pEmp){
-            //     throw new \Exception('Parâmetros não informados.');
-            // }
+            if(!$pEmp){
+                throw new \Exception('Parâmetros não informados.');
+            }
 
             $em = $this->getEntityManager();
             
@@ -93,12 +100,22 @@ class PvSolicitacaoController extends AbstractRestfulController
                     and s.id_item = ic.id_item
                     and s.id_categoria = ic.id_categoria
                     and ic.id_marca = m.id_marca
-                order by data_solicitacao desc
             ";
+
+            // Filter
+            // Todas as solicitações para o escritório central
+            if($pEmp !== 'EC')
+            $sql .= " and e.apelido = ? ";
+
+            // Order by
+            $sql .= " order by data_solicitacao desc ";
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
-            // $stmt->bindValue(1, $pEmp);
+
+            // Todas as solicitações para o escritório central
+            if($pEmp !== 'EC')
+            $stmt->bindValue(1, $pEmp);
             
             $stmt->execute();
             $results = $stmt->fetchAll();

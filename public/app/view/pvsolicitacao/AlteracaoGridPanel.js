@@ -55,9 +55,17 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                 emptyText: 'Emp',
                 forceSelection: true,
                 listeners: {
-                    select: function ( combo, record, ) {
+                    select: function ( combo, record ) {
                         // Ativa o botao de nova solicitacao
                         combo.up('toolbar').down('#novasolicitacao').enable();
+
+                        // Filtra os itens da filial
+                        var grid = this.up('grid'),
+                            store = grid.getStore();
+
+
+                        store.proxy.extraParams.emp = combo.getValue();
+                        store.reload();
                     }
                 }
             }

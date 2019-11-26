@@ -72,6 +72,7 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                 { name: 'idStatus',  type: 'integer' },
                 { name: 'descricaoStatus',  type: 'string' },
                 { name: 'usuarioSolicitacao',  type: 'string' },
+                { name: 'comentarioSolicitacao',  type: 'string' },
                 { name: 'dataSolicitacao', type: 'date', dateFormat: 'd/m/Y H:i:s' }
             ]
         });
@@ -88,6 +89,16 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                     reader: { type: 'json', root: 'data' }
                 }
             }),
+
+            listeners: {
+                select: function(grid, selected){
+                    var comentarioSolicitacao = selected.get('comentarioSolicitacao');
+                    grid.view.up('pvsolicitacaocadastromain')
+                             .down('#comentario')
+                             .down('displayfield')
+                             .setValue(comentarioSolicitacao);
+                }
+            },
         
             columns: [
                 {
@@ -121,6 +132,13 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                     align: 'center',
                     dataIndex: 'dataSolicitacao',
                     renderer: Ext.util.Format.dateRenderer('d/m/Y H:i')
+                },
+
+                {
+                    text: 'Usuário',
+                    width: 125,
+                    align: 'center',
+                    dataIndex: 'usuarioSolicitacao'
                 },
                 
                 {
@@ -168,9 +186,54 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                             
                         return value;
                     }
+                },
+
+                {
+                    width: 42,
+                    dataIndex: 'comentarioSolicitacao',
+                    sortable: false,
+                    menuDisabled: true,
+                    align: 'center',
+                    renderer: function (value, metaData, record) {
+                        metaData.tdAttr = 'data-qtip="'+record.get('comentarioSolicitacao')+'"';
+
+                        if(record.get('comentarioSolicitacao'))
+                        return '<span class="x-action-col-icon far fa-comment action-icon"></span>';
+                    }
                 }
 
+                // {
+                //     xtype: 'actioncolumn',
+                //     width: 42,
+                //     // menuDisabled: true,
+                //     sortable: false,
+                //     align: 'center',
+                //     items: [{
+                //         // tooltip: 'Sugerir preço de venda',
+                //         iconCls: 'far fa-comment action-icon',
+                //         getTip: function (value,metadata,record,rowIndex,colIndex,store) {
+                //             return record.get('comentarioSolicitacao');
+                //         },
+                //         handler: function(view, rowIndex, colIndex, item, e, record, row){  
+                          
+                //         },
+                //         renderer: function (value, metaData, record) {
+                //             console.log( value )
+                //         }
+                //     }]
+                // }
             ]
+
+            // features: [{
+            //     ftype: 'rowbody',
+            //     getAdditionalData: function (data, idx, record, orig) {
+            //         return {
+            //             rowBody: '<span>' + record.get("comentarioSolicitacao") + '</span>',
+            //             rowBodyCls: "grid-body-cls"
+            //         };
+            //     }
+            // }]
+
         });
 
         me.callParent(arguments);

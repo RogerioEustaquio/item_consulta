@@ -3,7 +3,6 @@ Ext.define('App.view.pvsolicitacao.Main', {
     xtype: 'pvsolicitacaoalteracaomain',
     requires: [
         'App.view.pvsolicitacao.AlteracaoGridPanel',
-        'App.view.pvsolicitacao.CadastroGridPanel',
         'App.view.pvsolicitacao.AlteracaoWindow',
         'App.view.pvsolicitacao.AlteracaoComentariosGridPanel'
     ],

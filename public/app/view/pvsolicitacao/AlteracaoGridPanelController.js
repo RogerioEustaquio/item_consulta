@@ -8,6 +8,15 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
         }
     },
 
+    listen: {
+        global: {
+            // appteste: function(){
+            //     console.log('appteste 1')
+            //     // console.log(this.getView())
+            // }
+        }
+    },
+
     init: function (view) {
 
         // // Ouvinto do evento de nova solicitação

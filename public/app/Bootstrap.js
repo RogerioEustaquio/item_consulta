@@ -10,11 +10,13 @@ Ext.application({
 
     requires: [
         'Ext.ux.util.Format',
-        'App.view.Viewport'
+        'App.view.Viewport',
+        'App.controller.PvSolicitacaoCadastroController'
     ],
     
     controllers: [
         'ApplicationController',
+        'PvSolicitacaoCadastroController'
     ],
     
     mainView: 'App.view.Viewport',

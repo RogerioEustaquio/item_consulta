@@ -1,11 +1,7 @@
-Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
+Ext.define('App.view.pvsolicitacaoalteracao.NovaSolicitacaoWindow', {
     extend: 'Ext.window.Window',
-    xtype: 'pvsolicitacaoalteracaowindow',
-    requires: [
-        'App.view.pvsolicitacao.AlteracaoWindowController'
-    ],
-
-    controller: 'pvsolicitacaoalteracaowindow',
+    xtype: 'pvsolicitacaoalteracaonovasolicitacaowindow',
+    controller: 'pvsolicitacaoalteracaonovasolicitacaowindow',
 
     title: 'Nova solicitação',
     width: 600,

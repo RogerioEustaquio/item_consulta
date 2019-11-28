@@ -1,6 +1,6 @@
-Ext.define('App.view.pvsolicitacao.AlteracaoWindowController', {
+Ext.define('App.view.pvsolicitacaoalteracao.NovaSolicitacaoWindowController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.pvsolicitacaoalteracaowindow',
+    alias: 'controller.pvsolicitacaoalteracaonovasolicitacaowindow',
 
     control: {
         

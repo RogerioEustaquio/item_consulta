@@ -1,12 +1,7 @@
-Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
+Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
     extend: 'Ext.grid.Panel',
-    xtype: 'pvsolicitacaoalteracaogridpanel',
-
-    requires: [
-        'App.view.pvsolicitacao.AlteracaoGridPanelController'
-    ],
-
-    controller: 'pvsolicitacaoalteracao',
+    xtype: 'pvsolicitacaoalteracaosolicitacoesgridpanel',
+    controller: 'pvsolicitacaoalteracaoalteracoesgridpanel',
 
     title: 'Alteração de Preço',
 

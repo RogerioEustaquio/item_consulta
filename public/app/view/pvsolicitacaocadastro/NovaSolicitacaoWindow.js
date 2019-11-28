@@ -1,10 +1,6 @@
 Ext.define('App.view.pvsolicitacaocadastro.NovaSolicitacaoWindow', {
     extend: 'Ext.window.Window',
     xtype: 'pvsolicitacaocadastronovasolicitacaowindow',
-    requires: [
-        'App.view.pvsolicitacaocadastro.NovaSolicitacaoWindowController'
-    ],
-
     controller: 'pvsolicitacaocadastronovasolicitacao',
 
     title: 'Nova solicitação',

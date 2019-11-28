@@ -1,9 +1,9 @@
-Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
+Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanelController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.pvsolicitacaoalteracao',
+    alias: 'controller.pvsolicitacaoalteracaoalteracoesgridpanel',
 
     control: {
-        'pvsolicitacaoalteracaogridpanel': {
+        'pvsolicitacaoalteracaosolicitacoesgridpanel': {
             select: 'onSelect'
         }
     },
@@ -25,8 +25,8 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
     // Item selecionado
     onSelect: function(grid, selected){
         var main = grid.view.up('pvsolicitacaoalteracaomain'),
-            comentariosGriPanel = main.down('pvsolicitacaoalteracaocomentariosgridpanel');
-
+            comentariosGriPanel = main.down('pvsolicitacaoalteracaosolicitacaocomentariosgridpanel');
+        
         // // Recarrega o grid
         var store = comentariosGriPanel.getStore(),
             solicitacao = selected.get('idSolicitacao');
@@ -38,7 +38,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
     onBtnNovaSolicitacaoClick: function(btn){
         var comboEmpresa = btn.up('toolbar').down('combobox[name=empresa]');
         
-        Ext.create('App.view.pvsolicitacao.AlteracaoWindow',{
+        Ext.create('App.view.pvsolicitacaoalteracao.NovaSolicitacaoWindow',{
             empresa: comboEmpresa.getValue()
         }).show();
     }

@@ -1,11 +1,6 @@
 Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
     extend: 'Ext.grid.Panel',
     xtype: 'pvsolicitacaocadastrogridpanel',
-
-    requires: [
-        'App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController'
-    ],
-
     controller: 'pvsolicitacaocadastrosolicitacoes',
 
     title: 'Cadastro de Preço',

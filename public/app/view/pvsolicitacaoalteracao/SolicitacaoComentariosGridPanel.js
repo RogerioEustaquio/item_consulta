@@ -1,12 +1,7 @@
-Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
+Ext.define('App.view.pvsolicitacaoalteracao.SolicitacaoComentariosGridPanel', {
     extend: 'Ext.grid.Panel',
-    xtype: 'pvsolicitacaoalteracaocomentariosgridpanel',
-
-    requires: [
-        'App.view.pvsolicitacao.AlteracaoComentariosGridPanelController'
-    ],
-
-    controller: 'pvsolicitacaoalteracaocomentarios',
+    xtype: 'pvsolicitacaoalteracaosolicitacaocomentariosgridpanel',
+    controller: 'pvsolicitacaoalteracaosolicitacaocomentarios',
 
     title: 'Comentários',
     hideHeaders: true,
@@ -15,7 +10,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
         var me = this,
             utilFormat = Ext.create('Ext.ux.util.Format');
 
-        Ext.define('App.model.pvsolicitacao.AlteracaoComentarios', {
+        Ext.define('App.model.pvsolicitacaoalteracao.SolicitacaoComentario', {
             extend: 'Ext.data.Model',
             fields: [
                 { name: 'usuario',  type: 'string' },
@@ -26,7 +21,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
     
         Ext.applyIf(me, {
             store: Ext.create('Ext.data.Store', {
-                model: 'App.model.pvsolicitacao.AlteracaoComentarios',
+                model: 'App.model.pvsolicitacaoalteracao.SolicitacaoComentario',
                 pageSize: 50,
                 autoLoad: false,
                 proxy: {

@@ -1,12 +1,7 @@
-Ext.define('App.view.pvsolicitacao.Main', {
+Ext.define('App.view.pvsolicitacaoalteracao.Main', {
     extend: 'Ext.Container',
     xtype: 'pvsolicitacaoalteracaomain',
-    requires: [
-        'App.view.pvsolicitacao.AlteracaoGridPanel',
-        'App.view.pvsolicitacao.AlteracaoWindow',
-        'App.view.pvsolicitacao.AlteracaoComentariosGridPanel'
-    ],
-    
+
     title: 'Alteração de Preço',
 
     layout: 'fit',
@@ -18,7 +13,7 @@ Ext.define('App.view.pvsolicitacao.Main', {
             items: [
                 {
                     region: 'center',
-                    xtype: 'pvsolicitacaoalteracaogridpanel',
+                    xtype: 'pvsolicitacaoalteracaosolicitacoesgridpanel',
                     title: null,
                     flex: 1
                 },
@@ -28,7 +23,7 @@ Ext.define('App.view.pvsolicitacao.Main', {
                     width: 320,
                     items: [
                         {
-                            xtype: 'pvsolicitacaoalteracaocomentariosgridpanel'
+                            xtype: 'pvsolicitacaoalteracaosolicitacaocomentariosgridpanel'
                         }
                     ]
                 }

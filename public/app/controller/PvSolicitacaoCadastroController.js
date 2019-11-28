@@ -3,21 +3,15 @@ Ext.define('App.controller.PvSolicitacaoCadastroController', {
 
     requires: [
         'App.view.pvsolicitacaocadastro.Main',
-        'App.view.pvsolicitacaocadastro.SolicitacoesGridPanel'
+        'App.view.pvsolicitacaocadastro.SolicitacoesGridPanel',
+        'App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController',
+        'App.view.pvsolicitacaocadastro.NovaSolicitacaoWindow',
+        'App.view.pvsolicitacaocadastro.NovaSolicitacaoWindowController'
     ],
-
 
     control: {
 
     },
-
-    // listen: {
-    //     global: {
-    //         appteste: function(){
-    //             console.log('appteste')
-    //         }
-    //     }
-    // },
 
     init: function() {
         var me = this;

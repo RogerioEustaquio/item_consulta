@@ -2,8 +2,7 @@ Ext.define('App.controller.ApplicationController', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'App.view.pvsolicitacao.Main',
-        'App.view.pvsolicitacaocadastro.Main'
+        
     ],
 
 

@@ -68,38 +68,6 @@ Ext.define('App.view.pvsolicitacao.AlteracaoComentariosGridPanel', {
                     };
                 }
             }]
-
-            // plugins: {
-            //     rowexpander: {
-            //         rowBodyTpl: new Ext.XTemplate(
-            //             '<p><b>Company:</b> {name}</p>',
-            //             '<p><b>Change:</b> {change:this.formatChange}</p><br>',
-            //             '<p><b>Summary:</b> {desc}</p>',
-            //             {
-            //                 formatChange: function(v) {
-            //                     var color = v >= 0 ? 'green' : 'red';
-        
-            //                     return '<span style="color: ' + color + ';">' +
-            //                         Ext.util.Format.usMoney(v) + '</span>';
-            //                 }
-            //             })
-            //     }
-            // }
-
-            // plugins: [{
-            //     ptype: 'ux-rowexpander',
-            //     id: 'rowexpander'
-            // }]
-
-            // viewConfig: {
-            //     itemId: 'view',
-            //     plugins: [{
-            //         pluginId: 'preview',
-            //         ptype: 'preview',
-            //         bodyField: 'menagem',
-            //         expanded: true
-            //     }]
-            // }
         });
 
         me.callParent(arguments);

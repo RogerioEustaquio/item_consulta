@@ -41,7 +41,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
                     fields: [{ name: 'coditem' }, { name: 'descricao' }],
                     proxy: {
                         type: 'ajax',
-                        url: BASEURL + '/api/pvsolicitacao/listarempresas',
+                        url: BASEURL + '/api/pvsolicitacaoalteracao/listarempresas',
                         reader: { type: 'json', root: 'data' }
                     }
                 }),

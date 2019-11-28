@@ -112,8 +112,8 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                         to_char(s.data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao,
                         s.id_solicitacao_status, ss.descricao as status, 
                         s.preco_de, s.preco_para, s.preco_confirmado
-                   from xp_pv_solicitacao s,
-                        xp_pv_solicitacao_status ss,
+                   from pricing.xpv_solicitacaoalt s,
+                        pricing.xpv_solicitacaoalt_status ss,
                         ms.empresa e,
                         ms.tb_item i,
                         ms.tb_categoria c,
@@ -195,9 +195,9 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                         c.usuario, 
                         c.comentario,
                         decode(c.id_solicitacao_status,1,'Solicitação' || ' de ' || o.preco_de || ' para ' || o.preco_para, s.descricao) || ' ' || c.comentario as mensagem
-                   from xp_pv_solicitacao_comentario c, 
-                        xp_pv_solicitacao_status s,
-                        xp_pv_solicitacao o
+                   from pricing.xpv_solicitacaoalt_comentario c, 
+                        pricing.xpv_solicitacaoalt_status s,
+                        pricing.xpv_solicitacaoalt o
                   where c.id_solicitacao_status = s.id_solicitacao_status
                     and c.id_solicitacao = o.id_solicitacao
                     and c.id_solicitacao = ?
@@ -333,7 +333,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacao.inserir(:emp, :cod_item, :preco_ideal, :usuario, :comentario)";
+            $sql = "call pkg_xpv_solicitacaoalt.inserir(:emp, :cod_item, :preco_ideal, :usuario, :comentario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':emp', $pEmp);
             $stmt->bindParam(':cod_item', $pCodItem);
@@ -368,7 +368,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacao.aprovar(:solicitacao, :usuario, :comentario)";
+            $sql = "call pkg_xpv_solicitacaoalt.aprovar(:solicitacao, :usuario, :comentario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);
@@ -401,7 +401,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacao.reprovar(:solicitacao, :usuario, :comentario)";
+            $sql = "call pkg_xpv_solicitacaoalt.reprovar(:solicitacao, :usuario, :comentario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);
@@ -435,7 +435,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacao.alterar(:solicitacao, :usuario, :comentario, :precoConfirmado)";
+            $sql = "call pkg_xpv_solicitacaoalt.alterar(:solicitacao, :usuario, :comentario, :precoConfirmado)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);

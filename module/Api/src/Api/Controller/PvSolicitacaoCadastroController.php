@@ -32,7 +32,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
                         s.usuario_solicitacao,
                         to_char(s.data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao,
                         s.comentario_solicitacao
-                from xp_pv_solicitacao_cadastro s,
+                   from pricing.xpv_solicitacaocad s,
                         ms.tb_item_categoria ic,
                         ms.tb_item i,
                         ms.tb_categoria c,
@@ -189,7 +189,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacaocadastro.inserir(:emp, :cod_item, :custo, :preco_sugerido, :usuario, :comentario)";
+            $sql = "call pkg_xpv_solicitacaocad.inserir(:emp, :cod_item, :custo, :preco_sugerido, :usuario, :comentario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':emp', $pEmp);
             $stmt->bindParam(':cod_item', $pCodItem);
@@ -226,7 +226,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xp_pv_solicitacaocadastro.concluir(:id_solicitacao, :usuario, :comentario, :preco_confirmado)";
+            $sql = "call pkg_xpv_solicitacaocad.concluir(:id_solicitacao, :usuario, :comentario, :preco_confirmado)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);

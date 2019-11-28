@@ -27,7 +27,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.NovaSolicitacaoWindowController', {
         window.setLoading({msg: '<b>Salvando os dados...</b>'});
 
         Ext.Ajax.request({
-            url: BASEURL +'/api/pvsolicitacao/enviarsolicitacao',
+            url: BASEURL +'/api/pvsolicitacaoalteracao/enviarsolicitacao',
             method: 'POST',
             params: values,
             success: function (response) {

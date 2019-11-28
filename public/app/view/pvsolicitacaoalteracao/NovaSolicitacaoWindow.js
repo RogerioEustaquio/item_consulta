@@ -51,7 +51,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.NovaSolicitacaoWindow', {
                                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                                 proxy: {
                                     type: 'ajax',
-                                    url: BASEURL + '/api/pvsolicitacao/listarprodutos',
+                                    url: BASEURL + '/api/pvsolicitacaoalteracao/listarprodutos',
                                     reader: { type: 'json', root: 'data' },
                                     extraParams: { emp: me.empresa }
                                 }

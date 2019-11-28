@@ -107,7 +107,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
                 autoLoad: true,
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/pvsolicitacao/listarsolicitacoes',
+                    url: BASEURL + '/api/pvsolicitacaoalteracao/listarsolicitacoes',
                     timeout: 120000,
                     reader: { type: 'json', root: 'data' }
                 }

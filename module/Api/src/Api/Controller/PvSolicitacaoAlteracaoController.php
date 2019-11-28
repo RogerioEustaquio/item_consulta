@@ -8,7 +8,7 @@ use Core\Hydrator\ObjectProperty;
 use Core\Hydrator\Strategy\ValueStrategy;
 use Core\Mvc\Controller\AbstractRestfulController;
 
-class PvSolicitacaoController extends AbstractRestfulController
+class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 {
     
     /**

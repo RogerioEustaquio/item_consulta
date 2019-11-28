@@ -26,7 +26,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacaoComentariosGridPanel', {
                 autoLoad: false,
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/pvsolicitacao/listarcomentarios',
+                    url: BASEURL + '/api/pvsolicitacaoalteracao/listarcomentarios',
                     timeout: 120000,
                     reader: { type: 'json', root: 'data' }
                 }

@@ -53,9 +53,11 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
                 listeners: {
                     select: function ( combo, record ) {
                         var value = combo.getValue(),
-                            btnNovaSolicitacao = combo.up('toolbar').down('#novasolicitacao');
+                            toolbar = combo.up('toolbar'),
+                            btnNovaSolicitacao = toolbar.down('#novasolicitacao');
 
                         // Ativa o botao de nova solicitacao
+                        if(value !== 'EC')
                         btnNovaSolicitacao.enable();
 
                         // Não ativa para o ec

@@ -26,11 +26,10 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
             },
             {
                 disabled: true,
-                tooltip: 'Alterar Solicitação',
+                itemId: 'analise',
+                tooltip: 'Analisar Solicitação',
                 iconCls: 'fa fa-wrench',
-                handler: function(btn){
-                    
-                }
+                handler: 'onBtnAnaliseClick'
             },
             '->',
             {
@@ -54,14 +53,14 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
                 listeners: {
                     select: function ( combo, record ) {
                         var value = combo.getValue(),
-                            comboNovaSolicitacao = combo.up('toolbar').down('#novasolicitacao');
+                            btnNovaSolicitacao = combo.up('toolbar').down('#novasolicitacao');
 
                         // Ativa o botao de nova solicitacao
-                        comboNovaSolicitacao.enable();
+                        btnNovaSolicitacao.enable();
 
                         // Não ativa para o ec
                         if(value === 'EC')
-                        comboNovaSolicitacao.disable();
+                        btnNovaSolicitacao.disable();
 
                         // Filtra os itens da filial
                         var grid = this.up('grid'),

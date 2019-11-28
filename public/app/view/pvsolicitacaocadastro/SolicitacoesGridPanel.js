@@ -13,7 +13,7 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
     tbar: {
         items: [
             {
-                // disabled: true,
+                disabled: true,
                 tooltip: 'Nova Solicitação',
                 iconCls: 'fa fa-plus',
                 itemId: 'novasolicitacao',

@@ -22,7 +22,7 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
             {
                 disabled: true,
                 tooltip: 'Alterar Solicitação',
-                iconCls: 'fa fa-pencil-alt',
+                iconCls: 'fa fa-wrench',
                 itemId: 'alterarsolicitacao',
                 handler: 'onBtnAlterarSolicitacaoClick'
             },

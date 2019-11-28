@@ -17,16 +17,17 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanel', {
                 tooltip: 'Nova Solicitação',
                 iconCls: 'fa fa-plus',
                 itemId: 'novasolicitacao',
-                handler: function(btn){
-                    var empresa = btn.up('grid').down('toolbar').down('combobox[name=empresa]').getValue();
+                handler: 'onBtnNovaSolicitacaoClick'
+                // handler: function(btn){
+                //     var empresa = btn.up('grid').down('toolbar').down('combobox[name=empresa]').getValue();
                     
-                    var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow', {
-                        empresa: empresa,
-                        btnRef: btn
-                    });
+                //     var win = Ext.create('App.view.pvsolicitacao.AlteracaoWindow', {
+                //         empresa: empresa,
+                //         btnRef: btn
+                //     });
 
-                    win.show();
-                }
+                //     win.show();
+                // }
             },
             {
                 disabled: true,

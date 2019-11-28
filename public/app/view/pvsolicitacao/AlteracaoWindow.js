@@ -2,8 +2,10 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
     extend: 'Ext.window.Window',
     xtype: 'pvsolicitacaoalteracaowindow',
     requires: [
-        
+        'App.view.pvsolicitacao.AlteracaoWindowController'
     ],
+
+    controller: 'pvsolicitacaoalteracaowindow',
 
     title: 'Nova solicitação',
     width: 600,
@@ -12,9 +14,6 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
     layout: 'fit',
     modal: true,
     empresa: null,
-
-    // referência inicial de criação da janela
-    btnRef: null,
 
     constructor: function(config) {
         var me = this;
@@ -111,12 +110,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                             // labelWidth: 80,
                             decimalSeparator: ',', 
                             fieldLabel: 'Preço Ideal', 
-                            name: 'preco',
-                            listeners: {
-                                mousedown: function(field){
-                                    //console.log(field)
-                                }
-                            }
+                            name: 'preco'
                         },
         
                         {
@@ -135,47 +129,7 @@ Ext.define('App.view.pvsolicitacao.AlteracaoWindow', {
                             action: 'confirmar',
                             formBind: true, 
                             disabled: true,
-                            handler: function() {
-
-                                var me = this,
-                                    notyType = 'success',
-                                    notyText = 'Solicitação enviada com sucesso!',
-                                    values = me.up('form').getForm().getValues();
-                                
-                                var gridReload = me.up('window').btnRef.up('grid');
-
-                                me.up('window').setLoading({msg: '<b>Salvando os dados...</b>'});
-        
-                                Ext.Ajax.request({
-                                    url: BASEURL +'/api/pvsolicitacao/enviarsolicitacao',
-                                    method: 'POST',
-                                    params: values,
-                                    success: function (response) {
-                                        var result = Ext.decode(response.responseText);
-                
-                                        if(!result.success){
-                                            notyType = 'error';
-                                            notyText = result.message;
-                                        }
-                
-                                        new Noty({
-                                            theme: 'relax',
-                                            layout: 'bottomRight',
-                                            type: notyType,
-                                            timeout: 3000,
-                                            text: notyText
-                                        }).show();
-                
-                                        me.up('form').getForm().reset();
-                                        me.up('window').close();
-        
-                                        // Evento de envio
-                                        // App.app.fireEvent('pvsolicitacaoalteracaoenviada', values);
-                                        gridReload.getStore().reload();
-        
-                                    }
-                                });
-                            }
+                            handler: 'onBtnConfirmarClick'
                         }, 
                         {
                             text: 'Cancelar',

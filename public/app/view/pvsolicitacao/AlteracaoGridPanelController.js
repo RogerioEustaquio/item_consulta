@@ -10,10 +10,10 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
 
     listen: {
         global: {
-            // appteste: function(){
-            //     console.log('appteste 1')
-            //     // console.log(this.getView())
-            // }
+            pvsolicitacaoalteracaosolicitacaoenviada: function(values){
+                // Atualiza a grid de solicitações
+                this.getView().getStore().reload()
+            }
         }
     },
 
@@ -39,6 +39,14 @@ Ext.define('App.view.pvsolicitacao.AlteracaoGridPanelController', {
         
         store.proxy.extraParams.solicitacao = solicitacao;
         store.reload();
+    },
+
+    onBtnNovaSolicitacaoClick: function(btn){
+        var comboEmpresa = btn.up('toolbar').down('combobox[name=empresa]');
+        
+        Ext.create('App.view.pvsolicitacao.AlteracaoWindow',{
+            empresa: comboEmpresa.getValue()
+        }).show();
     }
     
 });

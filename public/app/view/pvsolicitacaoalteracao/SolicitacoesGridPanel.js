@@ -81,12 +81,12 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
         var me = this,
             utilFormat = Ext.create('Ext.ux.util.Format');
 
-        Ext.define('App.model.pvsolicitacao.SolicitacaoAlteracao', {
+        Ext.define('App.model.pvsolicitacaoalteracao.Solicitacao', {
             extend: 'Ext.data.Model',
             fields: [
                 { name: 'idSolicitacao',  type: 'integer' },
                 { name: 'emp',  type: 'string' },
-                { name: 'codItem',  type: 'string' },
+                { name: 'codigo',  type: 'string' },
                 { name: 'descricao',  type: 'string' },
                 { name: 'marca',  type: 'string' },
                 { name: 'precoDe',  type: 'number' },
@@ -101,7 +101,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanel', {
     
         Ext.applyIf(me, {
             store: Ext.create('Ext.data.Store', {
-                model: 'App.model.pvsolicitacao.SolicitacaoAlteracao',
+                model: 'App.model.pvsolicitacaoalteracao.Solicitacao',
                 pageSize: 50,
                 // remoteSort: true,
                 // sorters: [{ property: 'vendaM6', direction: 'DESC' }],

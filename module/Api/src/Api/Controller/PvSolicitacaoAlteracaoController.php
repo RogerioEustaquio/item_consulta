@@ -44,6 +44,58 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         exit;
     }
 
+    public function listarletrasdescontoAction()
+    {   
+        $data = array();
+        
+        try {
+
+            $pEmp = $this->params()->fromQuery('emp',null);
+
+            if(!$pEmp){
+                throw new \Exception('Parâmetros não informados.');
+            }
+
+            $em = $this->getEntityManager();
+            
+            $sql = "
+                select em.apelido as emp, 
+                        dl.id_desconto_letra, 
+                        dl.perc_desconto as valor,
+                        dl.descricao as letra_descricao,
+                        dl.id_desconto_letra || ' ' || dl.perc_desconto as letra
+                from ms.tb_desconto_letra dl, ms.empresa em 
+                where dl.id_empresa = em.id_empresa
+                    and em.apelido = ?
+                order by valor asc
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(1, $pEmp);
+
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
     public function listarempresasAction()
     {   
         $data = array();
@@ -73,6 +125,200 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function simularprecoAction()
+    {   
+        $data = array();
+        
+        try {
+
+            $pEmp = $this->params()->fromQuery('emp',null);
+
+            if(!$pEmp){
+                throw new \Exception('Empresa não informada.');
+            }
+
+            $pProduto = $this->params()->fromQuery('produto',null);
+
+            if(!$pProduto){
+                throw new \Exception('Produto não informada.');
+            }
+
+            $pPreco = $this->params()->fromQuery('preco',null);
+
+            if(!$pPreco){
+                throw new \Exception('Preço não informada.');
+            }
+
+            $pDescontoLetra = $this->params()->fromQuery('descontoLetra',null);
+            $pDescontoPerc = $this->params()->fromQuery('descontoPerc',null);
+            if($pDescontoPerc === '') $pDescontoPerc = 'desconto_perc';
+            
+            $em = $this->getEntityManager();
+
+            // echo "
+            //     ".($pDescontoLetra ? "'".$pDescontoLetra."'" : "desconto_letra")." as ndesconto_letra,
+            //     ".($pDescontoPerc ? $pDescontoPerc : "desconto_perc")." as ndesconto_perc,  
+            // "; exit;
+            
+            $sql = "
+                     select emp, cod_item as codigo,
+                            descricao,
+                            nvl(icms,0)+nvl(pis_cofins,0) as imposto, 
+                            icms, pis_cofins, custo_unitario as custo,
+                            comissao, markup, preco, 
+                                            
+                            desconto_letra,
+                            desconto_perc,
+                    
+                            -- Atual
+                            --( preco - custo_unitario - (((icms+pis_cofins)/100)*preco) ) as lucro_unitario,
+                            round((( preco - custo_unitario - (((icms+pis_cofins)/100)*preco) ) / preco) * 100,2) as mb,
+                            
+                            round((( (preco*(1-(nvl(desconto_perc,0)/100))) - custo_unitario - (((icms+pis_cofins)/100)* ( (preco*(1-(nvl(desconto_perc,0)/100))) *(1-(nvl(desconto_perc,0)/100))) ) ) / (preco*(1-(nvl(desconto_perc,0)/100))) ) * 100,2) as mb_min,
+                            
+                            :preco as npreco,	
+                            round((:preco/custo_unitario)*100,2) - 100 as nmarkup,
+
+                            --( :preco - custo_unitario - (((icms+pis_cofins)/100)* :preco ) ) as nlucro_unitario,
+                            round((( :preco - custo_unitario - (((icms+pis_cofins)/100)* :preco ) ) / :preco ) * 100,2) as nmb,
+
+                            " . ( $pDescontoLetra ? "'".$pDescontoLetra."'" : "desconto_letra" ) . " as ndesconto_letra,
+                            " . $pDescontoPerc . " as ndesconto_perc, 
+                            
+                            round((( ( :preco *(1-(nvl($pDescontoPerc,0)/100))) - custo_unitario - (((icms+pis_cofins)/100)* ( ( :preco *(1-(nvl($pDescontoPerc,0)/100))) *(1-(nvl($pDescontoPerc,0)/100))) ) ) / ( :preco *(1-(nvl($pDescontoPerc,0)/100))) ) * 100,2) as nmb_min
+                                            
+                    from ( select em.apelido as emp,
+                                    i.cod_item||c.descricao as cod_item,
+                                    i.descricao,
+                                    ace.acessorio as acessorio,
+                                    nvl(ace.icms,0) as icms,
+                                    nvl(ic.aliq_pis,0)+nvl(ic.aliq_cofins,0) as pis_cofins,
+                                    round(mkp.comissao,4) as comissao,
+                                    round(mkp.markup,4) as markup,
+                                    round(mkp.preco,4) as preco,
+                                    
+                                    mkp.letra_desconto as desconto_letra,
+                                    mkp.perc_desconto as desconto_perc,
+                                    
+                                    round(e.custo_contabil,4) as custo_unitario
+                                                    
+                                    -- Custo
+                                    -- Impostos
+                                                    
+                                    -- Preco Atual
+                                    -- Mb Atual
+                                                    
+                                    -- Preco Resultante
+                                    -- Mb Resultante
+                                                    
+                                    -- Comissão
+                                    -- Margem de Contribuição
+                                                    
+                            from ms.tb_estoque e,
+                                ms.empresa em,
+                                ms.tb_item_categoria ic,
+                                ms.tb_item i,
+                                ms.tb_categoria c,
+                                    
+                                ( select a.id_empresa, a.id_item, a.id_categoria, a.preco_venda as preco, a.markup,
+                                            a.perc_comissao_gerente as comissao,
+                                            a.margem_maxima_markup, a.id_desconto_letra as letra_desconto, b.perc_desconto
+                                        from ms.tb_tab_preco_valor a, ms.tb_desconto_letra b
+                                        where a.id_empresa = b.id_empresa
+                                        and a.id_desconto_letra = b.id_desconto_letra(+)
+                                        and (a.id_empresa, a.id_tab_preco) in (select id_empresa, valor from ms.param_empresa
+                                                                                where id_param = 'TAB_PRECO_PADRAO') ) mkp,
+                                    
+                                (select e.id_empresa, e.id_item, e.id_categoria,
+                                            cp.gerar_preco_venda,
+                                            cp.acessorio,
+                                            ( case when e.id_empresa = 23 and nvl(st.st,'N') = 'S' then 0
+                                                    when e.id_empresa = 23 and nvl(st.st,'N') = 'N' then 17
+                                                    else cp.icms end ) as icms
+                                        from ms.tb_estoque e,
+                                            (select id_empresa, id_item, id_categoria,
+                                                    eh_acessorio as acessorio,
+                                                    gerar_preco_venda,
+                                                    (case when eh_acessorio = 'S' then 17 end) as icms
+                                                from ms.tb_item_categoria_param) cp,
+                                            tb_item_icms_st st
+                                    where e.id_empresa = cp.id_empresa(+)
+                                        and e.id_item = cp.id_item(+)
+                                        and e.id_categoria = cp.id_categoria(+)
+                                        and e.id_empresa = st.id_empresa(+)
+                                        and e.id_item = st.id_item(+)
+                                        and e.id_categoria = st.id_categoria(+)) ace,
+                                    
+                                pricing.vw_produto_restricao pr 
+                                    
+                            where e.id_item = ic.id_item
+                            and e.id_categoria = ic.id_categoria
+                            and e.id_item = i.id_item
+                            and e.id_categoria = c.id_categoria
+                            and e.id_empresa = em.id_empresa
+                                            
+                            -- Markup
+                            and e.id_empresa = mkp.id_empresa
+                            and e.id_item = mkp.id_item
+                            and e.id_categoria = mkp.id_categoria
+                                    
+                            -- Acess?rio
+                            and e.id_empresa = ace.id_empresa(+)
+                            and e.id_item = ace.id_item(+)
+                            and e.id_categoria = ace.id_categoria(+)
+                                    
+                            -- Restri??o
+                            and e.id_empresa = pr.id_empresa(+)
+                            and e.id_item = pr.id_item(+)
+                            and e.id_categoria = pr.id_categoria(+)
+                                    
+                            and i.cod_item||c.descricao = :produto
+                            and em.apelido = :emp )  
+            ";
+
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':emp', $pEmp);
+            $stmt->bindParam(':produto', $pProduto);
+            $stmt->bindParam(':preco', $pPreco);
+
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('custo', new ValueStrategy);
+            $hydrator->addStrategy('imposto', new ValueStrategy);
+            $hydrator->addStrategy('icms', new ValueStrategy);
+            $hydrator->addStrategy('pis_cofins', new ValueStrategy);
+            $hydrator->addStrategy('comissao', new ValueStrategy);
+            $hydrator->addStrategy('preco', new ValueStrategy);
+            $hydrator->addStrategy('lucro_unitario', new ValueStrategy);
+            $hydrator->addStrategy('desconto_perc', new ValueStrategy);
+            $hydrator->addStrategy('mb', new ValueStrategy);
+            $hydrator->addStrategy('mb_min', new ValueStrategy);
+            $hydrator->addStrategy('nmarkup', new ValueStrategy);
+            $hydrator->addStrategy('npreco', new ValueStrategy);
+            $hydrator->addStrategy('nmb', new ValueStrategy);
+            $hydrator->addStrategy('nmb_min', new ValueStrategy);
+            $hydrator->addStrategy('ndesconto_perc', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);

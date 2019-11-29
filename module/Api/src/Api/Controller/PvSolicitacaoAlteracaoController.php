@@ -161,8 +161,8 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                 throw new \Exception('Produto não informada.');
             }
 
-            $pPreco = $this->params()->fromQuery('preco',null);
-
+            $pPreco = (float) str_replace(",", ".", $this->params()->fromQuery('preco',null));
+            
             if(!$pPreco){
                 throw new \Exception('Preço não informada.');
             }
@@ -182,7 +182,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                      select emp, cod_item as codigo,
                             descricao,
                             nvl(icms,0)+nvl(pis_cofins,0) as imposto, 
-                            icms, pis_cofins, custo_unitario as custo,
+                            icms, pis_cofins, round(custo_unitario,2) as custo,
                             comissao, markup, preco, 
                                             
                             desconto_letra,
@@ -194,16 +194,16 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                             
                             round((( (preco*(1-(nvl(desconto_perc,0)/100))) - custo_unitario - (((icms+pis_cofins)/100)* ( (preco*(1-(nvl(desconto_perc,0)/100))) *(1-(nvl(desconto_perc,0)/100))) ) ) / (preco*(1-(nvl(desconto_perc,0)/100))) ) * 100,2) as mb_min,
                             
-                            :preco as npreco,	
-                            round((:preco/custo_unitario)*100,2) - 100 as nmarkup,
+                            $pPreco as npreco,	
+                            round(($pPreco/custo_unitario)*100,2) - 100 as nmarkup,
 
-                            --( :preco - custo_unitario - (((icms+pis_cofins)/100)* :preco ) ) as nlucro_unitario,
-                            round((( :preco - custo_unitario - (((icms+pis_cofins)/100)* :preco ) ) / :preco ) * 100,2) as nmb,
+                            --( $pPreco - custo_unitario - (((icms+pis_cofins)/100)* $pPreco ) ) as nlucro_unitario,
+                            round((( $pPreco - custo_unitario - (((icms+pis_cofins)/100)* $pPreco ) ) / $pPreco ) * 100,2) as nmb,
 
                             " . ( $pDescontoLetra ? "'".$pDescontoLetra."'" : "desconto_letra" ) . " as ndesconto_letra,
                             " . $pDescontoPerc . " as ndesconto_perc, 
                             
-                            round((( ( :preco *(1-(nvl($pDescontoPerc,0)/100))) - custo_unitario - (((icms+pis_cofins)/100)* ( ( :preco *(1-(nvl($pDescontoPerc,0)/100))) *(1-(nvl($pDescontoPerc,0)/100))) ) ) / ( :preco *(1-(nvl($pDescontoPerc,0)/100))) ) * 100,2) as nmb_min
+                            round((( ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) - custo_unitario - (((icms+pis_cofins)/100)* ( ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) *(1-(nvl($pDescontoPerc,0)/100))) ) ) / ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) ) * 100,2) as nmb_min
                                             
                     from ( select em.apelido as emp,
                                     i.cod_item||c.descricao as cod_item,
@@ -298,7 +298,6 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':emp', $pEmp);
             $stmt->bindParam(':produto', $pProduto);
-            $stmt->bindParam(':preco', $pPreco);
 
             $stmt->execute();
             $results = $stmt->fetchAll();

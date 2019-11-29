@@ -95,20 +95,20 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindow', {
                     }
                 },
                 listeners: {
-                    load: function(store, records, successful){
-                        var r = records[0],
-                            form = me.down('#formmarkup');
+                    // load: function(store, records, successful){
+                    //     var r = records[0],
+                    //         form = me.down('#formmarkup');
 
-                        form.down('[name=icms]').setValue(r.get('icms'));
-                        form.down('[name=pisCofins]').setValue(r.get('pisCofins'));
-                        form.down('[name=comissao]').setValue(r.get('comissao'));
-                        form.down('[name=custo]').setValue(r.get('custo'));
-                        form.down('[name=markup]').setValue(r.get('markup'));
-                        form.down('[name=preco]').setValue(r.get('npreco'));
-                        form.down('[name=mb]').setValue(r.get('nmb'));
-                        form.down('combobox[name=desconto]').select(r.get('ndescontoLetra'));
-                        form.down('[name=mbmin]').setValue(r.get('nmbMin'));
-                    }
+                    //     form.down('[name=icms]').setValue(r.get('icms'));
+                    //     form.down('[name=pisCofins]').setValue(r.get('pisCofins'));
+                    //     form.down('[name=comissao]').setValue(r.get('comissao'));
+                    //     form.down('[name=custo]').setValue(r.get('custo'));
+                    //     form.down('[name=markup]').setValue(r.get('markup'));
+                    //     form.down('[name=preco]').setValue(r.get('npreco'));
+                    //     form.down('[name=mb]').setValue(r.get('nmb'));
+                    //     form.down('combobox[name=desconto]').select(r.get('ndescontoLetra'));
+                    //     form.down('[name=mbmin]').setValue(r.get('nmbMin'));
+                    // }
                 }
             }),
             columns: [

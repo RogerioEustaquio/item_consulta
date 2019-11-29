@@ -443,6 +443,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                         decode(c.id_solicitacao_status,
                                1,'Solicitação' || ' de ' || o.preco_de || ' para ' || o.preco_para,
                                2,s.descricao||' '||c.comentario,
+                               3,'Alterada' || ' de ' || o.preco_de || ' para ' || o.preco_para,
                                s.descricao || ' ' || c.comentario) as mensagem
                    from pricing.xpv_solicitacaoalt_comentario c, 
                         pricing.xpv_solicitacaoalt_status s,
@@ -682,7 +683,9 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
             
             $pUsuario = 'EVERTON';
             $pSolicitacao = $this->params()->fromPost('solicitacao',null);
-            $pConfirmado = str_replace(",", ".", $this->params()->fromPost('precoConfirmado',null));
+            $pMarkup = str_replace(",", ".", $this->params()->fromPost('markup',null));
+            $pPreco = str_replace(",", ".", $this->params()->fromPost('preco',null));
+            $pMargem = str_replace(",", ".", $this->params()->fromPost('margem',null));
             $pComentario = $this->params()->fromPost('comentario',null);
 
             if(!$pSolicitacao){
@@ -691,12 +694,14 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xpv_solicitacaoalt.alterar(:solicitacao, :usuario, :comentario, :precoConfirmado)";
+            $sql = "call pkg_xpv_solicitacaoalt.alterar(:solicitacao, :usuario, :comentario, :markup, :preco, :margem)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);
             $stmt->bindParam(':comentario', $pComentario);
-            $stmt->bindParam(':precoConfirmado', $pConfirmado);
+            $stmt->bindParam(':markup', $pMarkup);
+            $stmt->bindParam(':preco', $pPreco);
+            $stmt->bindParam(':margem', $pMargem);
             $result = $stmt->execute();
             
             $this->setCallbackData($data);

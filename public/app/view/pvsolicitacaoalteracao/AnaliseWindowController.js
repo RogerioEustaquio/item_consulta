@@ -23,7 +23,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindowController', {
             form.down('[name=pisCofins]').setValue(r.get('pisCofins'));
             form.down('[name=comissao]').setValue(r.get('comissao'));
             form.down('[name=custo]').setValue(r.get('custo'));
-            form.down('[name=markup]').setValue(r.get('markup'));
+            form.down('[name=markup]').setValue(r.get('nmarkup'));
             form.down('[name=preco]').setValue(r.get('npreco'));
             form.down('[name=mb]').setValue(r.get('nmb'));
             form.down('combobox[name=desconto]').select(r.get('ndescontoLetra'));
@@ -136,7 +136,8 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindowController', {
             emp: record.get('emp'),
             codigo: record.get('codigo'),
             markup: record.get('nmarkup'),
-            precoConfirmado: record.get('npreco'),
+            preco: record.get('npreco'),
+            margem: record.get('nmb'),
             descontoLetra: record.get('ndescontoLetra'),
             comentario: window.down('#formmarkup').down('[name=comentario]').getValue()
         };

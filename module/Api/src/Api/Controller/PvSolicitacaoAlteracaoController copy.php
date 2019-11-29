@@ -198,13 +198,13 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                             round(($pPreco/custo_unitario)*100,2) - 100 as nmarkup,
 
                             --( $pPreco - custo_unitario - (((nvl(icms,0)+nvl(pis_cofins,0)+nvl(comissao,0))/100)* $pPreco ) ) as nlucro_unitario,
-                            round(xpv_get_preco_margem($pPreco, custo_unitario, nvl(icms,0)+nvl(pis_cofins,0)+nvl(comissao,0)), 2) as nmb,
-                            
+                            round((( $pPreco - custo_unitario - (((nvl(icms,0)+nvl(pis_cofins,0)+nvl(comissao,0))/100)* $pPreco ) ) / $pPreco ) * 100,2) as nmb,
+
                             " . ( $pDescontoLetra ? "'".$pDescontoLetra."'" : "desconto_letra" ) . " as ndesconto_letra,
                             " . $pDescontoPerc . " as ndesconto_perc, 
                             
-                            round(xpv_get_preco_margem($pPreco*(1-(nvl($pDescontoPerc,0)/100)), custo_unitario, nvl(icms,0)+nvl(pis_cofins,0)+nvl(comissao,0)), 2) as nmb_min
-
+                            round((( ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) - custo_unitario - (((nvl(icms,0)+nvl(pis_cofins,0)+nvl(comissao,0))/100)* ( ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) *(1-(nvl($pDescontoPerc,0)/100))) ) ) / ( $pPreco *(1-(nvl($pDescontoPerc,0)/100))) ) * 100,2) as nmb_min
+                                            
                     from ( select em.apelido as emp,
                                     i.cod_item||c.descricao as cod_item,
                                     i.descricao,
@@ -308,7 +308,6 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
             $hydrator->addStrategy('icms', new ValueStrategy);
             $hydrator->addStrategy('pis_cofins', new ValueStrategy);
             $hydrator->addStrategy('comissao', new ValueStrategy);
-            $hydrator->addStrategy('markup', new ValueStrategy);
             $hydrator->addStrategy('preco', new ValueStrategy);
             $hydrator->addStrategy('lucro_unitario', new ValueStrategy);
             $hydrator->addStrategy('desconto_perc', new ValueStrategy);
@@ -440,10 +439,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                         to_char(c.data, 'DD/MM/RRRR HH24:MI:SS') as data, 
                         c.usuario, 
                         c.comentario,
-                        decode(c.id_solicitacao_status,
-                               1,'Solicitação' || ' de ' || o.preco_de || ' para ' || o.preco_para,
-                               2,s.descricao||' '||c.comentario,
-                               s.descricao || ' ' || c.comentario) as mensagem
+                        decode(c.id_solicitacao_status,1,'Solicitação' || ' de ' || o.preco_de || ' para ' || o.preco_para, s.descricao) || ' ' || c.comentario as mensagem
                    from pricing.xpv_solicitacaoalt_comentario c, 
                         pricing.xpv_solicitacaoalt_status s,
                         pricing.xpv_solicitacaoalt o
@@ -628,7 +624,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
             $stmt->bindParam(':comentario', $pComentario);
             $stmt->bindParam(':markup', $pMarkup);
             $stmt->bindParam(':preco', $pPreco);
-            $stmt->bindParam(':margem', $pMargem);
+            $stmt->bindParam(':margem', $pPreco);
             $result = $stmt->execute();
             
             $this->setCallbackData($data);

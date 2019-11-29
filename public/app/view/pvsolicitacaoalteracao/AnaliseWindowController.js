@@ -51,8 +51,8 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindowController', {
                 form.down('button[action=alterar]').enable();
             }
 
-            // Verifica se tem comentário                
-            if(comentarioInserido)
+            // Verifica se tem comentário e está pendente
+            if(comentarioInserido && solicitacao.get('idSolicitacaoStatus') === 1)
             form.down('button[action=reprovar]').enable();
 
         });
@@ -76,18 +76,139 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindowController', {
     },
 
     onBtnAprovarClick: function(btn){
-        var me = this;
-        
+        var me = this,
+            notyType = 'success',
+            notyText = 'Solicitação aprovada com sucesso!',
+            window = this.getView(),
+            grid = window.down('#solicitacaosimulada'),
+            store = grid.getStore(),
+            record = store.getData().items[0];
+            
+        var params = {
+            solicitacao: window.solicitacao.get('idSolicitacao'),
+            // emp: record.get('emp'),
+            // codigo: record.get('codigo'),
+            markup: record.get('nmarkup'),
+            preco: record.get('npreco'),
+            margem: record.get('nmb'),
+            // descontoLetra: record.get('ndescontoLetra'),
+            comentario: window.down('#formmarkup').down('[name=comentario]').getValue()
+        };
+            
+        window.setLoading({msg: '<b>Salvando os dados...</b>'});
+
+        Ext.Ajax.request({
+            url: BASEURL +'/api/pvsolicitacaoalteracao/aprovarsolicitacao',
+            method: 'POST',
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if(!result.success){
+                    notyType = 'error';
+                    notyText = result.message;
+                    window.setLoading(false);
+                }
+
+                me.noty(notyType, notyText);
+
+                if(result.success){
+                    me.getView().close();
+
+                    // Evento de envio
+                    Ext.GlobalEvents.fireEvent('pvsolicitacaoalteracaoconcluida', params);
+                }
+            }
+        });
     },
 
     onBtnAlterarClick: function(btn){
-        var me = this;
+        var me = this,
+            notyType = 'success',
+            notyText = 'Solicitação alterada com sucesso!',
+            window = this.getView(),
+            grid = window.down('#solicitacaosimulada'),
+            store = grid.getStore(),
+            record = store.getData().items[0];
+            
+        var params = {
+            solicitacao: window.solicitacao.get('idSolicitacao'),
+            emp: record.get('emp'),
+            codigo: record.get('codigo'),
+            markup: record.get('nmarkup'),
+            precoConfirmado: record.get('npreco'),
+            descontoLetra: record.get('ndescontoLetra'),
+            comentario: window.down('#formmarkup').down('[name=comentario]').getValue()
+        };
+            
+        window.setLoading({msg: '<b>Salvando os dados...</b>'});
 
+        Ext.Ajax.request({
+            url: BASEURL +'/api/pvsolicitacaoalteracao/alterarsolicitacao',
+            method: 'POST',
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if(!result.success){
+                    notyType = 'error';
+                    notyText = result.message;
+                    window.setLoading(false);
+                }
+
+                me.noty(notyType, notyText);
+
+                if(result.success){
+                    me.getView().close();
+
+                    // Evento de envio
+                    Ext.GlobalEvents.fireEvent('pvsolicitacaoalteracaoconcluida', params);
+                }
+            }
+        });
     },
 
     onBtnReprovarClick: function(btn){
         var me = this;
 
+        var me = this,
+            notyType = 'success',
+            notyText = 'Solicitação reprovada com sucesso!',
+            window = this.getView(),
+            grid = window.down('#solicitacaosimulada'),
+            store = grid.getStore(),
+            record = store.getData().items[0];
+            
+        var params = {
+            solicitacao: window.solicitacao.get('idSolicitacao'),
+            comentario: window.down('#formmarkup').down('[name=comentario]').getValue()
+        };
+            
+        window.setLoading({msg: '<b>Salvando os dados...</b>'});
+
+        Ext.Ajax.request({
+            url: BASEURL +'/api/pvsolicitacaoalteracao/reprovarsolicitacao',
+            method: 'POST',
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if(!result.success){
+                    notyType = 'error';
+                    notyText = result.message;
+                    window.setLoading(false);
+                }
+
+                me.noty(notyType, notyText);
+
+                if(result.success){
+                    me.getView().close();
+
+                    // Evento de envio
+                    Ext.GlobalEvents.fireEvent('pvsolicitacaoalteracaoconcluida', params);
+                }
+            }
+        });
     },
 
     onBtnResetarClick: function(btn){
@@ -103,5 +224,15 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindowController', {
             store.proxy.extraParams.descontoLetra = null;
             store.proxy.extraParams.descontoPerc = null;
             store.load();
+    },
+
+    noty: function(notyType, notyText){
+        new Noty({
+            theme: 'relax',
+            layout: 'bottomRight',
+            type: notyType,
+            timeout: 3000,
+            text: notyText
+        }).show();
     }
 });

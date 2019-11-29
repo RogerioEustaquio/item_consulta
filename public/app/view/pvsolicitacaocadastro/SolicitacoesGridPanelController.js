@@ -9,8 +9,6 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController', {
     listen: {
         global: {
             pvsolicitacaocadastrosolicitacaoenviada: function(values){
-
-                // Atualiza a grid de solicitações
                 this.getView().getStore().reload();
             }
         }

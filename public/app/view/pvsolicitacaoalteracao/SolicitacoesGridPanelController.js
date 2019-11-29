@@ -11,9 +11,11 @@ Ext.define('App.view.pvsolicitacaoalteracao.SolicitacoesGridPanelController', {
     listen: {
         global: {
             pvsolicitacaoalteracaosolicitacaoenviada: function(values){
-                // Atualiza a grid de solicitações
                 this.getView().getStore().reload()
-            }
+            },
+            pvsolicitacaoalteracaoconcluida: function(values){
+                this.getView().getStore().reload();
+            },
         }
     },
 

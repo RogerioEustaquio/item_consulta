@@ -388,7 +388,7 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindow', {
                     margin: '10 0 0 0',
                     xtype: 'textarea',
                     labelAlign: 'top',
-                    allowBlank: false,
+                    // allowBlank: false,
                     name: 'comentario',
                     emptyText: 'Comentário'
                 }
@@ -399,7 +399,14 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindow', {
                     tooltip: 'Simular Markup',
                     iconCls: 'fa fa-calculator',
                     handler: 'onBtnSimularClick'
-                }
+                },
+
+                {
+                    tooltip: 'Resetar',
+                    iconCls: 'fa fa-redo-alt',
+                    handler: 'onBtnResetarClick'
+                } 
+
             ],
 
             buttons: [
@@ -407,24 +414,24 @@ Ext.define('App.view.pvsolicitacaoalteracao.AnaliseWindow', {
                 {
                     text: 'Aprovar',
                     action: 'aprovar',
-                    formBind: true, 
-                    disabled: true,
+                    // formBind: true, 
+                    // disabled: true,
                     handler: 'onBtnAprovarClick'
                 }, 
 
                 {
                     text: 'Alterar',
                     action: 'alterar',
-                    formBind: true, 
-                    disabled: true,
+                    // formBind: true, 
+                    // disabled: true,
                     handler: 'onBtnAlterarClick'
                 }, 
 
                 {
                     text: 'Reprovar',
                     action: 'reprovar',
-                    formBind: true, 
-                    disabled: true,
+                    // formBind: true, 
+                    // disabled: true,
                     handler: 'onBtnReprovarClick'
                 }
             ]

@@ -521,7 +521,7 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
                      and es.id_categoria = pv.id_categoria
                      and e.apelido = ?
                      and i.cod_item||c.descricao like upper('%$pCod%')
-                     and rownum <= 5
+                     and rownum <= 10
             ";
             
             $conn = $em->getConnection();

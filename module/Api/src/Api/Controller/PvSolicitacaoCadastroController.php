@@ -104,29 +104,27 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             $sql = "
-                 select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca,
-                        pv.preco_venda, e.custo_contabil
-                   from ms.tb_estoque e,
+                select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca,
+                        null as preco_venda, e.custo_contabil
+                from ms.tb_estoque e,
                         ms.tb_item i,
                         ms.tb_categoria c,
                         ms.tb_item_categoria ic,
                         ms.tb_marca m,
-                        ms.empresa em,
-                        (select id_empresa, id_item, id_categoria, preco_venda
-                        from ms.tb_tab_preco_valor
-                        where id_tab_preco = 1) pv
-                  where e.id_item = i.id_item
+                        ms.empresa em
+                where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_empresa = em.id_empresa
-                    and e.id_empresa = pv.id_empresa(+)
-                    and e.id_item = pv.id_item(+)
-                    and e.id_categoria = pv.id_categoria(+)
+                    and (e.id_empresa, e.id_item, e.id_categoria) not in (
+                        select id_empresa, id_item, id_categoria
+                        from ms.tb_tab_preco_valor
+                        where id_tab_preco = 1
+                    )
                     and e.id_item = ic.id_item
                     and e.id_categoria = ic.id_categoria
                     and ic.id_marca = m.id_marca
                     and i.cod_item||c.descricao like upper('%$pCod%')
                     and em.apelido = ?
-                    and pv.preco_venda is null
                     and rownum <= 5
             ";
             

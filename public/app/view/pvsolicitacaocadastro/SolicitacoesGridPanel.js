@@ -21,6 +21,13 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                 iconCls: 'fa fa-wrench',
                 handler: 'onBtnConcluirClick'
             },
+            {
+                disabled: true,
+                itemId: 'cancelar',
+                tooltip: 'Cancelar Solicitação',
+                iconCls: 'fa fa-times',
+                handler: 'onBtnCancelarClick'
+            },
             '->',
             {
                 width: 70,

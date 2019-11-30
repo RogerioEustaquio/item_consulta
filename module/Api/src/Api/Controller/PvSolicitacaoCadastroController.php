@@ -239,4 +239,34 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
+    public function cancelarsolicitacaoAction()
+    {   
+        $data = array();
+        
+        try {
+            
+            $pUsuario = 'EVERTON';
+            $pSolicitacao = $this->params()->fromPost('idSolicitacao',null);
+
+            if(!$pSolicitacao){
+                throw new \Exception('Solicitação não informada.');
+            }
+
+            $conn = $this->getConnection();
+
+            $sql = "call pkg_xpv_solicitacaocad.cancelar(:id_solicitacao, :usuario)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_solicitacao', $pSolicitacao);
+            $stmt->bindParam(':usuario', $pUsuario);
+            $result = $stmt->execute();
+            
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação ".$pSolicitacao." cancelada com sucesso.");
+
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
 }

@@ -17,14 +17,14 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
             {
                 disabled: true,
                 itemId: 'concluir',
-                tooltip: 'Concluir Solicitação',
-                iconCls: 'fa fa-wrench',
+                tooltip: 'Concluir',
+                iconCls: 'fa fa-check',
                 handler: 'onBtnConcluirClick'
             },
             {
                 disabled: true,
                 itemId: 'cancelar',
-                tooltip: 'Cancelar Solicitação',
+                tooltip: 'Cancelar',
                 iconCls: 'fa fa-times',
                 handler: 'onBtnCancelarClick'
             },
@@ -96,6 +96,7 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
                 select: function(grid, selected){
                     toolbar = grid.view.up('pvsolicitacaocadastromain').down('toolbar')
                     toolbar.down('#concluir').enable();
+                    toolbar.down('#cancelar').enable();
 
                     var comentarioSolicitacao = selected.get('comentarioSolicitacao');
                     grid.view.up('pvsolicitacaocadastromain')

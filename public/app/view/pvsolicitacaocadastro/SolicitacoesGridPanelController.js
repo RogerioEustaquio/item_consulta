@@ -71,6 +71,45 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController', {
         
     },
 
+    onBtnCancelarClick: function(btn){
+        var me = this,
+            grid = me.getView(),
+            store = grid.getStore();
+            selection = grid.getSelection(),
+            row = selection[0];
+            idSolicitacao = row.get('idSolicitacao')
+            notyType = 'success',
+            notyText = 'Solicitação cancelada com sucesso!';
+            params = { idSolicitacao: idSolicitacao };
+            
+            grid.setLoading({msg: '<b>Salvando os dados...</b>'});
+        
+        Ext.Ajax.request({
+            url: BASEURL +'/api/pvsolicitacaocadastro/cancelarsolicitacao',
+            method: 'POST',
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if(!result.success){
+                    notyType = 'error';
+                    notyText = result.message;
+                }
+
+                me.noty(notyType, notyText);
+
+                if(result.success){
+                    // Evento de envio
+                    store.load();
+                }
+
+                grid.setLoading(false);
+            }
+        });
+
+        
+    },
+
     onEmpresaSelect: function( combo, record ){
         var value = combo.getValue(),
             btnNovaSolicitacao = combo.up('toolbar').down('#novasolicitacao');

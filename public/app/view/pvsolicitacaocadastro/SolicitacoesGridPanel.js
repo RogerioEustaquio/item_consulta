@@ -181,6 +181,9 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanel', {
 
                         if (idStatus === 1)
                             metaData.tdCls = 'x-grid-cell-green-border';
+
+                        if (idStatus === 2)
+                            metaData.tdCls = 'x-grid-cell-red-border';    
                             
                         return value;
                     }

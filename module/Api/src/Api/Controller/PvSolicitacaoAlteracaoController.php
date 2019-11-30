@@ -19,31 +19,6 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         
     }
 
-    public function testeAction(){
-        $ip = null;
-
-        if (getenv('HTTP_CLIENT_IP')) {
-            $ip = getenv('HTTP_CLIENT_IP');
-        //Utilizo para verificar se o usuário está utilizando um proxy ou não.
-        } else if(getenv('HTTP_X_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_X_FORWARDED_FOR');
-        } else if(getenv('HTTP_X_FORWARDED')) {
-            $ip = getenv('HTTP_X_FORWARDED');
-        } else if(getenv('HTTP_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_FORWARDED_FOR');
-        } else if(getenv('HTTP_FORWARDED')) {
-            $ip = getenv('HTTP_FORWARDED');
-        //O endereço IP de onde o usuário está visualizado a página atual.
-        } else if(getenv('REMOTE_ADDR')) {
-            $ip = getenv('REMOTE_ADDR');
-        } else {
-            $ip = 'UNKNOWN';
-        }
-
-        echo $ip;
-        exit;
-    }
-
     public function listarletrasdescontoAction()
     {   
         $data = array();

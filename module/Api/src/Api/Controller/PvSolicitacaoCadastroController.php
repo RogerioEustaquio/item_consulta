@@ -29,7 +29,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
                 select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca,
                         s.id_solicitacao,
                         s.custo, s.preco_sugerido, s.preco_confirmado,
-                        s.status as id_status, decode(s.status,0,'Pendente',1,'Concluída') as descricao_status,
+                        s.status as id_status, decode(s.status,0,'Pendente',1,'Concluída',2,'Cancelada') as descricao_status,
                         s.usuario_solicitacao,
                         to_char(s.data_solicitacao, 'DD/MM/RRRR HH24:MI:SS') as data_solicitacao,
                         s.comentario_solicitacao

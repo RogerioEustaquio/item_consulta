@@ -162,7 +162,10 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pEmp = $this->params()->fromPost('emp',null);
             $pCodItem = $this->params()->fromPost('produto',null);
             $pCusto = str_replace(",", ".", $this->params()->fromPost('custo',null));
@@ -214,7 +217,10 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pSolicitacao = $this->params()->fromPost('idSolicitacao',null);
 
             if(!$pSolicitacao){
@@ -245,7 +251,10 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pSolicitacao = $this->params()->fromPost('idSolicitacao',null);
 
             if(!$pSolicitacao){

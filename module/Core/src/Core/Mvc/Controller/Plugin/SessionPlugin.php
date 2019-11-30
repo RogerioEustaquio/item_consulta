@@ -4,6 +4,7 @@ namespace Core\Mvc\Controller\Plugin;
  
 use Zend\Http\Request;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use stdClass;
  
 class SessionPlugin extends AbstractPlugin {
 
@@ -11,17 +12,16 @@ class SessionPlugin extends AbstractPlugin {
         session_start();
         $session = isset($_SESSION['info']) ? $_SESSION : null;
 
-        // if(!$session){
-        //     throw new \Exception("ORA:-20000 Usuário não logado no sistema!<br>Favor logar no Portal Agilize!");
-        // }
+        if(!$session){
+            throw new \Exception("ORA:-20000 Usuário não logado no sistema!<br>Favor logar no Portal Agilize!");
+        }
         
         return $session;
     }
 
     public function setSession($session) {
         session_start();
-        $_SESSION['info'] = $session['info'];
-        // $_SESSION['recursos'] = $session->recursos;
+        $_SESSION['info'] = $session;
         session_write_close();
         return $session;
     }
@@ -33,10 +33,8 @@ class SessionPlugin extends AbstractPlugin {
         if(!$session){
             throw new \Exception("ORA:-20000 Usuário não logado no sistema!<br>Favor logar no Portal Agilize!");
         }
-
-        $data = $session['info'];
-
-        return $data;
+        
+        return $session['info'];
     }
  
 }

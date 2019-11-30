@@ -3,6 +3,7 @@ namespace Api\Controller;
 
 use Zend\View\Model\JsonModel;
 use Core\Mvc\Controller\AbstractRestfulController;
+use Zend\Http\Client;
 
 class IndexController extends AbstractRestfulController
 {
@@ -13,6 +14,40 @@ class IndexController extends AbstractRestfulController
     public function __construct()
     {
         
+    }
+
+    public function loginAction()
+    {
+        $client = new Client('http://10.1.12.43/get_session.php');
+        $response = $client->send();
+        
+        $json = $response->getContent();
+        $info = json_decode($json);
+        
+        if($info){
+            $this->plugin('SessionPlugin')->setSession($info);
+        }
+        
+        exit;
+    }
+
+    public function testeloginAction()
+    {
+        $session = $this->getSession();
+        var_dump($session['info']->usuario_sistema);
+        
+        exit;
+    }
+
+    public function testesessionAction()
+    {   
+        $client = new Client('http://10.1.12.43/get_session.php');
+        $response = $client->send();
+        
+        $json = $response->getContent();
+        var_dump(json_decode($json));
+
+        exit;
     }
 
     public function testeAction()

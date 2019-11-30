@@ -67,4 +67,8 @@ class AbstractRestfulController extends AbstractController
     protected function getCallbackModel(){
         return $this->jsonModel($this->getCallback());
     }
+
+    protected function getSession(){
+        return $this->plugin('SessionPlugin')->getSession();
+    }
 }

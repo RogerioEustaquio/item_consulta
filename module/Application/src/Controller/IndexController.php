@@ -9,14 +9,11 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Http\Client;
 
 class IndexController extends AbstractActionController
 {
-    public function loginAction()
-    {
-        exit;
-    }
-
+    
     public function indexAction()
     {
         $view = new ViewModel();

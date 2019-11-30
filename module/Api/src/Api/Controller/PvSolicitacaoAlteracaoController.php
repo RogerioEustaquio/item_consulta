@@ -547,7 +547,10 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+
+            $pUsuario = $usuario->usuario_sistema;
             $pEmp = $this->params()->fromPost('emp',null);
             $pCodItem = $this->params()->fromPost('produto',null);
             $pPrecoIdeal = str_replace(",", ".", $this->params()->fromPost('preco',null));
@@ -596,7 +599,10 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pSolicitacao = $this->params()->fromPost('solicitacao',null);
             $pMarkup = str_replace(",", ".", $this->params()->fromPost('markup',null));
             $pPreco = str_replace(",", ".", $this->params()->fromPost('preco',null));
@@ -636,7 +642,10 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pSolicitacao = $this->params()->fromPost('solicitacao',null);
             $pComentario = $this->params()->fromPost('comentario',null);
 
@@ -669,7 +678,10 @@ class PvSolicitacaoAlteracaoController extends AbstractRestfulController
         
         try {
             
-            $pUsuario = 'EVERTON';
+            $session = $this->getSession();
+            $usuario = $session['info'];
+            
+            $pUsuario = $usuario->usuario_sistema;
             $pSolicitacao = $this->params()->fromPost('solicitacao',null);
             $pMarkup = str_replace(",", ".", $this->params()->fromPost('markup',null));
             $pPreco = str_replace(",", ".", $this->params()->fromPost('preco',null));

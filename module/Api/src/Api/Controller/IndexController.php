@@ -34,7 +34,7 @@ class IndexController extends AbstractRestfulController
     public function testeloginAction()
     {
         $session = $this->getSession();
-        var_dump($session['info']->usuario_sistema);
+        var_dump($session['info']);
         
         exit;
     }

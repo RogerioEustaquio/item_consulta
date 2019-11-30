@@ -27,6 +27,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
             
             $sql = "
                 select em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca,
+                        s.id_solicitacao,
                         s.custo, s.preco_sugerido, s.preco_confirmado,
                         s.status as id_status, decode(s.status,0,'Pendente',1,'Concluída') as descricao_status,
                         s.usuario_solicitacao,
@@ -214,9 +215,7 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
         try {
             
             $pUsuario = 'EVERTON';
-            $pSolicitacao = $this->params()->fromPost('solicitacao',null);
-            $pPrecoConfirmado = $this->params()->fromPost('precoConfirmado',null);
-            $pComentario = $this->params()->fromPost('comentario',null);
+            $pSolicitacao = $this->params()->fromPost('idSolicitacao',null);
 
             if(!$pSolicitacao){
                 throw new \Exception('Solicitação não informada.');
@@ -224,12 +223,10 @@ class PvSolicitacaoCadastroController extends AbstractRestfulController
 
             $conn = $this->getConnection();
 
-            $sql = "call pkg_xpv_solicitacaocad.concluir(:id_solicitacao, :usuario, :comentario, :preco_confirmado)";
+            $sql = "call pkg_xpv_solicitacaocad.concluir(:id_solicitacao, :usuario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id_solicitacao', $pSolicitacao);
             $stmt->bindParam(':usuario', $pUsuario);
-            $stmt->bindParam(':comentario', $pComentario);
-            $stmt->bindParam(':preco_confirmado', $pPrecoConfirmado);
             $result = $stmt->execute();
             
             $this->setCallbackData($data);

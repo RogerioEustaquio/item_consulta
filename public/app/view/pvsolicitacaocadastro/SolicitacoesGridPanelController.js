@@ -18,6 +18,10 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController', {
         
     },
 
+    onSelect: function(grid, selected){
+        
+    },
+
     onBtnNovaSolicitacaoClick: function(btn){
         var comboEmpresa = btn.up('toolbar').down('#comboempresa');
         
@@ -28,8 +32,43 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController', {
         }).show();
     },
 
-    onBtnAlterarSolicitacaoClick: function(btn){
-        console.log('onBtnAlterarSolicitacaoClick')
+    onBtnConcluirClick: function(btn){
+        var me = this,
+            grid = me.getView(),
+            store = grid.getStore();
+            selection = grid.getSelection(),
+            row = selection[0];
+            idSolicitacao = row.get('idSolicitacao')
+            notyType = 'success',
+            notyText = 'Solicitação concluída com sucesso!';
+            params = { idSolicitacao: idSolicitacao };
+            
+            grid.setLoading({msg: '<b>Salvando os dados...</b>'});
+        
+        Ext.Ajax.request({
+            url: BASEURL +'/api/pvsolicitacaocadastro/concluirsolicitacao',
+            method: 'POST',
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if(!result.success){
+                    notyType = 'error';
+                    notyText = result.message;
+                }
+
+                me.noty(notyType, notyText);
+
+                if(result.success){
+                    // Evento de envio
+                    store.load();
+                }
+
+                grid.setLoading(false);
+            }
+        });
+
+        
     },
 
     onEmpresaSelect: function( combo, record ){
@@ -50,6 +89,16 @@ Ext.define('App.view.pvsolicitacaocadastro.SolicitacoesGridPanelController', {
         // Atualiza
         store.proxy.extraParams.emp = combo.getValue();
         store.reload();
+    },
+
+    noty: function(notyType, notyText){
+        new Noty({
+            theme: 'relax',
+            layout: 'bottomRight',
+            type: notyType,
+            timeout: 3000,
+            text: notyText
+        }).show();
     }
     
 });

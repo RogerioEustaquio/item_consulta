@@ -92,7 +92,6 @@ class PrecoSugeridoController extends AbstractRestfulController
         if(!$getProduto){
             $getProduto = $this->params()->fromQuery('param2',null);
         }
-
         
         try {
 

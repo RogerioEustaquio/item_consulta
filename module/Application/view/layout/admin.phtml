@@ -1,0 +1,30 @@
+<?= $this->doctype() ?>
+
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <?= $this->headTitle('JS Peças . Admin')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?= $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+            ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons')
+            ->appendStylesheet($this->basePath('css/materialize-v1.0.0.min.css'))
+            ->appendStylesheet($this->basePath('css/style.css?_dc='.md5(date('H:m:s:u'))))
+        ?>
+
+        <!-- Scripts -->
+        <?= $this->headScript()
+            ->appendFile($this->basePath('js/jquery-3.4.1.min.js'))
+            ->appendFile($this->basePath('js/materialize-v1.0.0.min.js'))
+        ?>
+    </head>
+    <body>
+        <?= $this->inlineScript() ?>
+        <?= $this->content ?>
+    </body>
+</html>

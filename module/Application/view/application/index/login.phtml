@@ -1,0 +1,35 @@
+<script>
+    Ext.onReady(function() {
+        Ext.MessageBox.show({
+            msg: 'Verificando a permissão de acesso...',
+            progressText: 'Saving...',
+            width: 300,
+            wait: {
+                interval: 200
+            }
+        });
+
+        Ext.Ajax.request({
+            url: BASEURL +'/api/index/login',
+            method: 'POST',
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+                Ext.MessageBox.hide();
+
+                if(!result.success){
+                    new Noty({
+                        theme: 'relax',
+                        layout: 'bottomRight',
+                        type: 'error',
+                        closeWith: [],
+                        text: 'Acesso negado. Tente logar no agilize.'
+                    }).show();
+                }
+
+                if(result.success){
+                    window.location.href = BASEURL + '/';
+                }
+            }
+        });
+    });
+</script>

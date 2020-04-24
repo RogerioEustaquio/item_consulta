@@ -35,7 +35,6 @@ class PrecoSugeridoController extends AbstractRestfulController
                     select id_empresa, apelido as nome from ms.empresa 
                     where id_matriz = 1 
                     and id_empresa = 20
-
                     union all
                     select * from (
                         select id_empresa, apelido as nome from ms.empresa 

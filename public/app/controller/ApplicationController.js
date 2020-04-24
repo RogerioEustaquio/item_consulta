@@ -14,8 +14,7 @@ Ext.define('App.controller.ApplicationController', {
     },
 
     routes: {
-        'home': { action: 'homeAction' },
-        'pvvaloresproduto': { action: 'pvvaloresprodutoAction' }
+        'home': { action: 'pvvaloresprodutoAction' }
     },
     
     getViewport: function(){

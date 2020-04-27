@@ -30,7 +30,7 @@ Ext.application({
         // Recupera os dados do usuário
         USUARIO = Ext.decode(USUARIO);
 
-        // console.log(USUARIO)
+        // console.log(USUARIO);
     }
 
 });

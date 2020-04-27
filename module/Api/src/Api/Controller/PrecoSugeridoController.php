@@ -29,29 +29,19 @@ class PrecoSugeridoController extends AbstractRestfulController
             $usuario = $session['info'];
 
             $em = $this->getEntityManager();
-            
-            if($usuario->empresa === 'EC'){
-                $sql = "
+
+            $sql = "
+                select id_empresa, apelido as nome from ms.empresa 
+                where id_matriz = 1 
+                and id_empresa = 20
+                union all
+                select * from (
                     select id_empresa, apelido as nome from ms.empresa 
                     where id_matriz = 1 
-                    and id_empresa = 20
-                    union all
-                    select * from (
-                        select id_empresa, apelido as nome from ms.empresa 
-                        where id_matriz = 1 
-                        and id_empresa not in (26, 11, 28, 27, 20)
-                        order by apelido
-                    )
-                ";
-            }
-
-            if($usuario->empresa !== 'EC'){
-                $sql = "
-                    select id_empresa, apelido as nome from ms.empresa 
-                     where id_matriz = 1 
-                       and apelido = '".$usuario->empresa."'
-                ";
-            }
+                    and id_empresa not in (26, 11, 28, 27, 20)
+                    order by apelido
+                )
+            ";
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);

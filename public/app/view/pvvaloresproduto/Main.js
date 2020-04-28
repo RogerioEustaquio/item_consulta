@@ -26,7 +26,7 @@ Ext.define('App.view.pvvaloresproduto.Main', {
             collapsed: true,
             floatable: true,
             margin: '0 0 0 0',
-            width: 300,
+            width: 210,
             items:[
                 {
                     xtype: 'gridestoqueproduto',

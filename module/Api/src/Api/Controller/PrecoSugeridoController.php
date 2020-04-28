@@ -250,6 +250,7 @@ class PrecoSugeridoController extends AbstractRestfulController
             and e.id_empresa = em.id_empresa
             and e.id_item = ic.id_item
             and e.id_categoria = ic.id_categoria
+            and em.id_empresa not in (26, 11, 28, 27, 20)
             and i.cod_item||c.descricao = upper('$pCod')
             order by 1";
 

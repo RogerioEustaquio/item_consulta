@@ -7,7 +7,6 @@ Ext.define('App.view.pvvaloresproduto.ValoresProdutoGridPanel', {
     requires: [
         'App.view.pvvaloresproduto.ValoresProdutoGridLista'
     ],
-    // tbar: [],
     layout: 'fit',
 
     constructor: function() {
@@ -15,8 +14,6 @@ Ext.define('App.view.pvvaloresproduto.ValoresProdutoGridPanel', {
 
         var empbx = Ext.create('Ext.form.field.ComboBox',{
             width: 70,
-            // xtype: 'combobox',
-            // extend: 'Ext.form.field.ComboBox',
             name: 'empresa',
             itemId: 'comboempresa',
             store: Ext.data.Store({

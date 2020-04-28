@@ -113,10 +113,9 @@ class PrecoSugeridoController extends AbstractRestfulController
                                 AND (A.ID_EMPRESA, A.ID_TAB_PRECO) IN (SELECT ID_EMPRESA, VALOR FROM MS.PARAM_EMPRESA
                                                                         WHERE ID_PARAM = 'TAB_PRECO_PADRAO') ) MKP,
                             (SELECT ID_EMPRESA, ID_ITEM, ID_CATEGORIA,
-                                    EH_ACESSORIO as acessorio,
                                     GERAR_PRECO_VENDA,
-                                    (case when EH_ACESSORIO = 'S' then 17 end) as icms
-                            FROM MS.TB_ITEM_CATEGORIA_PARAM) ace,
+                                    icms
+                            FROM pricing.vw_produto_parametro) ace,
                             pricing.vw_produto_restricao pr
                     where e.id_item = ic.id_item
                     and e.id_categoria = ic.id_categoria

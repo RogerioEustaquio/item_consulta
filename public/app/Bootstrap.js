@@ -11,12 +11,14 @@ Ext.application({
     requires: [
         'Ext.ux.util.Format',
         'App.view.Viewport',
-        'App.controller.PvValoresProdutoController'
+        'App.controller.PvValoresProdutoController',
+        'App.controller.PvTransfProdutoController'
     ],
     
     controllers: [
         'ApplicationController',
-        'PvValoresProdutoController'
+        'PvValoresProdutoController',
+        'PvTransfProdutoController'
     ],
     
     mainView: 'App.view.Viewport',

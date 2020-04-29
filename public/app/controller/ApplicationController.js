@@ -60,14 +60,13 @@ Ext.define('App.controller.ApplicationController', {
 
     homeAction: function(){
         var me = this,
-            viewport = me.getViewport();
-
-            
+        viewport = me.getViewport();
     },
     
     pvvaloresprodutoAction: function(){
         var me = this;
         me.addMasterTab('pvvaloresprodutomain');
+        me.addMasterTab('pvtransfprodutomain');
     },
 
     addMasterTab: function(xtype){

@@ -131,7 +131,6 @@ Ext.define('App.view.pvvaloresproduto.ValoresProdutoGridPanel', {
                             tooltip: 'Consulta',
                             handler: function(form) {
             
-                                console.log(form.getId());
                                 var mygrid = form.up('grid');
                                 var myemp  = mygrid.down('#comboempresa').getSelection().getData().nome;
                                 var myitem = mygrid.down('#comboproduto').getSelection().getData().codItem;

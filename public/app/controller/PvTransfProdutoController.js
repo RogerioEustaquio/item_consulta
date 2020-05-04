@@ -3,7 +3,8 @@ Ext.define('App.controller.PvTransfProdutoController', {
 
     requires: [
         'App.view.pvtransfproduto.Main',
-        'App.view.pvtransfproduto.TransfProdutoGridPanel'
+        'App.view.pvtransfproduto.TransfProdutoGridPanel',
+        'App.view.pvtransfproduto.TransfProdutoGridLista'
     ],
 
     control: {

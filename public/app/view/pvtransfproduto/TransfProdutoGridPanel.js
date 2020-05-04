@@ -4,21 +4,25 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
     id: 'transfprodutogridpanel',
     itemId: 'transfprodutogridpanel',
     title: 'Simula Transf. Produto',
-    layout: 'fit',
+    layout: 'auto',
+    requires: [
+        'App.view.pvtransfproduto.TransfProdutoGridLista'
+    ],
 
     constructor: function() {
         var me = this;
 
-        var emporig = Ext.create('Ext.form.ComboBox',{
+        var empdest = Ext.create('Ext.form.ComboBox',{
             width: 70,
-            fieldLabel: 'Origem',
-            name: 'empresa',
-            itemId: 'comboempresa',
+            fieldLabel: 'Destino',
+            name: 'empresa2',
+            id: 'comboempresa',
+            margin: '0 0 0 10',
             store: Ext.data.Store({
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/precosugerido/listarempresas',
+                    url: BASEURL + '/api/transfproduto/listarempresauser',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -32,33 +36,30 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             forceSelection: true,
             disabled: true,
             listeners: {
-                select: function (form){
-        
-                    var valor = form.getRawValue();
 
-                    console.log(valor);
-
-                }
             }
         });
 
-        emporig.store.load(function(r){
-            emporig.enable();
-            emporig.select(USUARIO.empresa);
+        empdest.store.load(function(r){
+            empdest.enable();
+            empdest.select(USUARIO.empresa);
+
+            var proxyprod = empdest.up('panel').down('#comboproduto2').getStore().getProxy();
+            proxyprod.setExtraParams({emp: USUARIO.empresa});
 
         });
 
-        var empdest = Ext.create('Ext.form.ComboBox',{
+        var emporig = Ext.create('Ext.form.ComboBox',{
             width: 70,
-            fieldLabel: 'Destino',
-            name: 'empresa2',
-            itemId: 'comboempresa2',
             margin: '0 0 0 10',
+            fieldLabel: 'Origem',
+            name: 'empresa',
+            id: 'comboempresa2',
             store: Ext.data.Store({
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/precosugerido/listarempresas',
+                    url: BASEURL + '/api/transfproduto/listarempresas',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -71,10 +72,8 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             emptyText: 'Emp',
             forceSelection: true,
             listeners: {
-
             }
         });
-
 
         var combprod = Ext.create('Ext.form.ComboBox',{
             fieldLabel: 'Produto', 
@@ -87,7 +86,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/precosugerido/listarprodutos',
+                    url: BASEURL + '/api/transfproduto/listarprodutos',
                     reader: { type: 'json', root: 'data' },
                     extraParams: { emp: this.empresa }
                 }
@@ -118,12 +117,49 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         var badd = Ext.create('Ext.button.Button',{
             iconCls: 'fa fa-plus',
             margin: '26 0 0 10',
-            tooltip: 'Consulta'
+            tooltip: 'Consulta',
+            listeners: {
+                click: function(){
+
+                    var myform =  this.up('form');
+                    var listaStore = myform.up('panel').down('grid').getStore();
+
+                    var empdest = myform.down('#comboempresa').getSelection();
+                    var emporig = myform.down('#comboempresa2').getSelection();
+                    var produto = myform.down('#comboproduto2').getSelection();
+
+                    if(empdest){
+                        empdest = empdest.getData().nome;
+                    }
+                    if(emporig){
+                        emporig = emporig.getData().nome;
+                    }
+                    if(produto){
+                        var cdprod = produto.getData().codItem;
+                        var marca = produto.getData().marca;
+                        var pdesc = produto.getData().descricao;
+                    }
+
+                    if(empdest && emporig && produto ){
+
+                        listaStore.add(
+                            {
+                            emp : empdest,
+                            marca : marca,
+                            coditem : cdprod,
+                            descricao: pdesc,
+                            frete:'',
+                            total:''}
+                        );
+
+                    }else{
+                        Ext.Msg.alert('Alerta','Existe prametros para preencher!');
+                    }
+                }                 
+            }
         });
 
-        // badd.click(function(){
-        //     console.log('Teste button click!');
-        // });
+        // badd.;
 
         Ext.applyIf(me, {
 
@@ -133,15 +169,56 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                     layout: {
                         type: 'hbox'
                     },
+                    margin: '0 0 10 0',
+                    border: false,
                     defaults: {
                         labelAlign: 'top'
                     },
                     items: [
-                        emporig,
                         empdest,
+                        emporig,
                         combprod,
                         badd
                     ]
+                },
+                {
+                    xtype: 'pvtransfprodutogridlista'
+                },
+                {
+                    xtype: 'panel', //
+                    bbar:{
+                        border: false,
+                        items: [
+                            '->',
+                            {
+                                xtype: 'form',
+                                border: false,
+                                layout: {
+                                    type: 'hbox'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        name: 'vfrete',
+                                        fieldLabel: 'Frete',
+                                        margin: '2 2 2 2',
+                                        size: '10',
+                                        labelAlign: 'right',
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: 'Simular',
+                                        margin: '2 2 2 2',
+                                        listeners:{
+                                            click: function(){
+                                                console.log('Click Simular');
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 }
             ]
         });

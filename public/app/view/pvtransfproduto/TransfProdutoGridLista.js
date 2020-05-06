@@ -15,6 +15,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
             extend: 'Ext.data.Model',
             fields:[{name:'#',mapping:'#'},
                     {name:'emp',mapping:'emp'},
+                    {name:'orig',mapping:'orig'},
                     {name:'marca',mapping:'marca'},
                     {name:'coditem',mapping:'coditem'},
                     {name:'descricao',mapping:'descricao'},
@@ -49,10 +50,34 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                             iconCls: 'fa fa-minus',
                             tooltip: 'Remover',
                             handler: function(grid, rowIndex, colIndex) {
-                                var rec = grid.getStore().getAt(rowIndex);
-                                
-                                console.log(rowIndex );
-                                grid.getStore().removeAt(rowIndex);
+
+                                var utilFormat = Ext.create('Ext.ux.util.Format');  
+
+                                var listaStore = grid.getStore();
+                                var rec = listaStore.getAt(rowIndex);
+
+                                var totalLinha = rec.get('total');
+                                totalLinha = utilFormat.Value(totalLinha);
+                                // Formata para calculo
+                                totalLinha = totalLinha.toString().replace("\.","");
+                                totalLinha = totalLinha.replace("\,","\.");
+
+                                var objtotal = me.up('panel').down('toolbar').down('form').down('#vtotal');
+
+                                // Formata para calculo
+                                var ttotal = objtotal.value.toString().replace("\.","");
+                                ttotal = ttotal.replace("\,","\.");
+
+                                ttotal = parseFloat(ttotal) - parseFloat(totalLinha);
+
+                                objtotal.setValue(utilFormat.Value(ttotal));
+
+                                listaStore.removeAt(rowIndex);
+
+                                if(listaStore.getCount() <= 0){
+                                    me.up('panel').down('form').down('#comboempresa2').setDisabled(false);
+                                    objtotal.setValue(utilFormat.Value(0));
+                                }
 
                             }
                         }]
@@ -61,6 +86,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     text: 'Emp',
                     width: 52,
                     dataIndex: 'emp'
+                },
+                {
+                    text: 'orig',
+                    width: 52,
+                    dataIndex: 'orig',
+                    hidden: true
                 },
                 {
                     text: 'Marca ',
@@ -78,6 +109,11 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     flex: 1
                 },
                 {
+                    text: 'Quantidade',
+                    dataIndex: 'qtproduto',            
+                    width: 100
+                },
+                {
                     text: 'Frete',
                     dataIndex: 'frete',
                     width: 80,
@@ -88,7 +124,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                 {
                     text: 'Total',
                     dataIndex: 'total',
-                    width: 80,
+                    width: 90,
                     renderer: function (v) {
                         return utilFormat.Value(v);
                     }

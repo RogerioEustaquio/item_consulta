@@ -129,7 +129,7 @@ class TransfProdutoController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             $sql = "select distinct em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca, 
-                            null as preco_venda, null custo_contabil
+                            null as preco_venda, e.custo_contabil
                         from ms.tb_estoque e,
                         ms.tb_item i,
                         ms.tb_categoria c,
@@ -180,7 +180,33 @@ class TransfProdutoController extends AbstractRestfulController
         try {
             $dest = $this->params()->fromQuery('param1',null);
             $orig = $this->params()->fromQuery('param2',null);
-            $pCod = $this->params()->fromQuery('param3',null);
+            $lprod = $this->params()->fromQuery('param3',null);
+            $vfrete  = $this->params()->fromQuery('param4',null);
+
+            if(!$dest){
+                $dest   = $this->params()->fromPost('param1',null);
+            }
+            if(!$orig){
+                $orig   = $this->params()->fromPost('param2',null);
+            }
+            if(!$lprod){
+                $lprod   = $this->params()->fromPost('param3',null);
+            }
+            if(!$vfrete){
+                $vfrete   = $this->params()->fromPost('param4',null);
+            }
+
+            $listaitens = explode(',',$lprod);
+            $lprod='';
+
+            for ($i=0;$i < count($listaitens); $i++) {
+                
+                if($lprod){
+                    $lprod .= ','."'".$listaitens[$i]."'";
+                }else{
+                    $lprod = "'".$listaitens[$i]."'";
+                }
+            }
 
             $session = $this->getSession();
             $usuario = $session['info'];
@@ -189,14 +215,27 @@ class TransfProdutoController extends AbstractRestfulController
 
             $usuario->empresa = 'SA';
 
-            $sql = "select '$dest' emp,
-                            'marca' marca,
-                            '$pCod' coditem,
-                            'descricao' descricao,
-                            10.00 frete,
-                            120.90 total
-                        from dual";
-            
+            $sql = "select distinct em.apelido as emp,
+                            m.descricao as marca,
+                            i.cod_item||c.descricao as cod_item,
+                            i.descricao,
+                            null as frete_rat,
+                            null total
+                        from ms.tb_estoque e,
+                    ms.tb_item i,
+                    ms.tb_categoria c,
+                    ms.tb_item_categoria ic,
+                    ms.empresa em,
+                    ms.tb_marca m
+                    where e.id_item = i.id_item
+                    and e.id_categoria = c.id_categoria
+                    and e.id_empresa = em.id_empresa
+                    and e.id_item = ic.id_item
+                    and e.id_categoria = ic.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and i.cod_item||c.descricao in ($lprod)
+                    and em.apelido = '$dest'";
+
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
             
@@ -204,7 +243,7 @@ class TransfProdutoController extends AbstractRestfulController
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
-            $hydrator->addStrategy('frete', new ValueStrategy);
+            $hydrator->addStrategy('frete_rat', new ValueStrategy);
             $hydrator->addStrategy('total', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);

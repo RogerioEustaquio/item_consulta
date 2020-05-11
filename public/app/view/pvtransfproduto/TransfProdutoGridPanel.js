@@ -150,62 +150,83 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         var marca = produto.getData().marca;
                         var pdesc = produto.getData().descricao;
                         var custoContabil = produto.getData().custoContabil;
+                        custoContabil = me.formatreal(custoContabil);
                     }
-
-                    var vtotal = qtprod * custoContabil;
 
                     if(empdest && emporig && produto ){
 
                         var formbar = me.down('toolbar').down('form');
-                        var objTotal = formbar.down('#vtotal');
-                        //Formatar valor para calculo
-                        var ttotal = objTotal.getValue().toString().replace("\.","");
-                        ttotal = ttotal.replace("\,","\.");
 
+                        var objTotal = formbar.down('#vtotal');
+                        // var ttotal = me.desformatreal(objTotal.getValue());
+
+                        var objProd = formbar.down('#vproduto');
+                        // var tprod = me.desformatreal(objProd.getValue());
+                        var somaproduto = 0;
+
+                        var objTfrete = formbar.down('#vtfrete');
+                        var vtfrete = me.desformatreal(objTfrete.getValue());
 
                         // loop para ler grid 
-                        // recalcular item se já existir.
+                        // recalcular itens que já existem.
                         var array = listaStore.getData().items;
                         var naoadd = false;
+                        var ratfrete = 0;
+                        var qtprod2 = 1;
+                        var element = '';
                         for (let index = 0; index < array.length; index++) {
 
-                            var element = listaStore.getAt(index).getData();
+                            element = listaStore.getAt(index).getData();
 
                             if(cdprod == element.coditem){
 
                                 naoadd = true;
 
-                                qtprod = parseFloat(qtprod) + parseFloat(element.qtproduto);
+                                qtprod2 = parseFloat(qtprod) + parseFloat(element.qtproduto);
+                                vproduto = parseFloat(qtprod2) * parseFloat(custoContabil);
+                                vproduto = me.formatreal(vproduto);
 
-                                listaStore.getAt(index).set('qtproduto',qtprod);
+                                listaStore.getAt(index).set('produto',vproduto);
+                                listaStore.getAt(index).set('qtproduto',qtprod2);
+                                listaStore.getAt(index).set('total',vproduto);
 
-                                var vtotal2 = parseFloat(vtotal) + parseFloat(element.total);
-                                listaStore.getAt(index).set('total',vtotal2);
+                                somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
 
+                            }else{
+
+                                vproduto = parseFloat(element.produto);
+                                somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
                             }
-                            console.log(element);
-                            
                         }
+                        // Fim loop para ler grid 
 
                         if(naoadd != true){
 
+                            vproduto = qtprod * custoContabil;
+                            vproduto = me.formatreal(vproduto);
+  
                             listaStore.add(
                                 {
-                                emp : empdest,
-                                orig : emporig,
-                                custocontabil: custoContabil,
-                                marca : marca,
-                                coditem : cdprod,
-                                descricao: pdesc,
-                                qtproduto : qtprod,
-                                frete: '',
-                                total: vtotal}
-                            );
+                                    emp : empdest,
+                                    orig : emporig,
+                                    custocontabil: custoContabil,
+                                    marca : marca,
+                                    coditem : cdprod,
+                                    descricao: pdesc,
+                                    qtproduto : qtprod,
+                                    frete: ratfrete,
+                                    produto: vproduto,
+                                    total: vproduto
+                                });
+
+                            somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
 
                         }
 
-                        ttotal = parseFloat(ttotal) + parseFloat(vtotal);
-                        objTotal.setValue(utilFormat.Value(ttotal));
+                        objProd.setValue(me.utilFormat(somaproduto)); // total sem frete
+                        objTotal.setValue(me.utilFormat(somaproduto)); // total sem frete
+
+                        me.calcularProdutos();
 
                         if(listaStore.getCount() > 0){
                             myform.down('#comboempresa2').setDisabled(true);
@@ -281,6 +302,28 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     },
                                     {
                                         xtype: 'displayfield',
+                                        id: 'vproduto',
+                                        name: 'Produto',
+                                        fieldLabel: 'Produto',
+                                        margin: '2 2 2 2',
+                                        value: '0,00',
+                                        labelAlign: 'right',
+                                        labelWidth: 46,
+                                        hidden: false
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        id: 'vtfrete',
+                                        name: 'Frete',
+                                        fieldLabel: 'Frete',
+                                        margin: '2 2 2 2',
+                                        value: '0,00',
+                                        labelAlign: 'right',
+                                        labelWidth: 38,
+                                        hidden: false
+                                    },
+                                    {
+                                        xtype: 'displayfield',
                                         id: 'vtotal',
                                         name: 'vtotal',
                                         fieldLabel: 'Total',
@@ -289,17 +332,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                         labelAlign: 'right',
                                         labelWidth: 38
                                     },
-                                    {
-                                        xtype: 'displayfield',
-                                        id: 'vtfrete',
-                                        name: 'vtfrete',
-                                        fieldLabel: 'vtfrete',
-                                        margin: '2 42 2 2',
-                                        value: '0,00',
-                                        labelAlign: 'right',
-                                        labelWidth: 38,
-                                        hidden: true
-                                    }
+                                    
                                 ]
                             }
                         ]
@@ -314,77 +347,193 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
     
     calcularProdutos: function() {
         var me = this;
-        var utilFormat = Ext.create('Ext.ux.util.Format');  
-
+        var utilFormat = Ext.create('Ext.ux.util.Format');
+        // console.log('entrou');
         var mystore = me.down('grid').getStore();
         var mydata = mystore.getData();
         var array = mydata.items;
 
         var objform = me.down('toolbar').down('form');
+        var tproduto = objform.down('#vproduto').getValue();
         var tFrete = objform.down('#vfrete').getValue();
-        var ttotal = objform.down('#vtotal').getValue();
+        // var ttotal = objform.down('#vtotal').getValue();
         var antFrete = objform.down('#vtfrete').getValue();
-        console.log(antFrete);
+        // console.log(tproduto);
         // Formata para calculo
-        tFrete = tFrete.toString().replace("\.","");
-        tFrete = tFrete.replace("\,","\.");
-        ttotal = ttotal.toString().replace("\.","");
-        ttotal = ttotal.replace("\,","\.");
-        antFrete = antFrete.toString().replace("\.","");
-        antFrete = antFrete.replace("\,","\.");
-
-        ttotal = parseFloat(ttotal) - parseFloat(antFrete);
-
-        console.log(ttotal);
+        tproduto = me.desformatreal(tproduto);
+        tFrete = me.desformatreal(tFrete);
+        // ttotal = me.desformatreal(ttotal);
+        antFrete = me.desformatreal(antFrete);
 
         var cont = array.length;
-        antFrete = 0;
+        var somafrete = 0;
+        var ttotal = 0;
         for (let index = 0; index < cont; index++) {
 
             var element = mystore.getAt(index).getData();
-            console.log(element);
 
-            var auxtotal = utilFormat.Value(element.total);
-            // Formata para calculo
-            auxtotal = auxtotal.toString().replace("\.","");
-            auxtotal = auxtotal.replace("\,","\.");
+            var auxprod = parseFloat(element.produto);
+            var auxtotal = parseFloat(element.total);
 
-            var auxfrete = utilFormat.Value(element.frete);
-            // Formata para calculo
-            auxfrete = auxfrete.toString().replace("\.","");
-            auxfrete = auxfrete.replace("\,","\.");
-
-            if(parseFloat(auxfrete)>0){
-
-                auxtotal = parseFloat(auxtotal) - parseFloat(auxfrete);
-            }
-
-            console.log(auxtotal);
-
-            var vcoeficiente = (parseFloat(auxtotal) / parseFloat(ttotal));
+            var vcoeficiente = (parseFloat(auxprod) / parseFloat(tproduto));
 
             if(parseFloat(tFrete)>0){
                 var vratfrete = parseFloat(tFrete) * parseFloat(vcoeficiente);
-                element.frete = vratfrete;
+                vratfrete = me.formatreal(vratfrete);
+                somafrete = parseFloat(somafrete) + parseFloat(vratfrete);
                 mystore.getAt(index).set('frete',vratfrete); // record
-                
-                auxtotal = parseFloat(auxtotal) + parseFloat(vratfrete);
-                element.total = auxtotal;
+
+                auxtotal = parseFloat(auxprod) + parseFloat(vratfrete);
+                console.log(auxtotal);
+
                 mystore.getAt(index).set('total',auxtotal); // record
 
-                ttotal = parseFloat(ttotal) + parseFloat(vratfrete); // soma + frete rateado
-                objform.down('#vtotal').setValue(utilFormat.Value(ttotal));
+                ttotal = parseFloat(ttotal) + parseFloat(auxtotal);
 
-                antFrete = parseFloat(antFrete) + parseFloat(vratfrete);
-                // // Formata para calculo
-                // antFrete = antFrete.toString().replace("\.","");
-                // antFrete = antFrete.replace("\,","\.");
-                objform.down('#vtfrete').setValue(utilFormat.Value(antFrete));
+                objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
+
+            }else{
+
+                mystore.getAt(index).set('frete',0); // record
+                mystore.getAt(index).set('total',auxprod); // record
+
+                ttotal = parseFloat(ttotal) + parseFloat(auxprod);
+
+                objform.down('#vtfrete').setValue(utilFormat.Value(0.00));
 
             }
             
         }
+        // console.log('ttotal: '+ttotal);
+        objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
+        
+        // objform.down('#vtfrete').setValue(utilFormat.Value(tFrete));
+        // ttotal = parseFloat(tproduto) + parseFloat(tFrete);
+
+        // ajuste frete rat no ultimo produto da lista
+        // index = cont - 1;
+        // element = mystore.getAt(index).getData();
+        // ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
+        // mystore.getAt(index).set('frete',ratfrete);
+        // auxtotal = parseFloat(element.produto) + parseFloat(ratfrete);
+        // mystore.getAt(index).set('total',auxtotal); // record
+
+        //////////////////////////////////////////////////////////////
 
     },
+
+    ajusterat: function(evalor,somavalor,vtotal){
+        var me = this;
+        var dif = 0;
+        var ratvalor = evalor;
+        
+        if(parseFloat(somavalor) > parseFloat(vtotal)){
+
+            dif = parseFloat(somavalor) - parseFloat(vtotal);
+            dif = me.formatreal(dif);
+            ratvalor = parseFloat(evalor) - parseFloat(dif);
+            ratvalor = me.formatreal(ratvalor);
+    
+        }else if(parseFloat(somavalor) < parseFloat(vtotal)){
+    
+            dif = parseFloat(vtotal) - parseFloat(somavalor);
+            dif = me.formatreal(dif);
+            ratvalor = parseFloat(evalor) + parseFloat(dif);
+            ratvalor = me.formatreal(ratvalor);
+        }
+        
+        return ratvalor;
+
+    },
+
+    calcularateiofrete: function(vproduto){
+
+        var utilFormat = Ext.create('Ext.ux.util.Format');
+
+        var formbar = this.down('toolbar').down('form');
+
+        var objProd = formbar.down('#vproduto');
+        var ttotal = this.desformatreal(objProd.getValue());
+
+        var objFrete = formbar.down('#vtfrete');
+        var tfrete = this.desformatreal(objFrete.getValue());
+
+        if(parseFloat(ttotal)<= 0){
+            ttotal = parseFloat(vproduto); // total mais o valor do produto
+        }
+
+        var vcoeficiente = 1;
+        if(parseFloat(ttotal)>0){
+            vcoeficiente = (parseFloat(vproduto) / parseFloat(ttotal));
+        }
+
+        var freteRat = 0;
+        if(parseFloat(tfrete)>0){
+
+            freteRat = parseFloat(vcoeficiente) * parseFloat(tfrete);
+            freteRat = this.formatreal(freteRat);
+        }
+
+        return freteRat;
+
+    },
+
+    utilFormat : function(value){
+
+        var utilFormat = Ext.create('Ext.ux.util.Format');
+        value = utilFormat.Value(value);
+        return value;
+
+    },
+
+    formatreal: function(valor){
+
+        var utilFormat = Ext.create('Ext.ux.util.Format');
+
+        valor = utilFormat.Value(valor);
+        valor = valor.toString().replace("\.","");
+        valor = valor.toString().replace("\,","\.");
+
+        return valor;
+    },
+
+    desformatreal: function(valor){
+
+        valor = valor.toString().replace("\.","");
+        valor = valor.toString().replace("\,","\.");
+
+        return valor;
+    },
+
+    somaproduto: function(){
+        var me = this;
+        console.log('entrou');
+        var formbar = me.down('toolbar').down('form');
+        var listaStore = me.up('panel').down('grid').getStore();
+        console.log(listaStore.getData());
+        var array = listaStore.getData().items;
+        var element = '';
+        var qtproduto = 1;
+        var objProd = formbar.down('#vproduto');
+        console.log(objProd);
+
+        var vproduto = 0;
+        var vlcusto = 0;
+        for (let index = 0; index < array.length; index++) {
+
+            element = listaStore.getAt(index).getData();
+            
+            qtproduto = parseFloat(element.qtproduto);
+            vlcusto = parseFloat(element.custoContabil);
+
+            vproduto = parseFloat(qtproduto) * parseFloat(vlcusto);
+
+            console.log(vproduto);
+                
+            objProd.setValue(me.utilFormat(vproduto)); // total sem frete
+
+        }
+        // Fim loop para ler grid 
+    }
 
 });

@@ -20,6 +20,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     {name:'coditem',mapping:'coditem'},
                     {name:'descricao',mapping:'descricao'},
                     {name:'frete',mapping:'frete',type:'number'},
+                    {name:'produto',mapping:'produto',type:'number'},
                     {name:'total',mapping:'total',type:'number'}
                     ]
         });
@@ -51,32 +52,36 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                             tooltip: 'Remover',
                             handler: function(grid, rowIndex, colIndex) {
 
-                                var utilFormat = Ext.create('Ext.ux.util.Format');  
+                                var utilFormat = Ext.create('Ext.ux.util.Format');
 
+                                var mypanel = me.up('panel');
+                                var tform = mypanel.down('toolbar').down('form');
                                 var listaStore = grid.getStore();
-                                var rec = listaStore.getAt(rowIndex);
+                                var objProduto = tform.down('#vproduto');
+                                var objtotal = tform.down('#vtotal');
 
-                                var totalLinha = rec.get('total');
-                                totalLinha = utilFormat.Value(totalLinha);
-                                // Formata para calculo
-                                totalLinha = totalLinha.toString().replace("\.","");
-                                totalLinha = totalLinha.replace("\,","\.");
+                                var element = listaStore.getAt(rowIndex).getData();
 
-                                var objtotal = me.up('panel').down('toolbar').down('form').down('#vtotal');
+                                var upProduto = mypanel.desformatreal(objProduto.getValue());
+                                upProduto = parseFloat(upProduto) - parseFloat(element.produto);
+                                objProduto.setValue(utilFormat.Value(upProduto));
 
-                                // Formata para calculo
-                                var ttotal = objtotal.value.toString().replace("\.","");
-                                ttotal = ttotal.replace("\,","\.");
-
-                                ttotal = parseFloat(ttotal) - parseFloat(totalLinha);
-
-                                objtotal.setValue(utilFormat.Value(ttotal));
+                                var upTotal = mypanel.desformatreal(objtotal.getValue());
+                                upTotal = parseFloat(upTotal) - parseFloat(element.total);
+                                objtotal.setValue(utilFormat.Value(upTotal));
 
                                 listaStore.removeAt(rowIndex);
+                                
+                                mypanel.calcularProdutos();
 
                                 if(listaStore.getCount() <= 0){
                                     me.up('panel').down('form').down('#comboempresa2').setDisabled(false);
-                                    objtotal.setValue(utilFormat.Value(0));
+                                    
+                                    var objfrete = tform.down('#vtfrete');
+                                    
+                                    objtotal.setValue(utilFormat.Value(0.00));
+                                    objProduto.setValue(utilFormat.Value(0.00));
+                                    objfrete.setValue(utilFormat.Value(0.00));
                                 }
 
                             }
@@ -112,6 +117,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     text: 'Quantidade',
                     dataIndex: 'qtproduto',            
                     width: 100
+                },
+                {
+                    text: 'Produto',
+                    dataIndex: 'produto',
+                    width: 80,
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
                 },
                 {
                     text: 'Frete',

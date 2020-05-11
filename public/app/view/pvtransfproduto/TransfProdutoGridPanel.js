@@ -384,8 +384,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 mystore.getAt(index).set('frete',vratfrete); // record
 
                 auxtotal = parseFloat(auxprod) + parseFloat(vratfrete);
-                console.log(auxtotal);
-
                 mystore.getAt(index).set('total',auxtotal); // record
 
                 ttotal = parseFloat(ttotal) + parseFloat(auxtotal);
@@ -407,17 +405,27 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         // console.log('ttotal: '+ttotal);
         objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
         
-        // objform.down('#vtfrete').setValue(utilFormat.Value(tFrete));
-        // ttotal = parseFloat(tproduto) + parseFloat(tFrete);
-
         // ajuste frete rat no ultimo produto da lista
-        // index = cont - 1;
-        // element = mystore.getAt(index).getData();
-        // ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
-        // mystore.getAt(index).set('frete',ratfrete);
-        // auxtotal = parseFloat(element.produto) + parseFloat(ratfrete);
-        // mystore.getAt(index).set('total',auxtotal); // record
+        if(parseFloat(tFrete) != parseFloat(somafrete)){
+            index = cont - 1;
+            element = mystore.getAt(index).getData();
+           
+            ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
 
+            somafrete =  parseFloat(somafrete) - parseFloat(element.frete); // retira ultimo rateiro freta para adicionar novo
+            somafrete =  parseFloat(somafrete) + parseFloat(ratfrete); // Adiciona rateio frete novo
+            
+            auxtotal = parseFloat(element.produto) + parseFloat(ratfrete);
+
+            ttotal =  parseFloat(ttotal) - parseFloat(element.total); // retira total anterior
+            ttotal =  parseFloat(ttotal) + parseFloat(auxtotal); // Adiciona rateio frete novo no total
+            
+            mystore.getAt(index).set('frete',ratfrete);
+            mystore.getAt(index).set('total',auxtotal); // record
+
+            objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
+            objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
+        }
         //////////////////////////////////////////////////////////////
 
     },
@@ -426,20 +434,23 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         var me = this;
         var dif = 0;
         var ratvalor = evalor;
-        
-        if(parseFloat(somavalor) > parseFloat(vtotal)){
 
-            dif = parseFloat(somavalor) - parseFloat(vtotal);
-            dif = me.formatreal(dif);
-            ratvalor = parseFloat(evalor) - parseFloat(dif);
-            ratvalor = me.formatreal(ratvalor);
-    
-        }else if(parseFloat(somavalor) < parseFloat(vtotal)){
-    
-            dif = parseFloat(vtotal) - parseFloat(somavalor);
-            dif = me.formatreal(dif);
-            ratvalor = parseFloat(evalor) + parseFloat(dif);
-            ratvalor = me.formatreal(ratvalor);
+        if(parseFloat(evalor)>0){
+        
+            if(parseFloat(somavalor) > parseFloat(vtotal)){
+
+                dif = parseFloat(somavalor) - parseFloat(vtotal);
+                dif = me.formatreal(dif);
+                ratvalor = parseFloat(evalor) - parseFloat(dif);
+                ratvalor = me.formatreal(ratvalor);
+        
+            }else if(parseFloat(somavalor) < parseFloat(vtotal)){
+        
+                dif = parseFloat(vtotal) - parseFloat(somavalor);
+                dif = me.formatreal(dif);
+                ratvalor = parseFloat(evalor) + parseFloat(dif);
+                ratvalor = me.formatreal(ratvalor);
+            }
         }
         
         return ratvalor;

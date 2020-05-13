@@ -15,6 +15,7 @@ Ext.define('App.view.pvvaloresproduto.ValoresProdutoGridLista', {
                     {name:'marca',mapping:'marca'},
                     {name:'codItem',mapping:'codItem'},
                     {name:'descricao',mapping:'descricao'},
+                    {name:'locacao',mapping:'locacao'},
                     {name:'icms',mapping:'icms',type:'number'},
                     {name:'pisCofins',mapping:'pisCofins',type:'number'},
                     {name: 'preco',mapping:'preco',type:'number'},
@@ -60,6 +61,11 @@ Ext.define('App.view.pvvaloresproduto.ValoresProdutoGridLista', {
                     text: 'Descrição ',
                     dataIndex: 'descricao',            
                     flex: 1
+                },
+                {
+                    text: 'Locação ',
+                    dataIndex: 'locacao',            
+                    width: 120
                 },
                 {
                     text: 'Icms',

@@ -99,7 +99,8 @@ class PrecoSugeridoController extends AbstractRestfulController
                             mkp.perc_desconto as perc_desconto_max,
                             mkp.preco as preco,
                             round((1+(mkp.markup/100))*e.custo_contabil,2) as preco_sugerido,
-                            e.estoque
+                            e.estoque,
+                            e.id_locacao as locacao
                     from ms.tb_estoque e,
                             ms.empresa em,
                             ms.tb_item_categoria ic,

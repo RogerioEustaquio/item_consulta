@@ -19,6 +19,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     {name:'marca',mapping:'marca'},
                     {name:'coditem',mapping:'coditem'},
                     {name:'descricao',mapping:'descricao'},
+                    {name:'locacao',mapping:'locacao'},
                     {name:'frete',mapping:'frete',type:'number'},
                     {name:'produto',mapping:'produto',type:'number'},
                     {name:'total',mapping:'total',type:'number'}
@@ -46,9 +47,10 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                 {
                     xtype:'actioncolumn',
                     width:40,
+                    align: 'center',
                     items: [
                             {
-                            iconCls: 'fa fa-minus',
+                            iconCls: 'fa fa-times red-text',
                             tooltip: 'Remover',
                             handler: function(grid, rowIndex, colIndex) {
 
@@ -75,7 +77,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                 mypanel.calcularProdutos();
 
                                 if(listaStore.getCount() <= 0){
-                                    me.up('panel').down('form').down('#comboempresa2').setDisabled(false);
                                     
                                     var objfrete = tform.down('#vtfrete');
                                     
@@ -112,6 +113,11 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                     text: 'Descrição ',
                     dataIndex: 'descricao',            
                     flex: 1
+                },
+                {
+                    text: 'Locação',
+                    dataIndex: 'locacao',            
+                    width: 120
                 },
                 {
                     text: 'Quantidade',

@@ -146,16 +146,19 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         emporig = emporig.getData().nome;
                     }
                     if(produto){
-                        var cdprod = produto.getData().codItem;
-                        var marca = produto.getData().marca;
-                        var pdesc = produto.getData().descricao;
+                        var cdprod  = produto.getData().codItem;
+                        var marca   = produto.getData().marca;
+                        var pdesc   = produto.getData().descricao;
+                        var locacao = produto.getData().locacao;
                         var custoContabil = produto.getData().custoContabil;
                         custoContabil = me.formatreal(custoContabil);
                     }
 
-                    if(empdest && emporig && produto ){
+                    if(empdest && emporig && produto){
 
                         var formbar = me.down('toolbar').down('form');
+
+                        formbar.down('#origem').setValue(emporig);
 
                         var objTotal = formbar.down('#vtotal');
                         // var ttotal = me.desformatreal(objTotal.getValue());
@@ -213,6 +216,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     marca : marca,
                                     coditem : cdprod,
                                     descricao: pdesc,
+                                    locacao: locacao,
                                     qtproduto : qtprod,
                                     frete: ratfrete,
                                     produto: vproduto,
@@ -227,10 +231,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         objTotal.setValue(me.utilFormat(somaproduto)); // total sem frete
 
                         me.calcularProdutos();
-
-                        if(listaStore.getCount() > 0){
-                            myform.down('#comboempresa2').setDisabled(true);
-                        }
 
                     }else{
                         Ext.Msg.alert('Alerta','Existe prametros para preencher!');
@@ -299,6 +299,17 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                                             }
                                         }
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        id: 'origem',
+                                        name: 'Origem',
+                                        fieldLabel: 'Origem',
+                                        margin: '2 2 2 2',
+                                        value: '',
+                                        labelAlign: 'right',
+                                        labelWidth: 42,
+                                        hidden: false
                                     },
                                     {
                                         xtype: 'displayfield',
@@ -410,8 +421,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             index = cont - 1;
             element = mystore.getAt(index).getData();
            
-            ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
-
+            if(parseFloat(auxtotal)){
+                ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
+            }else{
+                ratfrete = 0.00;
+            }
+            
             somafrete =  parseFloat(somafrete) - parseFloat(element.frete); // retira ultimo rateiro freta para adicionar novo
             somafrete =  parseFloat(somafrete) + parseFloat(ratfrete); // Adiciona rateio frete novo
             
@@ -445,13 +460,29 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 ratvalor = me.formatreal(ratvalor);
         
             }else if(parseFloat(somavalor) < parseFloat(vtotal)){
-        
+
                 dif = parseFloat(vtotal) - parseFloat(somavalor);
                 dif = me.formatreal(dif);
+                console.log(dif);
+                console.log(evalor);
                 ratvalor = parseFloat(evalor) + parseFloat(dif);
                 ratvalor = me.formatreal(ratvalor);
             }
+        }else if(parseFloat(evalor) == 0){
+
+            if(parseFloat(somavalor) < parseFloat(vtotal)){
+
+                dif = parseFloat(vtotal) - parseFloat(somavalor);
+
+                if(dif <= 0.01){
+                    dif = me.formatreal(dif);
+                    ratvalor = parseFloat(evalor) + parseFloat(dif);
+                    ratvalor = me.formatreal(ratvalor);
+                }
+            }
+
         }
+
         
         return ratvalor;
 

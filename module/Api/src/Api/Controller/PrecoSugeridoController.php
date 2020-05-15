@@ -27,9 +27,6 @@ class PrecoSugeridoController extends AbstractRestfulController
 
             $session = $this->getSession();
             $usuario = $session['info'];
-
-            $usuario->empresa = 'SA';
-
             $em = $this->getEntityManager();
 
             $sql = "

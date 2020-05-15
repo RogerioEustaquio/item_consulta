@@ -37,7 +37,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             forceSelection: true,
             disabled: true,
             listeners: {
-
+                select: function (form){
+        
+                    var valor = form.getRawValue();
+                    var proxyprod = this.up('form').down('#comboproduto2').getStore().getProxy();
+                    proxyprod.setExtraParams({emp: valor});
+                }    
             }
         });
 
@@ -151,13 +156,21 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         var pdesc   = produto.getData().descricao;
                         var locacao = produto.getData().locacao;
                         var custoContabil = produto.getData().custoContabil;
+                        var icms = produto.getData().icms;
+                        var piscofins = produto.getData().pisCofins;
+                        var margem = produto.getData().margem;
+
                         custoContabil = me.formatreal(custoContabil);
+                        icms = me.formatreal(icms);
+                        piscofins = me.formatreal(piscofins);
+                        margem = me.formatreal(margem);
                     }
 
                     if(empdest && emporig && produto){
 
                         var formbar = me.down('toolbar').down('form');
 
+                        formbar.down('#destino').setValue(empdest);
                         formbar.down('#origem').setValue(emporig);
 
                         var objTotal = formbar.down('#vtotal');
@@ -207,6 +220,9 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                             vproduto = qtprod * custoContabil;
                             vproduto = me.formatreal(vproduto);
+
+                            preco = parseFloat(vproduto) /(1-((parseFloat(icms)+parseFloat(piscofins)+parseFloat(margem))/100));
+                            preco = me.formatreal(preco);
   
                             listaStore.add(
                                 {
@@ -220,7 +236,11 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     qtproduto : qtprod,
                                     frete: ratfrete,
                                     produto: vproduto,
-                                    total: vproduto
+                                    total: vproduto,
+                                    icms : icms,
+                                    piscofins : piscofins,
+                                    margem : margem,
+                                    preco : preco
                                 });
 
                             somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
@@ -313,6 +333,17 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     },
                                     {
                                         xtype: 'displayfield',
+                                        id: 'destino',
+                                        name: 'Destino',
+                                        fieldLabel: 'Destino',
+                                        margin: '2 2 2 2',
+                                        value: '',
+                                        labelAlign: 'right',
+                                        labelWidth: 44,
+                                        hidden: false
+                                    },
+                                    {
+                                        xtype: 'displayfield',
                                         id: 'vproduto',
                                         name: 'Produto',
                                         fieldLabel: 'Produto',
@@ -338,11 +369,21 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                         id: 'vtotal',
                                         name: 'vtotal',
                                         fieldLabel: 'Total',
-                                        margin: '2 42 2 2',
+                                        margin: '2 2 2 2',
                                         value: '0,00',
                                         labelAlign: 'right',
                                         labelWidth: 38
                                     },
+                                    {
+                                        xtype: 'displayfield',
+                                        id: 'vpreco',
+                                        name: 'vpreco',
+                                        fieldLabel: 'Preço',
+                                        margin: '2 2 2 2',
+                                        value: '0,00',
+                                        labelAlign: 'right',
+                                        labelWidth: 38
+                                    }
                                     
                                 ]
                             }
@@ -379,13 +420,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         var cont = array.length;
         var somafrete = 0;
         var ttotal = 0;
+        var somapreco = 0;
         for (let index = 0; index < cont; index++) {
 
             var element = mystore.getAt(index).getData();
-
+            console.log(element);
             var auxprod = parseFloat(element.produto);
             var auxtotal = parseFloat(element.total);
-
+            var auxpreco = parseFloat(element.preco);
             var vcoeficiente = (parseFloat(auxprod) / parseFloat(tproduto));
 
             if(parseFloat(tFrete)>0){
@@ -397,7 +439,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 auxtotal = parseFloat(auxprod) + parseFloat(vratfrete);
                 mystore.getAt(index).set('total',auxtotal); // record
 
+                auxpreco = parseFloat(auxtotal) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+                auxpreco = me.formatreal(auxpreco);
+                mystore.getAt(index).set('preco',auxpreco); // record
+
                 ttotal = parseFloat(ttotal) + parseFloat(auxtotal);
+                somapreco = parseFloat(somapreco) + parseFloat(auxpreco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
 
@@ -406,7 +453,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 mystore.getAt(index).set('frete',0); // record
                 mystore.getAt(index).set('total',auxprod); // record
 
+                auxpreco = parseFloat(auxprod) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+                auxpreco = me.formatreal(auxpreco);
+                mystore.getAt(index).set('preco',auxpreco); // record
+
                 ttotal = parseFloat(ttotal) + parseFloat(auxprod);
+                somapreco = parseFloat(somapreco) + parseFloat(auxpreco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(0.00));
 
@@ -415,6 +467,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         }
         // console.log('ttotal: '+ttotal);
         objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
+        objform.down('#vpreco').setValue(utilFormat.Value(somapreco)); // total com frete
         
         // ajuste frete rat no ultimo produto da lista
         if(parseFloat(tFrete) != parseFloat(somafrete)){
@@ -431,15 +484,21 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             somafrete =  parseFloat(somafrete) + parseFloat(ratfrete); // Adiciona rateio frete novo
             
             auxtotal = parseFloat(element.produto) + parseFloat(ratfrete);
-
             ttotal =  parseFloat(ttotal) - parseFloat(element.total); // retira total anterior
             ttotal =  parseFloat(ttotal) + parseFloat(auxtotal); // Adiciona rateio frete novo no total
+
+            auxpreco = parseFloat(auxtotal) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+            auxpreco = me.formatreal(auxpreco);
+            somapreco =  parseFloat(somapreco) - parseFloat(element.preco); // retira ultimo rateiro freta para adicionar novo
+            somapreco =  parseFloat(somapreco) + parseFloat(auxpreco); // Adiciona rateio frete novo
             
             mystore.getAt(index).set('frete',ratfrete);
             mystore.getAt(index).set('total',auxtotal); // record
+            mystore.getAt(index).set('preco',auxpreco); // record
 
             objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
             objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
+            objform.down('#vpreco').setValue(utilFormat.Value(somapreco));
         }
         //////////////////////////////////////////////////////////////
 
@@ -463,8 +522,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                 dif = parseFloat(vtotal) - parseFloat(somavalor);
                 dif = me.formatreal(dif);
-                console.log(dif);
-                console.log(evalor);
                 ratvalor = parseFloat(evalor) + parseFloat(dif);
                 ratvalor = me.formatreal(ratvalor);
             }
@@ -482,7 +539,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             }
 
         }
-
         
         return ratvalor;
 

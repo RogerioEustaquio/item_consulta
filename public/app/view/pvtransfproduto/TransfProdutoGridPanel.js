@@ -180,7 +180,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         // var tprod = me.desformatreal(objProd.getValue());
                         var somaproduto = 0;
 
-
                         // loop para ler grid 
                         // recalcular itens que já existem.
                         var array = listaStore.getData().items;
@@ -188,6 +187,8 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         var ratfrete = 0;
                         var qtprod2 = 1;
                         var element = '';
+                        var vproduto = 0;
+                        var custototal = 0;
                         for (let index = 0; index < array.length; index++) {
 
                             element = listaStore.getAt(index).getData();
@@ -199,19 +200,24 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                 qtprod2 = parseFloat(qtprod) + parseFloat(element.qtproduto);
                                 listaStore.getAt(index).set('qtproduto',qtprod2);
 
-                                somaproduto = parseFloat(somaproduto) + parseFloat(custoContabil);
+                                custototal = parseFloat(qtprod2) * parseFloat(custoContabil);
+                                custototal = me.formatreal(custototal);
+                                listaStore.getAt(index).set('custototal',custototal);
+
+                                somaproduto = parseFloat(somaproduto) + parseFloat(custototal);
 
                             }else{
 
-                                vproduto = parseFloat(element.custoproduto);
-                                somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
+                                custototal = parseFloat(element.custototal);
+                                somaproduto = parseFloat(somaproduto) + parseFloat(custototal);
                             }
                         }
                         // Fim loop para ler grid 
 
                         if(naoadd != true){
 
-                            // vproduto = qtprod * custoContabil;
+                            custototal = parseFloat(qtprod) * parseFloat(custoContabil);
+                            custototal = me.formatreal(custototal);
                             vproduto = me.formatreal(custoContabil);
 
                             var preco = parseFloat(custoContabil) /(1-((parseFloat(icms)+parseFloat(piscofins)+parseFloat(margem))/100));
@@ -231,6 +237,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     locacao: locacao,
                                     qtproduto : qtprod,
                                     custoproduto: vproduto,
+                                    custototal: custototal,
                                     frete: ratfrete,
                                     custounitario: vproduto,
                                     icms : icms,
@@ -240,7 +247,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     valorproduto : vtotal
                                 });
 
-                            somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
+                            somaproduto = parseFloat(somaproduto) + parseFloat(custototal);
 
                         }
 
@@ -425,7 +432,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             var custoproduto = parseFloat(element.custoproduto);
             var custounitario = parseFloat(element.custounitario);
             var preco = parseFloat(element.preco);
-            var vcoeficiente = (parseFloat(custoproduto) / parseFloat(tproduto));
+            var vcoeficiente = (parseFloat(element.custototal) / parseFloat(tproduto));
 
             if(parseFloat(tFrete)>0){
 

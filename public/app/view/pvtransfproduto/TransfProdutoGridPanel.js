@@ -180,8 +180,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         // var tprod = me.desformatreal(objProd.getValue());
                         var somaproduto = 0;
 
-                        var objTfrete = formbar.down('#vtfrete');
-                        var vtfrete = me.desformatreal(objTfrete.getValue());
 
                         // loop para ler grid 
                         // recalcular itens que já existem.
@@ -199,18 +197,13 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                 naoadd = true;
 
                                 qtprod2 = parseFloat(qtprod) + parseFloat(element.qtproduto);
-                                vproduto = parseFloat(qtprod2) * parseFloat(custoContabil);
-                                vproduto = me.formatreal(vproduto);
-
-                                listaStore.getAt(index).set('produto',vproduto);
                                 listaStore.getAt(index).set('qtproduto',qtprod2);
-                                listaStore.getAt(index).set('total',vproduto);
 
-                                somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
+                                somaproduto = parseFloat(somaproduto) + parseFloat(custoContabil);
 
                             }else{
 
-                                vproduto = parseFloat(element.produto);
+                                vproduto = parseFloat(element.custoproduto);
                                 somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
                             }
                         }
@@ -218,12 +211,15 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                         if(naoadd != true){
 
-                            vproduto = qtprod * custoContabil;
-                            vproduto = me.formatreal(vproduto);
+                            // vproduto = qtprod * custoContabil;
+                            vproduto = me.formatreal(custoContabil);
 
-                            preco = parseFloat(vproduto) /(1-((parseFloat(icms)+parseFloat(piscofins)+parseFloat(margem))/100));
+                            var preco = parseFloat(custoContabil) /(1-((parseFloat(icms)+parseFloat(piscofins)+parseFloat(margem))/100));
                             preco = me.formatreal(preco);
-  
+
+                            var vtotal = parseFloat(preco) * parseFloat(qtprod);
+                            vtotal = me.formatreal(vtotal);
+
                             listaStore.add(
                                 {
                                     emp : empdest,
@@ -234,13 +230,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     descricao: pdesc,
                                     locacao: locacao,
                                     qtproduto : qtprod,
+                                    custoproduto: vproduto,
                                     frete: ratfrete,
-                                    produto: vproduto,
-                                    total: vproduto,
+                                    custounitario: vproduto,
                                     icms : icms,
                                     piscofins : piscofins,
                                     margem : margem,
-                                    preco : preco
+                                    preco : preco,
+                                    valorproduto : vtotal
                                 });
 
                             somaproduto = parseFloat(somaproduto) + parseFloat(vproduto);
@@ -400,7 +397,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
     calcularProdutos: function() {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
-        // console.log('entrou');
         var mystore = me.down('grid').getStore();
         var mydata = mystore.getData();
         var array = mydata.items;
@@ -421,44 +417,54 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         var somafrete = 0;
         var ttotal = 0;
         var somapreco = 0;
+        var valortotal =0;
         for (let index = 0; index < cont; index++) {
 
             var element = mystore.getAt(index).getData();
-            console.log(element);
-            var auxprod = parseFloat(element.produto);
-            var auxtotal = parseFloat(element.total);
-            var auxpreco = parseFloat(element.preco);
-            var vcoeficiente = (parseFloat(auxprod) / parseFloat(tproduto));
+            // console.log(element);
+            var custoproduto = parseFloat(element.custoproduto);
+            var custounitario = parseFloat(element.custounitario);
+            var preco = parseFloat(element.preco);
+            var vcoeficiente = (parseFloat(custoproduto) / parseFloat(tproduto));
 
             if(parseFloat(tFrete)>0){
+
                 var vratfrete = parseFloat(tFrete) * parseFloat(vcoeficiente);
                 vratfrete = me.formatreal(vratfrete);
                 somafrete = parseFloat(somafrete) + parseFloat(vratfrete);
                 mystore.getAt(index).set('frete',vratfrete); // record
 
-                auxtotal = parseFloat(auxprod) + parseFloat(vratfrete);
-                mystore.getAt(index).set('total',auxtotal); // record
+                custounitario = parseFloat(custoproduto) + parseFloat(vratfrete);
+                mystore.getAt(index).set('custounitario',custounitario); // record
 
-                auxpreco = parseFloat(auxtotal) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
-                auxpreco = me.formatreal(auxpreco);
-                mystore.getAt(index).set('preco',auxpreco); // record
+                preco = parseFloat(custounitario) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+                preco = me.formatreal(preco);
+                mystore.getAt(index).set('preco',preco); // record
 
-                ttotal = parseFloat(ttotal) + parseFloat(auxtotal);
-                somapreco = parseFloat(somapreco) + parseFloat(auxpreco);
+                valortotal = parseFloat(preco) * parseFloat(element.qtproduto);
+                valortotal = me.formatreal(valortotal);
+                mystore.getAt(index).set('valorproduto',valortotal); // record
+
+                ttotal = parseFloat(ttotal) + parseFloat(custounitario);
+                somapreco = parseFloat(somapreco) + parseFloat(preco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
 
             }else{
 
                 mystore.getAt(index).set('frete',0); // record
-                mystore.getAt(index).set('total',auxprod); // record
+                mystore.getAt(index).set('custounitario',custoproduto); // record
 
-                auxpreco = parseFloat(auxprod) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
-                auxpreco = me.formatreal(auxpreco);
-                mystore.getAt(index).set('preco',auxpreco); // record
+                preco = parseFloat(custoproduto) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+                preco = me.formatreal(preco);
+                mystore.getAt(index).set('preco',preco); // record
 
-                ttotal = parseFloat(ttotal) + parseFloat(auxprod);
-                somapreco = parseFloat(somapreco) + parseFloat(auxpreco);
+                valortotal = parseFloat(preco) * parseFloat(element.qtproduto);
+                valortotal = me.formatreal(valortotal);
+                mystore.getAt(index).set('valorproduto',valortotal); // record
+
+                ttotal = parseFloat(ttotal) + parseFloat(custoproduto);
+                somapreco = parseFloat(somapreco) + parseFloat(preco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(0.00));
 
@@ -474,7 +480,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             index = cont - 1;
             element = mystore.getAt(index).getData();
            
-            if(parseFloat(auxtotal)){
+            if(parseFloat(custounitario)){
                 ratfrete = me.ajusterat(element.frete,somafrete,tFrete);
             }else{
                 ratfrete = 0.00;
@@ -483,18 +489,22 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             somafrete =  parseFloat(somafrete) - parseFloat(element.frete); // retira ultimo rateiro freta para adicionar novo
             somafrete =  parseFloat(somafrete) + parseFloat(ratfrete); // Adiciona rateio frete novo
             
-            auxtotal = parseFloat(element.produto) + parseFloat(ratfrete);
-            ttotal =  parseFloat(ttotal) - parseFloat(element.total); // retira total anterior
-            ttotal =  parseFloat(ttotal) + parseFloat(auxtotal); // Adiciona rateio frete novo no total
+            custounitario = parseFloat(element.custoproduto) + parseFloat(ratfrete);
+            ttotal =  parseFloat(ttotal) - parseFloat(element.custounitario); // retira total anterior
+            ttotal =  parseFloat(ttotal) + parseFloat(custounitario); // Adiciona rateio frete novo no total
 
-            auxpreco = parseFloat(auxtotal) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
-            auxpreco = me.formatreal(auxpreco);
+            preco = parseFloat(custounitario) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
+            preco = me.formatreal(preco);
             somapreco =  parseFloat(somapreco) - parseFloat(element.preco); // retira ultimo rateiro freta para adicionar novo
-            somapreco =  parseFloat(somapreco) + parseFloat(auxpreco); // Adiciona rateio frete novo
+            somapreco =  parseFloat(somapreco) + parseFloat(preco); // Adiciona rateio frete novo
             
             mystore.getAt(index).set('frete',ratfrete);
-            mystore.getAt(index).set('total',auxtotal); // record
-            mystore.getAt(index).set('preco',auxpreco); // record
+            mystore.getAt(index).set('custounitario',custounitario); // record
+            mystore.getAt(index).set('preco',preco); // record
+
+            valortotal = parseFloat(preco) * parseFloat(element.qtproduto);
+            valortotal = me.formatreal(valortotal);
+            mystore.getAt(index).set('valorproduto',valortotal); // record
 
             objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
             objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete

@@ -95,7 +95,8 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                         };
         var coldesc  =  {
                             text: 'Descrição ',
-                            dataIndex: 'descricao',            
+                            dataIndex: 'descricao',  
+                            minWidth: 66,          
                             flex: 1
                         };
         var colloca =   {
@@ -108,14 +109,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                             dataIndex: 'qtproduto',            
                             width: 100
                         };
-        var colprod =   {
-                            text: 'Produto',
-                            dataIndex: 'produto',
-                            width: 80,
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                    };
+        var colcustoproduto =   {
+                                    text: 'Custo Produto',
+                                    dataIndex: 'custoproduto',
+                                    width: 112,
+                                    renderer: function (v) {
+                                        return utilFormat.Value(v);
+                                    }
+                                };
         var colfrete =  {
                             text: 'Frete',
                             dataIndex: 'frete',
@@ -124,14 +125,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                 return utilFormat.Value(v);
                             }
                         };
-        var coltotal =  {
-                            text: 'Total',
-                            dataIndex: 'total',
-                            width: 90,
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        };
+        var colcustounitario =  {
+                                    text: 'Custo Unitário',
+                                    dataIndex: 'custounitario',
+                                    width: 112,
+                                    renderer: function (v) {
+                                        return utilFormat.Value(v);
+                                    }
+                                };
         var colicms =   {
                             text: 'Icms',
                             dataIndex: 'icms',
@@ -164,8 +165,17 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                 return utilFormat.Value(v);
                             }
                         }
+        var colvproduto =  {
+                                text: 'Valor Produto',
+                                dataIndex: 'valorproduto',
+                                width: 118,
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                }
+                            }
 
         if(USUARIO.empresa == "EC"){
+
             var arraycolums = [ coldel,
                                 coldest,
                                 colorig,
@@ -174,15 +184,17 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                 coldesc,
                                 colloca,
                                 colquant,
-                                colprod,
+                                colcustoproduto,
                                 colfrete,
-                                coltotal,
+                                colcustounitario,
                                 colicms,
                                 colpiscof,
                                 colmargem,
-                                colpreco
+                                colpreco,
+                                colvproduto
                             ];
         }else{
+
             var arraycolums = [ coldel,
                                 colmarca,
                                 colcodigo,
@@ -190,10 +202,10 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                 colloca,
                                 colquant,
                                 colfrete,
-                                colpreco
+                                colpreco,
+                                colvproduto
                             ];
         }
-        
 
         Ext.applyIf(this, {
 

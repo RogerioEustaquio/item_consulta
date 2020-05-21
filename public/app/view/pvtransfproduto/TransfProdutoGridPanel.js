@@ -168,7 +168,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                     if(empdest && emporig && produto){
 
-                        var formbar = me.down('toolbar').down('form');
+                        var formbar = me.down('toolbar').down('#formsimula');
 
                         formbar.down('#destino').setValue(empdest);
                         formbar.down('#origem').setValue(emporig);
@@ -294,9 +294,35 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                     bbar:{
                         border: false,
                         items: [
+                            // {
+                            //     xtype: 'form',
+                            //     id: 'formpedido',
+                            //     border: false,
+                            //     layout: {
+                            //         type: 'hbox'
+                            //     },
+                            //     items: [{
+                            //                 xtype: 'button',
+                            //                 text: 'Pedido',
+                            //                 listeners:{
+
+                            //                     click: function(){
+                            //                         Ext.create('Ext.window.Window',
+                            //                         {
+                            //                             title: 'Hello',
+                            //                             height: 200,
+                            //                             width: 400,
+                            //                             layout: 'fit'
+                            //                         }).show();
+                            //                     }
+                                                
+                            //                 }
+                            //             }]
+                            // },
                             '->',
                             {
                                 xtype: 'form',
+                                id: 'formsimula',
                                 border: false,
                                 layout: {
                                     type: 'hbox'
@@ -355,7 +381,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                         value: '0,00',
                                         labelAlign: 'right',
                                         labelWidth: 46,
-                                        hidden: false
+                                        hidden: true
                                     },
                                     {
                                         xtype: 'displayfield',
@@ -370,19 +396,20 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     },
                                     {
                                         xtype: 'displayfield',
-                                        id: 'vtotal',
-                                        name: 'vtotal',
-                                        fieldLabel: 'Total',
-                                        margin: '2 2 2 2',
-                                        value: '0,00',
-                                        labelAlign: 'right',
-                                        labelWidth: 38
-                                    },
-                                    {
-                                        xtype: 'displayfield',
                                         id: 'vpreco',
                                         name: 'vpreco',
                                         fieldLabel: 'Preço',
+                                        margin: '2 2 2 2',
+                                        value: '0,00',
+                                        labelAlign: 'right',
+                                        labelWidth: 38,
+                                        hidden: true
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        id: 'vtotal',
+                                        name: 'vtotal',
+                                        fieldLabel: 'Total',
                                         margin: '2 2 2 2',
                                         value: '0,00',
                                         labelAlign: 'right',
@@ -408,7 +435,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         var mydata = mystore.getData();
         var array = mydata.items;
 
-        var objform = me.down('toolbar').down('form');
+        var objform = me.down('toolbar').down('#formsimula');
         var tproduto = objform.down('#vproduto').getValue();
         var tFrete = objform.down('#vfrete').getValue();
         // var ttotal = objform.down('#vtotal').getValue();
@@ -452,7 +479,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 valortotal = me.formatreal(valortotal);
                 mystore.getAt(index).set('valorproduto',valortotal); // record
 
-                ttotal = parseFloat(ttotal) + parseFloat(custounitario);
+                ttotal = parseFloat(ttotal) + parseFloat(valortotal);
                 somapreco = parseFloat(somapreco) + parseFloat(preco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
@@ -470,7 +497,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 valortotal = me.formatreal(valortotal);
                 mystore.getAt(index).set('valorproduto',valortotal); // record
 
-                ttotal = parseFloat(ttotal) + parseFloat(custoproduto);
+                ttotal = parseFloat(ttotal) + parseFloat(valortotal);
                 somapreco = parseFloat(somapreco) + parseFloat(preco);
 
                 objform.down('#vtfrete').setValue(utilFormat.Value(0.00));
@@ -497,8 +524,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             somafrete =  parseFloat(somafrete) + parseFloat(ratfrete); // Adiciona rateio frete novo
             
             custounitario = parseFloat(element.custoproduto) + parseFloat(ratfrete);
-            ttotal =  parseFloat(ttotal) - parseFloat(element.custounitario); // retira total anterior
-            ttotal =  parseFloat(ttotal) + parseFloat(custounitario); // Adiciona rateio frete novo no total
 
             preco = parseFloat(custounitario) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
             preco = me.formatreal(preco);
@@ -511,11 +536,15 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
             valortotal = parseFloat(preco) * parseFloat(element.qtproduto);
             valortotal = me.formatreal(valortotal);
-            mystore.getAt(index).set('valorproduto',valortotal); // record
 
+            ttotal =  parseFloat(ttotal) - parseFloat(element.valorproduto); // retira total anterior
+            ttotal =  parseFloat(ttotal) + parseFloat(valortotal); // Adiciona rateio frete novo no total
+
+            mystore.getAt(index).set('valorproduto',valortotal); // record
+            
             objform.down('#vtfrete').setValue(utilFormat.Value(somafrete));
-            objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
             objform.down('#vpreco').setValue(utilFormat.Value(somapreco));
+            objform.down('#vtotal').setValue(utilFormat.Value(ttotal)); // total com frete
         }
         //////////////////////////////////////////////////////////////
 
@@ -565,7 +594,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
-        var formbar = this.down('toolbar').down('form');
+        var formbar = this.down('toolbar').down('#formsimula');
 
         var objProd = formbar.down('#vproduto');
         var ttotal = this.desformatreal(objProd.getValue());
@@ -623,7 +652,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
     somaproduto: function(){
         var me = this;
         console.log('entrou');
-        var formbar = me.down('toolbar').down('form');
+        var formbar = me.down('toolbar').down('#formsimula');
         var listaStore = me.up('panel').down('grid').getStore();
         console.log(listaStore.getData());
         var array = listaStore.getData().items;

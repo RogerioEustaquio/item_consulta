@@ -145,25 +145,29 @@ class TransfProdutoController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
             
-            $sql = "select distinct em.apelido as emp, i.cod_item||c.descricao as cod_item, i.descricao, m.descricao as marca, 
-                            null as preco_venda, e.custo_contabil,
+            $sql = "select distinct em.apelido as emp,
+                            i.cod_item||c.descricao as cod_item,
+                            i.descricao,
+                            m.descricao as marca, 
+                            null as preco_venda,
+                            e.custo_contabil,
                             e.id_locacao as locacao,
-                            --nvl(ace.icms,0) as icms,
-                            17 as icms,
+                            nvl(ace.icms,0) as icms,
                             nvl(ic.aliq_pis,0)+nvl(ic.aliq_cofins,0) as pis_cofins,
-                            30 margem
+                            mg.margem
                         from ms.tb_estoque e,
-                        ms.tb_item i,
-                        ms.tb_categoria c,
-                        ms.tb_item_categoria ic,
-                        ms.empresa em,
-                        ms.tb_marca m,
-                        (SELECT ID_EMPRESA, ID_ITEM, ID_CATEGORIA,
-                                EH_ACESSORIO as acessorio,
-                                GERAR_PRECO_VENDA,
-                                (case when EH_ACESSORIO = 'S' then 17 end) as icms
-                        FROM MS.TB_ITEM_CATEGORIA_PARAM
-                        ) ace
+                             ms.tb_item i,
+                             ms.tb_categoria c,
+                             ms.tb_item_categoria ic,
+                             ms.empresa em,
+                             ms.tb_marca m,
+                             (SELECT ID_EMPRESA, ID_ITEM, ID_CATEGORIA,
+                                    EH_ACESSORIO as acessorio,
+                                    GERAR_PRECO_VENDA,
+                                    (case when EH_ACESSORIO = 'S' then 17 end) as icms
+                             FROM MS.TB_ITEM_CATEGORIA_PARAM
+                             ) ace,
+                             xp_simuladortransf_margem mg
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_empresa = em.id_empresa
@@ -173,6 +177,7 @@ class TransfProdutoController extends AbstractRestfulController
                     and e.id_empresa = ace.id_empresa(+)
                     and e.id_item = ace.id_item(+)
                     and e.id_categoria = ace.id_categoria(+)
+                    and e.id_empresa = mg.id_empresa
                     and i.cod_item||c.descricao like upper('%$pCod%')
                     and em.apelido = ?
                     and rownum <= 5";

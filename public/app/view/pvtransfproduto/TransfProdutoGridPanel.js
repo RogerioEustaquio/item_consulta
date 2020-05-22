@@ -39,10 +39,37 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             listeners: {
                 select: function (form){
         
+                    var objprod = this.up('form').down('#comboproduto2');
                     var valor = form.getRawValue();
-                    var proxyprod = this.up('form').down('#comboproduto2').getStore().getProxy();
+                    var proxyprod = objprod.getStore().getProxy();
                     proxyprod.setExtraParams({emp: valor});
-                }    
+
+                    if(USUARIO.empresa != valor){
+                        // Peguntar para limpar grid, caso existir lista.
+                        var listaStore = me.down('grid').getStore();
+
+                        if(listaStore.getCount() > 0){
+                            Ext.Msg.show({
+                                // title:'A Mudança do destino irá limpar o lista. Deseja confirmar?',
+                                message: 'A mudança do destino irá limpar o lista. Deseja limpar?',
+                                buttons: Ext.Msg.YESNO,
+                                fn: function(btn) {
+                                    objprod.setValue('');
+                                    
+                                    if (btn === 'yes') {
+                                        listaStore.removeAll();
+
+                                    } else if (btn === 'no') {
+
+                                        var element = listaStore.getAt(0).getData();
+                                        form.setValue(element.emp);
+                                        proxyprod.setExtraParams({emp: element.emp});
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
             }
         });
 
@@ -151,6 +178,8 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         emporig = emporig.getData().nome;
                     }
                     if(produto){
+
+                        var emppro  = produto.getData().emp;
                         var cdprod  = produto.getData().codItem;
                         var marca   = produto.getData().marca;
                         var pdesc   = produto.getData().descricao;
@@ -193,7 +222,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
                             element = listaStore.getAt(index).getData();
 
-                            if(cdprod == element.coditem){
+                            if(cdprod == element.coditem && emppro == element.emp){
 
                                 naoadd = true;
 
@@ -296,14 +325,14 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                         items: [
                             // {
                             //     xtype: 'form',
-                            //     id: 'formpedido',
+                            //     id: 'formsalvar',
                             //     border: false,
                             //     layout: {
                             //         type: 'hbox'
                             //     },
                             //     items: [{
                             //                 xtype: 'button',
-                            //                 text: 'Pedido',
+                            //                 text: 'Salvar',
                             //                 listeners:{
 
                             //                     click: function(){

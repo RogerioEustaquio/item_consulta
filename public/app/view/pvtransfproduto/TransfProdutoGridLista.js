@@ -40,7 +40,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                                     var utilFormat = Ext.create('Ext.ux.util.Format');
 
                                     var mypanel = me.up('panel');
-                                    var tform = mypanel.down('toolbar').down('form');
+                                    var tform = mypanel.down('toolbar').down('#formsimula');
                                     var listaStore = grid.getStore();
                                     var objProduto = tform.down('#vproduto');
                                     var objtotal = tform.down('#vtotal');

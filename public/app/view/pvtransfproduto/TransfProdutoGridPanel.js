@@ -59,6 +59,9 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     if (btn === 'yes') {
                                         listaStore.removeAll();
 
+                                        var formbar = me.down('toolbar').down('#formsimula');
+                                        formbar.down('#vtotal').setValue(0);
+
                                     } else if (btn === 'no') {
 
                                         var element = listaStore.getAt(0).getData();
@@ -105,6 +108,38 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             emptyText: 'Emp',
             forceSelection: true,
             listeners: {
+                select: function (form){
+                    var objprod = this.up('form').down('#comboproduto2');
+                    var valor = form.getRawValue();
+
+                    var listaStore = me.down('grid').getStore();
+
+                    if(listaStore.getCount() > 0){
+
+                        var element = listaStore.getAt(0).getData();
+
+                        if(valor != element.orig){
+
+                            Ext.Msg.show({
+                                message: 'A mudança da Origem irá limpar o lista. Deseja limpar?',
+                                buttons: Ext.Msg.YESNO,
+                                fn: function(btn) {
+                                    objprod.setValue('');
+                                    
+                                    if (btn === 'yes') {
+                                        listaStore.removeAll();
+                                        var formbar = me.down('toolbar').down('#formsimula');
+                                        formbar.down('#vtotal').setValue(0);
+
+                                    } else if (btn === 'no') {
+
+                                        form.setValue(element.orig);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
             }
         });
 

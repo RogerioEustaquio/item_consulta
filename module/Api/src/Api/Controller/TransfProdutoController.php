@@ -252,8 +252,6 @@ class TransfProdutoController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
 
-            $usuario->empresa = 'SA';
-
             $sql = "select distinct em.apelido as emp,
                             m.descricao as marca,
                             i.cod_item||c.descricao as cod_item,

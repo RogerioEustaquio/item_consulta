@@ -1,10 +1,11 @@
-Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
+Ext.define('App.view.pvtransfproduto.TransfProdutoPedidoGridLista',{
     extend: 'Ext.grid.Panel',
-    xtype: 'pvtransfprodutogridlista',
-    id: 'transfprodutogridlista',
-    itemId: 'transfprodutogridlista',
+    xtype: 'transfprodutopedidogridlista',
+    id: 'transfprodutopedidogridlista',
+    itemId: 'transfprodutopedidogridlista',
     requires: [
-        'Ext.ux.util.Format'
+        'Ext.ux.util.Format',
+        'Ext.grid.feature.Grouping'
     ],
     constructor: function(config) {
 
@@ -13,74 +14,40 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
 
         Ext.define('App.view.pvtransfproduto.modelgrid', {
             extend: 'Ext.data.Model',
-            fields:[{name:'#',mapping:'#'},
-                    {name:'emp',mapping:'emp'},
-                    {name:'orig',mapping:'orig'},
+            fields:[
+                    {name:'idPedido',mapping:'idPedido',type:'number'},
+                    {name:'dtPedido',mapping:'dtPedido'},
+                    {name:'empDest',mapping:'empDest'},
+                    {name:'empOrig',mapping:'empOrig'},
                     {name:'marca',mapping:'marca'},
-                    {name:'coditem',mapping:'coditem'},
+                    {name:'codItem',mapping:'codItem'},
                     {name:'descricao',mapping:'descricao'},
                     {name:'locacao',mapping:'locacao'},
                     {name:'frete',mapping:'frete',type:'number'},
-                    {name:'produto',mapping:'produto',type:'number'},
+                    {name:'qtProduto',mapping:'qtProduto',type:'number'},
+                    {name:'precoUnitario',mapping:'precoUnitario',type:'number'},
+                    {name:'totalItem',mapping:'totalItem',type:'number'},
+                    {name:'totalFrete',mapping:'totalFrete',type:'number'},
                     {name:'total',mapping:'total',type:'number'},
-                    {name:'preco',mapping:'preco',type:'number'}
+                    'observacao',
+                    {name:'idUsu',mapping:'idUsu'},
                     ]
         });
 
-        var coldel = {
-                        xtype:'actioncolumn',
-                        width:40,
-                        align: 'center',
-                        items: [
-                                {
-                                iconCls: 'fa fa-times red-text',
-                                tooltip: 'Remover',
-                                handler: function(grid, rowIndex, colIndex) {
-
-                                    var utilFormat = Ext.create('Ext.ux.util.Format');
-
-                                    var mypanel = me.up('panel');
-                                    var tform = mypanel.down('toolbar').down('#formsimula');
-                                    var listaStore = grid.getStore();
-                                    var objProduto = tform.down('#vproduto');
-                                    var objtotal = tform.down('#vtotal');
-
-                                    var element = listaStore.getAt(rowIndex).getData();
-
-                                    var upProduto = mypanel.desformatreal(objProduto.getValue());
-                                    upProduto = parseFloat(upProduto) - parseFloat(element.produto);
-                                    objProduto.setValue(utilFormat.Value(upProduto));
-
-                                    var upTotal = mypanel.desformatreal(objtotal.getValue());
-                                    upTotal = parseFloat(upTotal) - parseFloat(element.total);
-                                    objtotal.setValue(utilFormat.Value(upTotal));
-
-                                    listaStore.removeAt(rowIndex);
-                                    
-                                    mypanel.calcularProdutos();
-
-                                    if(listaStore.getCount() <= 0){
-                                        
-                                        var objfrete = tform.down('#vtfrete');
-                                        
-                                        objtotal.setValue(utilFormat.Value(0.00));
-                                        objProduto.setValue(utilFormat.Value(0.00));
-                                        objfrete.setValue(utilFormat.Value(0.00));
-                                    }
-
-                                }
-                            }]
-                    };
-
+        var colId =   {
+            text: 'Pedido',
+            width: 52,
+            dataIndex: 'idPedido'
+        };
         var coldest =   {
-                            text: 'Emp',
-                            width: 52,
-                            dataIndex: 'emp'
-                        };
+            text: 'Emp',
+            width: 52,
+            dataIndex: 'empDest'
+        };
         var colorig =   {
                             text: 'Orig',
                             width: 52,
-                            dataIndex: 'orig',
+                            dataIndex: 'empOrig',
                             hidden: false
                         };
         var colmarca =  {
@@ -90,7 +57,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                         };
         var colcodigo = {
                             text: 'Codigo',
-                            dataIndex: 'coditem',
+                            dataIndex: 'codItem',
                             width: 110
                         };
         var coldesc  =  {
@@ -106,12 +73,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                         };
         var colquant =  {
                             text: 'Quantidade',
-                            dataIndex: 'qtproduto',            
+                            dataIndex: 'qtProduto',            
                             width: 100
                         };
         var colcustoproduto =   {
                                     text: 'Custo Produto',
-                                    dataIndex: 'custoproduto',
+                                    dataIndex: 'custoProduto',
                                     width: 112,
                                     renderer: function (v) {
                                         return utilFormat.Value(v);
@@ -127,7 +94,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                         };
         var colcustounitario =  {
                                     text: 'Custo Unitário',
-                                    dataIndex: 'custounitario',
+                                    dataIndex: 'custoUnitario',
                                     width: 112,
                                     renderer: function (v) {
                                         return utilFormat.Value(v);
@@ -159,15 +126,15 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                         };
         var colpreco =  {
                             text: 'Preço Sugerido',
-                            dataIndex: 'preco',
+                            dataIndex: 'precoUnitario',
                             width: 118,
                             renderer: function (v) {
                                 return utilFormat.Value(v);
                             }
                         }
         var colvproduto =  {
-                                text: 'Valor Produtos',
-                                dataIndex: 'valorproduto',
+                                text: 'Valor Produto',
+                                dataIndex: 'totalItem',
                                 width: 118,
                                 renderer: function (v) {
                                     return utilFormat.Value(v);
@@ -176,7 +143,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
 
         if(USUARIO.empresa == "EC"){
 
-            var arraycolums = [ coldel,
+            var arraycolums = [ colId,
                                 coldest,
                                 colorig,
                                 colmarca,
@@ -195,7 +162,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                             ];
         }else{
 
-            var arraycolums = [ coldel,
+            var arraycolums = [ colId,
                                 colmarca,
                                 colcodigo,
                                 coldesc,
@@ -211,20 +178,28 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
 
             store: Ext.create('Ext.data.Store', {
                 model: 'App.view.pvtransfproduto.modelgrid',
-                // proxy: {
-                //     type: 'ajax',
-                //     method:'POST',
-                //     url : BASEURL + '/api/transfproduto/simulacaotransf',
-                //     encode: true,
-                //     format: 'json',
-                //     reader: {
-                //         type: 'json',
-                //         rootProperty: 'data'
-                //     }
-                // }
-                // ,autoLoad: true
+                groupField: 'idPedido',
+                autoLoad: false,
+                // remoteSort: true,
+                proxy: {
+                    type: 'ajax',
+                    method:'POST',
+                    url : BASEURL + '/api/transfproduto/listarProdutosPedidos',
+                    encode: true,
+                    format: 'json',
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data'
+                    }
+                }
             }),
             columns: arraycolums,
+            features: [{
+                ftype:'grouping',
+                groupHeaderTpl: '{columnName}: {name} | {[values.rows[0].data.dtPedido]} | {[values.rows[0].data.idUsu]} | Origem: {[values.rows[0].data.empOrig]} | Frete: {[values.rows[0].data.totalFrete]} | Total: {[values.rows[0].data.total]} | Obs: {[values.rows[0].data.observacao]}',
+                hideGroupHeader: true,
+                startCollapsed: true,
+            }],
             listeners: {
             }
 

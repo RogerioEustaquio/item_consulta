@@ -6,14 +6,23 @@ Ext.define('App.view.pvtransfproduto.Main', {
     requires: [
 
     ],
-    title: 'Simula Transf. Produto',
+    title: 'Simular Transf. Produto',
     layout: 'border',
-    items: [
-        {
-            region: 'center',
-            xtype: 'pvtransfprodutogridpanel',
-            title: null,
-            flex: 1
-        }
-    ]
+    items: {
+        region: 'center',
+        xtype: 'tabpanel',
+        layout: 'fit',
+        items: [
+            {
+                title: 'Simulador',
+                xtype: 'pvtransfprodutogridpanel',
+                
+            },
+            {
+                xtype: 'transfprodutopedidopanel',
+                title: 'Solicitações'
+
+            }
+        ]
+    }
 });

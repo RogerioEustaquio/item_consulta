@@ -1,8 +1,8 @@
-Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
+Ext.define('App.view.pvtransfproduto.TransfProdutoPedidoGridLista',{
     extend: 'Ext.grid.Panel',
-    xtype: 'pvtransfprodutogridlista',
-    id: 'transfprodutogridlista',
-    itemId: 'transfprodutogridlista',
+    xtype: 'transfprodutopedidogridlista',
+    id: 'transfprodutopedidogridlista',
+    itemId: 'transfprodutopedidogridlista',
     requires: [
         'Ext.ux.util.Format'
     ],
@@ -166,7 +166,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
                             }
                         }
         var colvproduto =  {
-                                text: 'Valor Produtos',
+                                text: 'Valor Produto',
                                 dataIndex: 'valorproduto',
                                 width: 118,
                                 renderer: function (v) {
@@ -211,18 +211,18 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridLista',{
 
             store: Ext.create('Ext.data.Store', {
                 model: 'App.view.pvtransfproduto.modelgrid',
-                // proxy: {
-                //     type: 'ajax',
-                //     method:'POST',
-                //     url : BASEURL + '/api/transfproduto/simulacaotransf',
-                //     encode: true,
-                //     format: 'json',
-                //     reader: {
-                //         type: 'json',
-                //         rootProperty: 'data'
-                //     }
-                // }
-                // ,autoLoad: true
+                proxy: {
+                    type: 'ajax',
+                    method:'POST',
+                    url : BASEURL + '/api/transfproduto/listarprodutosPedidos',
+                    encode: true,
+                    format: 'json',
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data'
+                    }
+                }
+                ,autoLoad: false
             }),
             columns: arraycolums,
             listeners: {

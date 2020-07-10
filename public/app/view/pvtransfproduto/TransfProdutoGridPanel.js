@@ -23,7 +23,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/transfproduto/listarempresauser',
+                    url: BASEURL + '/api/transfproduto/listarEmpresaUser',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -95,7 +95,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/transfproduto/listarempresas',
+                    url: BASEURL + '/api/transfproduto/listarEmpresas',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -154,7 +154,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 fields: [{ name: 'coditem' }, { name: 'descricao' }, { name: 'custoContabil',type: 'number' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/transfproduto/listarprodutos',
+                    url: BASEURL + '/api/transfproduto/listarProdutos',
                     reader: { type: 'json', root: 'data' },
                     extraParams: { emp: this.empresa }
                 }
@@ -162,7 +162,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             queryParam: 'codigo',
             queryMode: 'remote',
             displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">',		                            
+                '<tpl for=".">',
                 '{codItem} {descricao} {marca}',
                 '</tpl>'), 
             valueField: 'codItem',
@@ -358,32 +358,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                     bbar:{
                         border: false,
                         items: [
-                            // {
-                            //     xtype: 'form',
-                            //     id: 'formsalvar',
-                            //     border: false,
-                            //     layout: {
-                            //         type: 'hbox'
-                            //     },
-                            //     items: [{
-                            //                 xtype: 'button',
-                            //                 text: 'Salvar',
-                            //                 listeners:{
-
-                            //                     click: function(){
-                            //                         Ext.create('Ext.window.Window',
-                            //                         {
-                            //                             title: 'Hello',
-                            //                             height: 200,
-                            //                             width: 400,
-                            //                             layout: 'fit'
-                            //                         }).show();
-                            //                     }
-                                                
-                            //                 }
-                            //             }]
-                            // },
-                            '->',
                             {
                                 xtype: 'form',
                                 id: 'formsimula',
@@ -400,6 +374,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                         margin: '2 2 2 2',
                                         size: '10',
                                         labelAlign: 'right',
+                                        labelWidth: 36,
                                         value: utilFormat.Value(0)
                                     },
                                     {
@@ -408,7 +383,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                         margin: '2 2 2 2',
                                         listeners:{
                                             click: function(){
-                                               
+                                            
                                                 me.calcularProdutos();
 
                                             }
@@ -481,6 +456,95 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                     }
                                     
                                 ]
+                            },
+                            '->',
+                            {
+                                xtype: 'form',
+                                id: 'formsalvar',
+                                border: false,
+                                layout: {
+                                    type: 'hbox'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        id:'observ',
+                                        name: 'observ',
+                                        fieldLabel: 'Obs',
+                                        margin: '2 2 2 2',
+                                        size: '40',
+                                        labelAlign: 'right',
+                                        labelWidth: 36
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: 'Salvar',
+                                        listeners:{
+
+                                            click: function(){
+
+                                                var myStore = me.down('grid').getStore();
+                                                var objform = me.down('toolbar').down('#formsimula');
+                                                var frete   = objform.down('#vtfrete').getValue();
+                                                var total   = objform.down('#vtotal').getValue();
+                                                var obs     = this.up('form').down('#observ').getValue();
+
+                                                frete = frete.toString().replace(".","");
+                                                total = total.toString().replace(".","");
+
+                                                var arrayData =  new Array();
+                                                for (let index = 0; index < myStore.getCount(); index++) {
+                                                    
+                                                    var elements = myStore.getAt(index).getData();
+                                                    elements.custocontabil = elements.custocontabil.toString().replace(".",",");
+                                                    elements.custoproduto = elements.custoproduto.toString().replace(".",",");
+                                                    elements.custototal = elements.custototal.toString().replace(".",",");
+                                                    elements.frete = elements.frete.toString().replace(".",",");
+                                                    elements.custounitario = elements.custounitario.toString().replace(".",",");
+                                                    elements.icms = elements.icms.toString().replace(".",",");
+                                                    elements.piscofins = elements.piscofins.toString().replace(".",",");
+                                                    elements.margem = elements.margem.toString().replace(".",",");
+                                                    elements.preco = elements.preco.toString().replace(".",",");
+                                                    elements.valorproduto = elements.valorproduto.toString().replace(".",",");
+                                                    elements.total = elements.total.toString().replace(".",",");
+                                                    arrayData[index]= elements;
+                                                    
+                                                }
+
+                                                var params = {
+                                                    emp_orig: elements.orig,
+                                                    emp_dest: elements.emp,
+                                                    frete: frete.trim(),
+                                                    imposto: 0,
+                                                    total: total.trim(),
+                                                    obs: obs,
+                                                    itens: arrayData
+                                                };
+
+                                                me.setLoading({ msg: '<b>Salvando os dados...</b>' });
+
+                                                Ext.Ajax.request({
+                                                    url: BASEURL + '/api/transfproduto/inserirPedido',
+                                                    method: 'POST',
+                                                    params: {dados: Ext.encode(params)},
+                                                    success: function (response) {
+
+                                                        var result = Ext.decode(response.responseText);
+                                                        if(result.success){
+                                                            
+                                                            var pedido = result.message;
+                                                            Ext.Msg.alert('Alerta','Simulação transferência Salva. ('+pedido+')');
+                                                            
+                                                        }else{
+                                                            alert('Erro na solicitação!');
+                                                        }
+                                                        me.setLoading(false);
+                                                    }
+                                                });
+                                            }
+                                            
+                                        }
+                                    }]
                             }
                         ]
                     }
@@ -533,6 +597,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                 mystore.getAt(index).set('frete',vratfrete); // record
 
                 custounitario = parseFloat(custoproduto) + parseFloat(vratfrete);
+                custounitario = parseFloat(me.formatreal(custounitario));
                 mystore.getAt(index).set('custounitario',custounitario); // record
 
                 preco = parseFloat(custounitario) /(1-((parseFloat(element.icms)+parseFloat(element.piscofins)+parseFloat(element.margem))/100));
@@ -702,6 +767,10 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
         valor = valor.toString().replace("\.","");
         valor = valor.toString().replace("\,","\.");
 
+        if(valor){
+            valor = valor.trim();
+        }
+
         return valor;
     },
 
@@ -715,16 +784,12 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
     somaproduto: function(){
         var me = this;
-        console.log('entrou');
         var formbar = me.down('toolbar').down('#formsimula');
         var listaStore = me.up('panel').down('grid').getStore();
-        console.log(listaStore.getData());
         var array = listaStore.getData().items;
         var element = '';
         var qtproduto = 1;
         var objProd = formbar.down('#vproduto');
-        console.log(objProd);
-
         var vproduto = 0;
         var vlcusto = 0;
         for (let index = 0; index < array.length; index++) {
@@ -736,8 +801,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
 
             vproduto = parseFloat(qtproduto) * parseFloat(vlcusto);
 
-            console.log(vproduto);
-                
             objProd.setValue(me.utilFormat(vproduto)); // total sem frete
 
         }

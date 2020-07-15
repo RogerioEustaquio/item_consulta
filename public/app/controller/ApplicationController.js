@@ -14,6 +14,7 @@ Ext.define('App.controller.ApplicationController', {
     },
 
     routes: {
+        'home': { action: 'pvvaloresprodutoAction' },
         'transferencia': { action: 'pvvaloresprodutoAction' }
     },
     
@@ -58,7 +59,7 @@ Ext.define('App.controller.ApplicationController', {
         }
     },
 
-    transferenciaAction: function(){
+    homeAction: function(){
         var me = this,
         viewport = me.getViewport();
     },

@@ -20,22 +20,25 @@ CREATE TABLE xtf_pedido_item (
 );
 
 CREATE TABLE xtf_pedido (
-    id_pedido  INTEGER NOT NULL,
-    dt_pedido  DATE,
-	emp_orig   VARCHAR2(3),
-    emp_dest   VARCHAR2(3),
-    frete      FLOAT,
-    impostos   FLOAT,
-    total      FLOAT,
-    id_usu     VARCHAR2(20),
-	observacao VARCHAR2(100)
+    id_pedido   INTEGER NOT NULL,
+    dt_pedido   DATE,
+	emp_orig    VARCHAR2(3),
+    emp_dest    VARCHAR2(3),
+    frete       FLOAT,
+    impostos    FLOAT,
+    total       FLOAT,
+    id_usu      VARCHAR2(20),
+	observacao  VARCHAR2(100),
+	status 	    VARCHAR2(2),
+	dt_canc     date,
+	id_usu_canc varchar2(20)
 );
 
 ALTER TABLE xtf_pedido ADD CONSTRAINT xtf_pedido_pk PRIMARY KEY ( id_pedido );
 
 ALTER TABLE xtf_pedido_item
     ADD CONSTRAINT xtf_pedido_item_fk FOREIGN KEY ( id_pedido )
-        REFERENCES pedido ( id_pedido );
+        REFERENCES xtf_pedido ( id_pedido );
 
 create table xtf_param_mb
 (
@@ -57,6 +60,10 @@ create or replace package xpkg_tf_pedido is
     procedure inserir_pedido (
      p_id_pedido number, p_emp_orig varchar2, p_emp_dest varchar2,p_frete float,p_imposto float,p_total float, p_id_usu varchar2, p_observacao varchar2
     );
+    
+    procedure cancelar_pedido (
+     p_id_pedido number,p_id_usu_canc varchar2
+    );
 
 end xpkg_tf_pedido;
 
@@ -68,8 +75,8 @@ create or replace package body xpkg_tf_pedido is
     
     begin
 
-        insert into xtf_pedido (ID_PEDIDO, DT_PEDIDO, EMP_ORIG, EMP_DEST, FRETE, IMPOSTOS, TOTAL, ID_USU,observacao)
-           values(p_id_pedido, sysdate, p_emp_orig, p_emp_dest, p_frete, p_imposto, p_total, p_id_usu, p_observacao);
+        insert into xtf_pedido (ID_PEDIDO, DT_PEDIDO, EMP_ORIG, EMP_DEST, FRETE, IMPOSTOS, TOTAL, ID_USU,observacao,status)
+           values(p_id_pedido, sysdate, p_emp_orig, p_emp_dest, p_frete, p_imposto, p_total, p_id_usu, p_observacao,'A');
 
         commit;
 
@@ -87,6 +94,22 @@ create or replace package body xpkg_tf_pedido is
         commit;
 
     end inserir_item_pedido;
+    
+    procedure cancelar_pedido (
+     p_id_pedido number,p_id_usu_canc varchar2
+    ) as
+
+    begin
+
+        update xtf_pedido
+            SET STATUS = 'C' 
+                ,id_usu_canc = p_id_usu_canc
+                ,dt_canc = sysdate
+        where id_pedido = p_id_pedido;
+
+        commit;
+
+    end cancelar_pedido;
 
 end xpkg_tf_pedido;
 */

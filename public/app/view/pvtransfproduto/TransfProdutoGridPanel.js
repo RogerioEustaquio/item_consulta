@@ -327,8 +327,6 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
             }
         });
 
-        // badd.;
-
         Ext.applyIf(me, {
 
             items: [
@@ -544,7 +542,8 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoGridPanel', {
                                             }
                                             
                                         }
-                                    }]
+                                    }
+                                ]
                             }
                         ]
                     }

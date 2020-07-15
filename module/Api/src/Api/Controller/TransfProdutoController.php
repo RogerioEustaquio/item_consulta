@@ -393,8 +393,9 @@ class TransfProdutoController extends AbstractRestfulController
 
             $pEmpDest    = $this->params()->fromQuery('empdest',null);
             $pEmpOrig    = $this->params()->fromQuery('emporig',null);
-            $pInicio = $this->params()->fromQuery('dtinicio',null);
-            $pFim    = $this->params()->fromQuery('dtfim',null);
+            $pInicio     = $this->params()->fromQuery('dtinicio',null);
+            $pFim        = $this->params()->fromQuery('dtfim',null);
+            $pStatus     = $this->params()->fromQuery('status',null);
             $andSql = '';
 
             if($pEmpDest && ($pEmpDest != 'EC')){
@@ -412,9 +413,13 @@ class TransfProdutoController extends AbstractRestfulController
             }
 
             if($pFim){
-                $andSql .= "and p.dt_pedido <= '$pFim'";
+                $andSql .= "and p.dt_pedido <= '$pFim' ";
             }else{
-                $andSql .= "and p.dt_pedido <= sysdate";
+                $andSql .= "and p.dt_pedido <= sysdate ";
+            }
+
+            if($pStatus){
+                $andSql .= "and p.status = trim('$pStatus') ";
             }
 
             $em = $this->getEntityManager();
@@ -439,7 +444,11 @@ class TransfProdutoController extends AbstractRestfulController
                             i.PRECO_UNITARIO,
                             i.TOTAL total_item,
                             p.observacao,
-                            p.id_usu
+                            p.id_usu,
+                            case when p.status = 'C'
+                                then 'Cancelado'
+                                else 'Ativo'
+                            end status
                         from xtf_pedido_item i,
                              xtf_pedido p,
                              ms.tb_estoque e,
@@ -497,4 +506,31 @@ class TransfProdutoController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
+    public function cancelarPedidoAction()
+    {
+        $data = array();
+        
+        try {
+            $session = $this->getSession();
+            $usuario = $session['info']->usuario_sistema;
+
+            $id_pedido = $this->params()->fromPost('idPedido',null);
+
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
+
+            $sql = "call xpkg_tf_pedido.cancelar_pedido( :id_pedido, :id_usu_canc)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_pedido', $id_pedido);
+            $stmt->bindParam(':id_usu_canc', $usuario);
+            $result = $stmt->execute();
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação enviada com sucesso.");
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
 }

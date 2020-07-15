@@ -31,6 +31,7 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoPedidoGridLista',{
                     {name:'total',mapping:'total',type:'number'},
                     'observacao',
                     {name:'idUsu',mapping:'idUsu'},
+                    {name:'status',mapping:'status'}
                     ]
         });
 
@@ -174,13 +175,32 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoPedidoGridLista',{
                             ];
         }
 
+        var text   = '{columnName}: {name} | {[values.rows[0].data.dtPedido]} | {[values.rows[0].data.idUsu]} | ';
+            text   += 'Origem: {[values.rows[0].data.empOrig]} | ';
+            text   += 'Frete: {[values.rows[0].data.totalFrete]} | ';
+            text   += 'Total: {[values.rows[0].data.total]} | ';
+            // text   += 'Status: {[values.rows[0].data.status]} | ';
+            text   += 'Obs: {[values.rows[0].data.observacao]} ';
+
+        var script = " var win = Ext.getCmp('wincancela'); ";
+            script += "win.center(); ";
+            script += "win.setHtml('Deseja realizar o cancelamento do pedido? <br><br>"+text+"\'); ";
+            script += "win.dado={name}; ";
+            script += "win.setHidden(false) ";
+
+        var btntpl = new Ext.XTemplate( '<div style="display: inline;">',
+                                         text,
+                                         '</div>',
+                                         '<div style="float:right;display: inline;">',
+                                         '<button type="button" id="btn_click{name}" class="fa fa-times red-text" onclick="'+script+'"</button>',
+                                         '</div>');
+
         Ext.applyIf(this, {
 
             store: Ext.create('Ext.data.Store', {
                 model: 'App.view.pvtransfproduto.modelgrid',
                 groupField: 'idPedido',
                 autoLoad: false,
-                // remoteSort: true,
                 proxy: {
                     type: 'ajax',
                     method:'POST',
@@ -192,22 +212,20 @@ Ext.define('App.view.pvtransfproduto.TransfProdutoPedidoGridLista',{
                         rootProperty: 'data'
                     }
                 }
+                
             }),
             columns: arraycolums,
             features: [{
                 ftype:'grouping',
-                groupHeaderTpl: '{columnName}: {name} | {[values.rows[0].data.dtPedido]} | {[values.rows[0].data.idUsu]} | Origem: {[values.rows[0].data.empOrig]} | Frete: {[values.rows[0].data.totalFrete]} | Total: {[values.rows[0].data.total]} | Obs: {[values.rows[0].data.observacao]}',
+                groupHeaderTpl: btntpl ,
                 hideGroupHeader: true,
                 startCollapsed: true,
-            }],
-            listeners: {
-            }
+            }]
 
         });
 
         this.callParent(arguments);
 
     }
-
 
 })

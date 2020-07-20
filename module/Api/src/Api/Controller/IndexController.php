@@ -60,13 +60,13 @@ class IndexController extends AbstractRestfulController
     public function loginAction()
     {
 
-        $info = $this->plugin('SessionPlugin')->getSession();  // o retorno do json vazio está vindo com "".
+        $info = $this->plugin('SessionPlugin')->getSession();
 
         if($info){
-            $this->setSession($info);
+
             echo json_encode(array(
                 "success" => true,
-                "usuario" => '', //$info,
+                "usuario" => $info,
                 "msg" => "Usuário logado no sistema."
             ));
         } else {

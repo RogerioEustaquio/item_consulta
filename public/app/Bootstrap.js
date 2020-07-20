@@ -28,13 +28,12 @@ Ext.application({
     launch: function() {
 
         if(!USUARIO && USUARIO != '""')
-        
         window.location.href = BASEURL + '/login';
 
         // Recupera os dados do usuário
         USUARIO = Ext.decode(USUARIO);
 
-        console.log(USUARIO);
+        // console.log(USUARIO);
     }
 
 });

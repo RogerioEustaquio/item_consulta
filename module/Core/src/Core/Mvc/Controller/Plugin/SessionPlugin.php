@@ -9,25 +9,36 @@ use stdClass;
 class SessionPlugin extends AbstractPlugin {
 
     public function getSession() {
-        session_start();
+
+        if(session_status() !== PHP_SESSION_ACTIVE){
+            session_start();
+        }
+
         $session = isset($_SESSION['info']) ? $_SESSION : null;
 
         if(!$session){
-            throw new \Exception("ORA:-20000 Usuário não logado no sistema!<br>Favor logar no Portal Agilize!");
+            // throw new \Exception("ORA:-20000 Usuário não logado no sistema!<br>Favor logar no Portal Agilize!");
+            $session = null;
         }
         
         return $session;
     }
 
     public function setSession($session) {
-        session_start();
+
+        if(session_status() !== PHP_SESSION_ACTIVE){
+            session_start();
+        }
         $_SESSION['info'] = $session;
         session_write_close();
         return $session;
     }
 
     public function getResources() {
-        session_start();
+        
+        if(session_status() !== PHP_SESSION_ACTIVE){
+            session_start();
+        }
         $session = isset($_SESSION['info']) ? $_SESSION : null;
 
         if(!$session){

@@ -87,7 +87,6 @@ Ext.define('App.controller.ApplicationController', {
                 const element = idtabs[index];
 
                 if(key != element){
-                    console.log('('+index+') '+element + ' = ' + key);
                     viewportTabs.remove(element);
                 }
             }

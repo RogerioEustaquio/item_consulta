@@ -1,0 +1,129 @@
+<script>
+
+Ext.onReady(function() {
+
+    var myview = Ext.create('App.view.Viewport', {
+                        layout:'fit',
+                        width: '100%'
+                    });
+
+    var myform = Ext.create('Ext.panel.Panel', {
+                        id:'panellogin',
+                        layout: 'fit',
+                        width: '100%',
+                        // style: {
+                        //     background : '#ffffff !important'
+                        // },
+                        tbar:[{
+                            xtype: 'form',
+                            id:'formlogin',
+                            layout: 'fit',
+                            title: 'Login',
+                            items:[
+                                {
+                                    xtype: 'textfield',
+                                    allowBlank: false,
+                                    fieldLabel: 'Usuário',
+                                    id: 'user',
+                                    name: 'user',
+                                    emptyText: 'Usuário'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    allowBlank: false,
+                                    fieldLabel: 'Senha',
+                                    id: 'pass',
+                                    name: 'pass',
+                                    emptyText: 'Senha',
+                                    inputType: 'password'
+                                },
+                                {
+                                    type: 'button',
+                                    text: 'Login',
+                                    handler: function() {
+
+                                        var user = this.up('form').down('#user').getValue();
+                                        var pass = this.up('form').down('#pass').getValue();
+
+                                        params = {
+                                                user: user,
+                                                pass: pass
+                                            };
+
+                                        Ext.MessageBox.show({
+                                            msg: 'Verificando a permissão de acesso...',
+                                            progressText: 'Saving...',
+                                            width: 300,
+                                            wait: {
+                                                interval: 200
+                                            }
+                                        });
+                                        
+                                        Ext.Ajax.request({
+                                            url: BASEURL +'/api/Index/logar',
+                                            method: 'POST',
+                                            params: params,
+                                            success: function (response) {
+
+                                                Ext.MessageBox.hide();
+                                                var result = Ext.decode(response.responseText);
+
+                                                if(!result.success){
+                                                    new Noty({
+                                                        theme: 'relax',
+                                                        layout: 'bottomRight',
+                                                        type: 'error',
+                                                        closeWith: [],
+                                                        text: 'Acesso negado.'
+                                                    }).show();
+                                                }else{
+                                                    window.location.href = BASEURL + '/';
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            ]
+
+                        }],
+                        items: [
+                            {
+                                xtype: 'panel',
+                                title: 'Teste',
+                                items:[
+                                    {
+                                        xtype: 'textfield'
+                                    }
+                                ]
+                            }
+                        ]
+                });
+
+        var pMsg = Ext.MessageBox.show({
+            msg: 'Verificando a permissão de acesso...',
+            progressText: 'Saving...',
+            width: 300,
+            wait: {
+                interval: 200
+            }
+        });
+
+        Ext.Ajax.request({
+            url: BASEURL +'/api/index/login',
+            method: 'POST',
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+                Ext.MessageBox.hide();
+                
+                if(!result.success){
+                    
+                    myview.add(myform);
+                }
+
+                if(result.success){
+                    window.location.href = BASEURL + '/';
+                }
+            }
+        });
+});
+</script>

@@ -9,6 +9,7 @@ use Core\Hydrator\Strategy\ValueStrategy;
 use Core\Mvc\Controller\AbstractRestfulController;
 use Zend\Json\Json;
 
+
 class TransfProdutoController extends AbstractRestfulController
 {
     
@@ -533,4 +534,5 @@ class TransfProdutoController extends AbstractRestfulController
         
         return $this->getCallbackModel();
     }
+    
 }

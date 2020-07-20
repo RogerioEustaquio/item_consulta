@@ -7,7 +7,10 @@ class Usuario extends AbstractHelper
 {
     public function __invoke()
     {
-        session_start();
+        if(session_status() !== PHP_SESSION_ACTIVE){
+            session_start();
+        }
+
         $session = isset($_SESSION['info']) ? $_SESSION : null;
 
         if(!$session){

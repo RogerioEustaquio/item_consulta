@@ -2,99 +2,97 @@
 
 Ext.onReady(function() {
 
-    var myview = Ext.create('App.view.Viewport', {
-                        layout:'fit',
-                        width: '100%'
-                    });
+    var myview = Ext.create('App.view.Viewport');
 
-    var myform = Ext.create('Ext.panel.Panel', {
+    var myform = Ext.create('Ext.container.Container', {
                         id:'panellogin',
                         layout: 'fit',
-                        width: '100%',
-                        // style: {
-                        //     background : '#ffffff !important'
-                        // },
-                        tbar:[{
-                            xtype: 'form',
-                            id:'formlogin',
-                            layout: 'fit',
-                            title: 'Login',
-                            items:[
-                                {
-                                    xtype: 'textfield',
-                                    allowBlank: false,
-                                    fieldLabel: 'Usuário',
-                                    id: 'user',
-                                    name: 'user',
-                                    emptyText: 'Usuário'
-                                },
-                                {
-                                    xtype: 'textfield',
-                                    allowBlank: false,
-                                    fieldLabel: 'Senha',
-                                    id: 'pass',
-                                    name: 'pass',
-                                    emptyText: 'Senha',
-                                    inputType: 'password'
-                                },
-                                {
-                                    type: 'button',
-                                    text: 'Login',
-                                    handler: function() {
-
-                                        var user = this.up('form').down('#user').getValue();
-                                        var pass = this.up('form').down('#pass').getValue();
-
-                                        params = {
-                                                user: user,
-                                                pass: pass
-                                            };
-
-                                        Ext.MessageBox.show({
-                                            msg: 'Verificando a permissão de acesso...',
-                                            progressText: 'Saving...',
-                                            width: 300,
-                                            wait: {
-                                                interval: 200
-                                            }
-                                        });
-                                        
-                                        Ext.Ajax.request({
-                                            url: BASEURL +'/api/Index/logar',
-                                            method: 'POST',
-                                            params: params,
-                                            success: function (response) {
-
-                                                Ext.MessageBox.hide();
-                                                var result = Ext.decode(response.responseText);
-
-                                                if(!result.success){
-                                                    new Noty({
-                                                        theme: 'relax',
-                                                        layout: 'bottomRight',
-                                                        type: 'error',
-                                                        closeWith: [],
-                                                        text: 'Acesso negado.'
-                                                    }).show();
-                                                }else{
-                                                    window.location.href = BASEURL + '/';
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            ]
-
-                        }],
-                        items: [
+                        whith: '100%',
+                        style: {
+                            background : '#ffffff !important'
+                        },
+                        items:[
                             {
-                                xtype: 'panel',
-                                title: 'Teste',
+                                xtype: 'form',
+                                id:'formlogin',
+                                title: 'Login',
+                                frame: true,
+                                bodyPadding: 10,
+                                margin :'20 20 20 20',
+                                defaultType: 'textfield',
                                 items:[
                                     {
-                                        xtype: 'textfield'
+                                        // xtype: 'textfield',
+                                        allowBlank: false,
+                                        fieldLabel: 'Usuário',
+                                        id: 'user',
+                                        name: 'user',
+                                        emptyText: 'Usuário'
+                                    }, 
+                                    {
+                                        // xtype: 'textfield',
+                                        allowBlank: false,
+                                        fieldLabel: 'Senha',
+                                        id: 'pass',
+                                        name: 'pass',
+                                        emptyText: 'Senha',
+                                        inputType: 'password'
                                     }
-                                ]
+                                ],
+
+                                buttons: [
+                                    { 
+                                        text: 'Login',
+                                        handler: function() {
+
+                                            var user = this.up('form').down('#user').getValue();
+                                            var pass = this.up('form').down('#pass').getValue();
+
+                                            params = {
+                                                    user: user,
+                                                    pass: pass
+                                                };
+
+                                            Ext.MessageBox.show({
+                                                msg: 'Verificando a permissão de acesso...',
+                                                progressText: 'Saving...',
+                                                width: 300,
+                                                wait: {
+                                                    interval: 200
+                                                }
+                                            });
+                                            
+                                            Ext.Ajax.request({
+                                                url: BASEURL +'/api/Index/logar',
+                                                method: 'POST',
+                                                params: params,
+                                                success: function (response) {
+
+                                                    Ext.MessageBox.hide();
+                                                    var result = Ext.decode(response.responseText);
+
+                                                    if(!result.success){
+                                                        new Noty({
+                                                            theme: 'relax',
+                                                            layout: 'bottomRight',
+                                                            type: 'error',
+                                                            closeWith: [],
+                                                            text: 'Acesso negado. '+result.msg
+                                                        }).show();
+                                                    }else{
+                                                        window.location.href = BASEURL + '/';
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                ],
+
+                                defaults: {
+                                    anchor: '100%',
+                                    labelWidth: 120
+                                }
+
                             }
                         ]
                 });

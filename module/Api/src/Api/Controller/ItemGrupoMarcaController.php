@@ -275,8 +275,9 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
                     $andSql
+                    and rownum <= 100
                     -- and e.estoque > 0
-                    order by emp, grupo_marca, marca, ultima_compra desc
+                    order by emp, grupo_marca, ultima_compra desc, marca
             ";
             
             $conn = $em->getConnection();

@@ -45,9 +45,17 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                     storemarca.getProxy().setExtraParams({emp: valor});
                     storeitem.getProxy().setExtraParams({emp: valor});
 
-                    storegrupo.load();
-                    storemarca.load();
-                    storeitem.load();
+                    storegrupo.load(function(){
+                    
+                        storemarca.load(
+                            function(){
+                                
+                                storeitem.load()
+                            }
+                        );
+                    });
+                    
+                    ;
                 }
             }
         });

@@ -56,12 +56,19 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             empbx.enable();
             empbx.select(USUARIO.empresa);
 
-            me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore().load();
-            me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore().load();
+            me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore().load(
+                function(){
+                    
+                    me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore().load(
+                        function(){
+                            
+                            me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore().load();
+                        }
+                    );
+                }
+            );
 
-            setTimeout(function(){
-                me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore().load();
-            }, 500);
+            
            
 
         });

@@ -38,14 +38,13 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                     var valor = form.getRawValue();
                     
                     var storegrupo = me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore();
-                    console.log(storegrupo.getId());
                     var storemarca = me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore();
                     var storeitem = me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore();
 
                     storegrupo.getProxy().setExtraParams({emp: valor});
                     storemarca.getProxy().setExtraParams({emp: valor});
                     storeitem.getProxy().setExtraParams({emp: valor});
-                    
+
                     storegrupo.load();
                     storemarca.load();
                     storeitem.load();
@@ -57,6 +56,9 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             empbx.enable();
             empbx.select(USUARIO.empresa);
 
+            me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore().load();
+            me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore().load();
+            me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore().load();
             // var proxyprod = empbx.up('grid').down('#comboproduto').getStore().getProxy();
             // proxyprod.setExtraParams({emp: USUARIO.empresa});
         });

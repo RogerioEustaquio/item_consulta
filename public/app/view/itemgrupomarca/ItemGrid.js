@@ -30,7 +30,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
                 rootProperty: 'data'
             }
         },
-        autoLoad : true
+        autoLoad : false
     }),
     columns: [
         {

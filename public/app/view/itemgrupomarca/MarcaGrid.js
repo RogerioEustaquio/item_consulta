@@ -26,7 +26,7 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
                 rootProperty: 'data'
             }
         },
-        autoLoad : true
+        autoLoad : false
     }),
     columns: [
         {

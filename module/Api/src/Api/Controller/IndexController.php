@@ -96,6 +96,7 @@ class IndexController extends AbstractRestfulController
                              ms.empresa e
                     where f.id_pessoa = :cpf
                     and f.id_empresa = e.id_empresa
+                    and f.data_saida is null 
             ";
             
             $conn = $em->getConnection();

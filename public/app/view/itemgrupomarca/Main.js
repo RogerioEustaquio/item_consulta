@@ -6,26 +6,30 @@ Ext.define('App.view.itemgrupomarca.Main', {
     requires: [
     ],
     title: 'Novos Produtos',
-    layout: 'auto',
+    layout: 'border',
 
     constructor: function() {
         var me = this;
         
         Ext.applyIf(me, {
-            
+            style: {
+                background:'#ffffff !important'
+            },
             items: [
                 { 
                     xtype: 'ItemGrupoMarcaToolbar',
+                    region: 'north',
                 },
                 {
                     xtype: 'container',
                     id: 'containergrids',
+                    region: 'center',
                     layout: {
                         type: 'hbox'
                     },
                     defaults:{
                         border: false,
-                        margin: '2 2 2 2',
+                        margin: '1 1 1 1',
                         // scrollable: true,
                         height : 536,
                     },

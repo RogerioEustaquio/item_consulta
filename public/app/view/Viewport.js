@@ -12,7 +12,7 @@ Ext.define('App.view.Viewport', {
             xtype: 'toolbar',
             padding: 2,
             items: [
-
+                
             ]
         }
     ]

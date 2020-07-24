@@ -2,7 +2,9 @@
 
 Ext.onReady(function() {
 
-    var myview = Ext.create('Ext.Viewport');
+    var myview = Ext.create('Ext.Viewport',{
+        layout: 'fit'
+    });
 
     function funcLogar (user,pass){
 
@@ -47,16 +49,15 @@ Ext.onReady(function() {
     var myform = Ext.create('Ext.panel.Panel', {
                         id:'panellogin',
                         layout: 'fit',
-                        bodyStyle: {
-                            background : 'url(../data/background.png) !important'
-                        },
                         tbar :[
                             {
                                 xtype: 'image',
                                 src: '../data/logo.png',
+                                margin: '0 0 0 0',
+                                width: 40,
+                                height: 40,
                                 style: {
-                                    iconAlign:'top !important',
-                                    width: '40px !important'
+                                    top:'0px !important',
                                 }
                             },
                             '->',
@@ -131,7 +132,7 @@ Ext.onReady(function() {
                             }
                         ]
                 });
-
+        
         var pMsg = Ext.MessageBox.show({
             msg: 'Verificando a permissão de acesso...',
             progressText: 'Saving...',
@@ -149,7 +150,8 @@ Ext.onReady(function() {
                 Ext.MessageBox.hide();
                 
                 if(!result.success){
-                    
+
+                    myform.down('toolbar').setHeight(60);
                     myview.add(myform);
                 }
 

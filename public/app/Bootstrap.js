@@ -12,13 +12,15 @@ Ext.application({
         'Ext.ux.util.Format',
         'App.view.Viewport',
         'App.controller.PvValoresProdutoController',
-        'App.controller.PvTransfProdutoController'
+        'App.controller.PvTransfProdutoController',
+        'App.controller.ItemGrupoMarcaController'
     ],
     
     controllers: [
         'ApplicationController',
         'PvValoresProdutoController',
-        'PvTransfProdutoController'
+        'PvTransfProdutoController',
+        'ItemGrupoMarcaController'
     ],
     
     mainView: 'App.view.Viewport',
@@ -26,6 +28,30 @@ Ext.application({
     defaultToken: 'home',
     
     launch: function() {
+
+        // var body = Ext.getBody();
+
+        // Ext.create('Ext.panel.Panel', {
+        //     id: 'panelSair',
+        //     floating: true,
+        //     layout: 'fit',
+        //     width: '100%',
+        //     items:[{
+        //             xtype: 'button',
+        //             iconCls: 'fa fa-sign-out-alt blue-text',
+        //             tooltip: 'Logout',
+        //             style: {
+        //                 background: '#ffffff !important',
+        //                 position: 'fixed !important',
+        //                 top: '2px !important',
+        //                 right: '2px !important'
+        //             },
+        //             renderTo: body
+                
+        //         }
+        //     ]
+            
+        // });
 
         if(!USUARIO && USUARIO != '""')
         window.location.href = BASEURL + '/login';

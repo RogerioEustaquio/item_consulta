@@ -66,17 +66,31 @@ Ext.define('App.controller.ApplicationController', {
     
     pvvaloresprodutoAction: function(){
         var me = this;
-        me.rmMasterTab('valoresprodutomain');
+        me.rmTranfTab();
         me.addMasterTab('pvvaloresprodutomain');
+        me.rmTranfTab();
+        me.addMasterTab('itemgrupomarcamain');
+        me.rmTranfTab();
+        
     },
 
     pvtransfprodutoAction: function(){
         var me = this;
-        me.rmMasterTab('transfprodutomain');
+        me.rmAllTab('transfprodutomain');
         me.addMasterTab('pvtransfprodutomain');
+        me.rmAllTab('transfprodutomain');
     },
 
-    rmMasterTab: function(key){
+    rmTranfTab: function(){
+        var me = this,
+            viewport = me.getViewport(),
+            viewportTabs = viewport.down('#applicationtabs');
+
+        viewportTabs.remove('transfprodutomain');
+
+    },
+
+    rmAllTab: function(key){
         var me = this,
             viewport = me.getViewport(),
             viewportTabs = viewport.down('#applicationtabs');
@@ -84,7 +98,7 @@ Ext.define('App.controller.ApplicationController', {
             var idtabs = viewportTabs.items.keys;
 
             for (let index = 0; index < idtabs.length; index++) {
-                const element = idtabs[index];
+                var element = idtabs[index];
 
                 if(key != element){
                     viewportTabs.remove(element);

@@ -58,9 +58,12 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
 
             me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore().load();
             me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore().load();
-            me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore().load();
-            // var proxyprod = empbx.up('grid').down('#comboproduto').getStore().getProxy();
-            // proxyprod.setExtraParams({emp: USUARIO.empresa});
+
+            setTimeout(function(){
+                me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore().load();
+            }, 500);
+           
+
         });
 
         Ext.applyIf(me, {

@@ -31,7 +31,7 @@ Ext.define('App.view.itemgrupomarca.Main', {
                         border: false,
                         margin: '1 1 1 1',
                         // scrollable: true,
-                        height : 536,
+                        height : '100%',
                     },
                     items:[
                         {

@@ -7,7 +7,6 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
     margin: '1 1 1 1',
     store: Ext.create('Ext.data.Store', {
         model: Ext.create('Ext.data.Model', {
-                // fields: ['descricao', 'marca','estoque']
                 fields:[{name:'idGrupoMarca',mapping:'idGrupoMarca'},
                         {name:'idMarca',mapping:'idMarca'},
                         {name:'marca',mapping:'marca'},
@@ -19,7 +18,6 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
             method:'POST',
             url : BASEURL + '/api/itemgrupomarca/listarmarca',
             encode: true,
-            // extraParams: {param1: '0',  param2: ''},
             format: 'json',
             reader: {
                 type: 'json',
@@ -90,8 +88,14 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
         var pemp = this.up('panel').up('container').up('container').down('toolbar').down('#cbxempgrupo').getRawValue();
 
         var griditem = this.up('panel').up('container').down('#itemgridpanel').down('grid').getStore();
-        griditem.getProxy().setExtraParams({grupoMarca: stringGrupoMarca, marca: stringMarca, emp : pemp});
-        griditem.load();
+
+        var jsonParams = {
+            emp: pemp,
+            grupoMarca: stringGrupo,
+            marca: stringMarca
+        };
+
+        griditem.load({params: jsonParams});
     }
 
 });

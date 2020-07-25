@@ -5,33 +5,43 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
     columnLines: true,
     selType: 'checkboxmodel',
     margin: '1 1 1 1',
+    requires: [
+        'Ext.toolbar.Paging'
+    ],
+    
+    bbar: {
+        xtype: 'pagingtoolbar',
+        displayInfo: true,
+        displayMsg: 'Exibindo solicitações {0} - {1} de {2}',
+        emptyMsg: "Não há solicitações a serem exibidos"
+    },
     store: Ext.create('Ext.data.Store', {
-        model: Ext.create('Ext.data.Model', {
-                // fields: ['descricao', 'marca','estoque']
-                fields:[{name:'emp',mapping:'emp'},
-                        {name:'grupoMarca',mapping:'grupoMarca'},
-                        {name:'marca',mapping:'marca'},
-                        {name:'CodItem',mapping:'CodItem'},
-                        {name:'descricao',mapping:'descricao'},
-                        {name:'ultimaCompra',mapping:'ultimaCompra'},
-                        {name:'ultimaVenda',mapping:'ultimaVenda'},
-                        {name:'estoque',mapping:'estoque'}
-                        ]
-        }),
-        proxy: {
-            type: 'ajax',
-            method:'POST',
-            url : BASEURL + '/api/itemgrupomarca/listaritem',
-            encode: true,
-            timeout: 60000,
-            // extraParams: {param1: '0',  param2: ''},
-            format: 'json',
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        },
-        autoLoad : false
+                model: Ext.create('Ext.data.Model', {
+                            fields:[{name:'emp',mapping:'emp'},
+                                    {name:'grupoMarca',mapping:'grupoMarca'},
+                                    {name:'marca',mapping:'marca'},
+                                    {name:'CodItem',mapping:'CodItem'},
+                                    {name:'descricao',mapping:'descricao'},
+                                    {name:'ultimaCompra',mapping:'ultimaCompra'},
+                                    {name:'ultimaVenda',mapping:'ultimaVenda'},
+                                    {name:'estoque',mapping:'estoque'}
+                                    ]
+                }),
+                pageSize: 50,
+                autoLoad: false,
+                proxy: {
+                    type: 'ajax',
+                    method:'POST',
+                    url : BASEURL + '/api/itemgrupomarca/listaritem',
+                    encode: true,
+                    timeout: 60000,
+                    format: 'json',
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data',
+                        totalProperty: 'total'
+                    }
+                }
     }),
     columns: [
         {

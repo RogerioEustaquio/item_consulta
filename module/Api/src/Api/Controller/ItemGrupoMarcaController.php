@@ -228,9 +228,18 @@ class ItemGrupoMarcaController extends AbstractRestfulController
     {
         $data = array();
 
-        $emp   = $this->params()->fromQuery('emp',null);
+        $emp        = $this->params()->fromQuery('emp',null);
         $grupomarca = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
-        $marca = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
+        $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
+        $inicio     = $this->params()->fromQuery('start',null);
+        $final      = $this->params()->fromQuery('limit',null);
+
+        // if(!$inicio){
+        //     $inicio = $this->params()->fromQuery('start',null);
+        // }
+        // if(!$final){
+        //     $final = $this->params()->fromQuery('limit',null);
+        // }
         
         try {
 
@@ -249,6 +258,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             }
 
             $em = $this->getEntityManager();
+            $conn = $em->getConnection();
             
             $sql = "select em.apelido as emp,
                             g.descricao as grupo_marca,
@@ -275,14 +285,24 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
                     $andSql
-                    and rownum <= 100
+                    --and rownum <= 100
                     -- and e.estoque > 0
                     order by emp, grupo_marca, ultima_compra desc, marca
             ";
-            
-            $conn = $em->getConnection();
+
+            $sql1 = "select count(*) as totalCount from ($sql)";
+            $stmt = $conn->prepare($sql1);
+            $stmt->execute();
+            $resultCount = $stmt->fetchAll();
+
+            $sql = "
+                SELECT PGN.*
+                  FROM (SELECT ROWNUM AS RNUM, PGN.*
+                          FROM ($sql) PGN) PGN
+                 WHERE RNUM BETWEEN " . ($inicio +1 ) . " AND " . ($inicio + $final) . "
+            ";
+
             $stmt = $conn->prepare($sql);
-            
             $stmt->execute();
             $results = $stmt->fetchAll();
 
@@ -302,6 +322,10 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             $this->setCallbackError($e->getMessage());
         }
         
-        return $this->getCallbackModel();
+        $objReturn = $this->getCallbackModel();
+
+        $objReturn->total = $resultCount[0]['TOTALCOUNT'];
+
+        return $objReturn;
     }
 }

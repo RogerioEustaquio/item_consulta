@@ -87,15 +87,18 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
 
         var pemp = this.up('panel').up('container').up('container').down('toolbar').down('#cbxempgrupo').getRawValue();
 
-        var griditem = this.up('panel').up('container').down('#itemgridpanel').down('grid').getStore();
+        var griditem = this.up('panel').up('container').down('#itemgridpanel').down('grid');
+        var storeitem = griditem.getStore();
+        storeitem.getProxy().setExtraParams({grupoMarca: stringGrupoMarca, marca: stringMarca, emp: pemp});
 
-        var jsonParams = {
-            emp: pemp,
-            grupoMarca: stringGrupo,
-            marca: stringMarca
-        };
+        // storeitem.getProxy().setExtraParam('grupoMarca', stringGrupoMarca); 
+        // storeitem.getProxy().setExtraParam('marca', stringMarca); 
+        // storeitem.getProxy().setExtraParam('emp', pemp); 
 
-        griditem.load({params: jsonParams});
+        // me.getFiltroPessoa().getStore().getProxy().setExtraParam('idEmpresa', me.getEmpresa().getValue()); 
+        // console.log(griditem.down('pagingtoolbar').getStore());
+        
+        storeitem.loadPage(1);
     }
 
 });

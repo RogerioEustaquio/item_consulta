@@ -263,7 +263,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             $sql = "select em.apelido as emp,
                             g.descricao as grupo_marca,
                             m.descricao as marca,
-                            i.cod_item||c.descricao as cod_item,   
+                            i.cod_item||c.descricao as cod_item,
                             i.descricao,
                             trunc(e.ultima_compra) as ultima_compra,
                             trunc(e.ultima_venda) as ultima_venda,

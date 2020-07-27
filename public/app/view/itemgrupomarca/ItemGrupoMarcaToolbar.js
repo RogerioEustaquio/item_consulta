@@ -36,26 +36,24 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                 select: function (form){
         
                     var valor = form.getRawValue();
-
+                    
                     var storegrupo = me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore();
                     var storemarca = me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore();
                     var storeitem = me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore();
 
-                    var jsonParams = {
-                        emp: valor
-                    };
+                    storegrupo.getProxy().setExtraParams({emp: valor});
+                    storemarca.getProxy().setExtraParams({emp: valor});
+                    storeitem.getProxy().setExtraParams({emp: valor});
 
-                    storegrupo.load({
-                        params: jsonParams,
-                        callback :function(){
-                            storemarca.load({
-                                params: jsonParams,
-                                callback :function(){
-                                    storeitem.load({params: jsonParams})
-                                }
-                            });
-                        }
+                    storegrupo.load(function(){
+                        storemarca.load(
+                            function(){
+                                storeitem.loadPage(1);
+                            }
+                        );
                     });
+                    
+                    ;
                 }
             }
         });
@@ -63,20 +61,25 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
         empbx.store.load(function(r){
             empbx.enable();
             empbx.select(USUARIO.empresa);
-              
+
             var storegrupo = me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore();
             var storemarca = me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore();
             var storeitem = me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore();
 
+            // storeitem.getProxy().setExtraParams({page: 0});
+            
             storegrupo.load(
                 function(){
                     storemarca.load(
                         function(){
-                            storeitem.load();
+                            storeitem.loadPage(1);
                         }
                     );
                 }
             );
+
+            
+           
 
         });
 

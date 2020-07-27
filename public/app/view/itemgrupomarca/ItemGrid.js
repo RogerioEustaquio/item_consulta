@@ -32,6 +32,11 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
                 proxy: {
                     type: 'ajax',
                     method:'POST',
+                    // params: {
+                    //     grupoMarca: '',
+                    //     marca: '',
+                    //     emp: ''
+                    // },
                     url : BASEURL + '/api/itemgrupomarca/listaritem',
                     encode: true,
                     timeout: 60000,

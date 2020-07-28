@@ -91,13 +91,9 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
         var storeitem = griditem.getStore();
         storeitem.getProxy().setExtraParams({grupoMarca: stringGrupoMarca, marca: stringMarca, emp: pemp});
 
-        // storeitem.getProxy().setExtraParam('grupoMarca', stringGrupoMarca); 
-        // storeitem.getProxy().setExtraParam('marca', stringMarca); 
-        // storeitem.getProxy().setExtraParam('emp', pemp); 
-
-        // me.getFiltroPessoa().getStore().getProxy().setExtraParam('idEmpresa', me.getEmpresa().getValue()); 
+        // storeitem.getProxy().setExtraParam('grupoMarca', stringGrupoMarca);
         // console.log(griditem.down('pagingtoolbar').getStore());
-        
+
         storeitem.loadPage(1);
     }
 

@@ -73,12 +73,15 @@ Ext.define('App.view.itemgrupomarca.GrupoMarcaGrid', {
         }
         
         var pemp = this.up('panel').up('container').up('container').down('toolbar').down('#cbxempgrupo').getRawValue();
+        var produto  = this.up('panel').up('container').up('container').down('toolbar').down('#txtproduto').getValue();
+        var dtinicio = this.up('panel').up('container').up('container').down('toolbar').down('#dtinicio').getRawValue();
+        var dtfinal  = this.up('panel').up('container').up('container').down('toolbar').down('#dtfim').getRawValue();
 
         var gridmarca = this.up('panel').up('container').down('#marcagridpanel').down('grid').getStore();
-        gridmarca.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp});
+        gridmarca.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp, produto: produto, dtinicio: dtinicio, dtfinal: dtfinal});
         
         var griditem = this.up('panel').up('container').down('#itemgridpanel').down('grid').getStore();
-        griditem.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp});
+        griditem.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp, produto: produto, dtinicio: dtinicio, dtfinal: dtfinal});
 
         gridmarca.load(
             function(){

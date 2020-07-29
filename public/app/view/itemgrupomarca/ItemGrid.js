@@ -63,7 +63,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
         {
             text: 'Código',
             dataIndex: 'codItem',
-            width: 100
+            width: 110
         },
         {
             text: 'Descrição',

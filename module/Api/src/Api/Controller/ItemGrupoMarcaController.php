@@ -85,7 +85,10 @@ class ItemGrupoMarcaController extends AbstractRestfulController
     {
         $data = array();
 
-        $emp   = $this->params()->fromQuery('emp',null);
+        $emp        = $this->params()->fromQuery('emp',null);
+        $produto    = $this->params()->fromQuery('produto',null);
+        $dtinicio   = $this->params()->fromQuery('dtinicio',null);
+        $dtfinal    = $this->params()->fromQuery('dtfinal',null);
         
         try {
 
@@ -98,6 +101,18 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             
             if($emp && $emp != "EC"){
                 $andSql = " and em.apelido = '$emp'";
+            }
+            
+            if($produto){
+                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+            }
+
+            if($dtinicio){
+                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+            }
+
+            if($dtfinal){
+                $andSql .= " and e.ultima_compra <= '$dtfinal'";
             }
 
             $sql = "select g.id_grupo_marca,
@@ -156,6 +171,9 @@ class ItemGrupoMarcaController extends AbstractRestfulController
 
         $emp        = $this->params()->fromQuery('emp',null);
         $grupomarca = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
+        $produto    = $this->params()->fromQuery('produto',null);
+        $dtinicio   = $this->params()->fromQuery('dtinicio',null);
+        $dtfinal    = $this->params()->fromQuery('dtfinal',null);
 
         try {
 
@@ -169,6 +187,18 @@ class ItemGrupoMarcaController extends AbstractRestfulController
     
             if($grupomarca){
                 $andSql .= " and g.id_grupo_marca in ($grupomarca)";
+            }
+
+            if($produto){
+                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+            }
+
+            if($dtinicio){
+                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+            }
+
+            if($dtfinal){
+                $andSql .= " and e.ultima_compra <= '$dtfinal'";
             }
 
             $em = $this->getEntityManager();
@@ -231,15 +261,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
         $emp        = $this->params()->fromQuery('emp',null);
         $grupomarca = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
         $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
+        $produto    = $this->params()->fromQuery('produto',null);
+        $dtinicio     = $this->params()->fromQuery('dtinicio',null);
+        $dtfinal      = $this->params()->fromQuery('dtfinal',null);
         $inicio     = $this->params()->fromQuery('start',null);
         $final      = $this->params()->fromQuery('limit',null);
-
-        // if(!$inicio){
-        //     $inicio = $this->params()->fromQuery('start',null);
-        // }
-        // if(!$final){
-        //     $final = $this->params()->fromQuery('limit',null);
-        // }
         
         try {
 
@@ -255,6 +281,18 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             }
             if($marca){
                 $andSql .= " and m.id_marca in ($marca)";
+            }
+
+            if($produto){
+                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+            }
+
+            if($dtinicio){
+                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+            }
+
+            if($dtfinal){
+                $andSql .= " and e.ultima_compra <= '$dtfinal'";
             }
 
             $em = $this->getEntityManager();
@@ -289,6 +327,9 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     -- and e.estoque > 0
                     order by emp, grupo_marca, ultima_compra desc, marca
             ";
+
+            // print "$sql";
+            // exit;
 
             $sql1 = "select count(*) as totalCount from ($sql)";
             $stmt = $conn->prepare($sql1);

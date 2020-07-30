@@ -30,12 +30,10 @@ Ext.define('App.view.itemgrupomarca.Main', {
                     defaults:{
                         border: false,
                         margin: '1 1 1 1',
-                        // scrollable: true,
                         height : '100%',
                     },
                     items:[
                         {
-                            // xtype: 'grupomarcagrid',
                             xtype:'panel',
                             id: 'grupomarcagridpanel',
                             layout: 'fit',
@@ -48,7 +46,6 @@ Ext.define('App.view.itemgrupomarca.Main', {
                             
                         },
                         {
-                            // xtype: 'marcagrid',
                             xtype:'panel',
                             id: 'marcagridpanel',
                             layout: 'fit',
@@ -60,7 +57,6 @@ Ext.define('App.view.itemgrupomarca.Main', {
                             ]
                         },
                         {
-                            // xtype: 'itemgrid',
                             xtype:'panel',
                             id: 'itemgridpanel',
                             layout: 'fit',

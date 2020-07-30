@@ -9,7 +9,6 @@ Ext.define('App.view.itemgrupomarca.GrupoMarcaGrid', {
     margin: '1 1 1 1',
     store: Ext.create('Ext.data.Store', {
         model: Ext.create('Ext.data.Model', {
-                // fields: ['descricao', 'marca','estoque']
                 fields:[{name:'idGrupoMarca',mapping:'idGrupoMarca'},
                         {name:'grupoMarca',mapping:'grupoMarca'},
                         {name:'skus',mapping:'skus'}
@@ -20,7 +19,6 @@ Ext.define('App.view.itemgrupomarca.GrupoMarcaGrid', {
             method:'POST',
             url : BASEURL + '/api/itemgrupomarca/listargrupomarca',
             encode: true,
-            // extraParams: {param1: '0',  param2: ''},
             format: 'json',
             reader: {
                 type: 'json',

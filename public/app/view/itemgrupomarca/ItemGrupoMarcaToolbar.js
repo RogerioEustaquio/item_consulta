@@ -11,7 +11,6 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
 
         var empbx = Ext.create('Ext.form.field.ComboBox',{
             width: 70,
-            // name: 'empresa',
             id: 'cbxempgrupo',
             itemId: 'cbxempgrupo',
             store: Ext.data.Store({
@@ -39,14 +38,16 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                     var valor = form.getRawValue();
 
                     var txtProduto = form.up('toolbar').down('#txtproduto').getValue();
+                    var dtinicio = form.up('toolbar').down('#dtinicio').getRawValue();
+                    var dtfinal  = form.up('toolbar').down('#dtfim').getRawValue();
                     
                     var storegrupo = me.up('container').down('#containergrids').down('#grupomarcagridpanel').down('grid').getStore();
                     var storemarca = me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore();
                     var storeitem = me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore();
 
-                    storegrupo.getProxy().setExtraParams({emp: valor, produto: txtProduto});
-                    storemarca.getProxy().setExtraParams({emp: valor, produto: txtProduto});
-                    storeitem.getProxy().setExtraParams({emp: valor, produto: txtProduto});
+                    storegrupo.getProxy().setExtraParams({emp: valor, produto: txtProduto, dtinicio: dtinicio, dtfinal: dtfinal});
+                    storemarca.getProxy().setExtraParams({emp: valor, produto: txtProduto, dtinicio: dtinicio, dtfinal: dtfinal});
+                    storeitem.getProxy().setExtraParams({emp: valor, produto: txtProduto, dtinicio: dtinicio, dtfinal: dtfinal});
 
                     storegrupo.load(function(){
                         storemarca.load(
@@ -69,8 +70,6 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             var storemarca = me.up('container').down('#containergrids').down('#marcagridpanel').down('grid').getStore();
             var storeitem = me.up('container').down('#containergrids').down('#itemgridpanel').down('grid').getStore();
 
-            // storeitem.getProxy().setExtraParams({page: 0});
-            
             storegrupo.load(
                 function(){
                     storemarca.load(
@@ -106,7 +105,6 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             labelWidth: 68,
             format: 'd/m/Y',
             altFormats: 'dmY',
-//            maxValue: new Date(),
             emptyText: '__/__/____'
         });
 
@@ -119,7 +117,6 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             labelWidth: 20,
             format: 'd/m/Y',
             altFormats: 'dmY',
-//            maxValue: new Date(),
             emptyText: '__/__/____'
         });
 
@@ -193,8 +190,6 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                         );
                     }
                 );
-
-                
 
             }
         });

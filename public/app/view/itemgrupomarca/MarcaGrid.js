@@ -94,9 +94,6 @@ Ext.define('App.view.itemgrupomarca.MarcaGrid', {
         var storeitem = griditem.getStore();
         storeitem.getProxy().setExtraParams({grupoMarca: stringGrupoMarca, marca: stringMarca, emp: pemp, produto: produto, dtinicio: dtinicio, dtfinal: dtfinal});
 
-        // storeitem.getProxy().setExtraParam('grupoMarca', stringGrupoMarca);
-        // console.log(griditem.down('pagingtoolbar').getStore());
-
         storeitem.loadPage(1);
     }
 

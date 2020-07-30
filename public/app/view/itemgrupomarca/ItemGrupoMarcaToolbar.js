@@ -87,7 +87,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             id: 'txtproduto',
             width: 200,
             margin: '1 1 1 1',
-            emptyText: 'Código do produto',
+            emptyText: 'Código/Descrição do produto',
             enableKeyEvents: true,
             listeners:{
 

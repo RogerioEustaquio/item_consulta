@@ -102,9 +102,10 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             if($emp && $emp != "EC"){
                 $andSql = " and em.apelido = '$emp'";
             }
-            
+
             if($produto){
-                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " and (i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " or i.descricao like '%$produto%')";
             }
 
             if($dtinicio){
@@ -190,7 +191,8 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             }
 
             if($produto){
-                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " and (i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " or i.descricao like '%$produto%')";
             }
 
             if($dtinicio){
@@ -284,7 +286,8 @@ class ItemGrupoMarcaController extends AbstractRestfulController
             }
 
             if($produto){
-                $andSql .= " and i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " and (i.cod_item||c.descricao like '%$produto%'";
+                $andSql .= " or i.descricao like '%$produto%')";
             }
 
             if($dtinicio){
@@ -327,9 +330,6 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     -- and e.estoque > 0
                     order by emp, grupo_marca, ultima_compra desc, marca
             ";
-
-            // print "$sql";
-            // exit;
 
             $sql1 = "select count(*) as totalCount from ($sql)";
             $stmt = $conn->prepare($sql1);

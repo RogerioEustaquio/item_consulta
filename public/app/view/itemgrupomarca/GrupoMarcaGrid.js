@@ -70,16 +70,32 @@ Ext.define('App.view.itemgrupomarca.GrupoMarcaGrid', {
             }
         }
         
-        var pemp = this.up('panel').up('container').up('container').down('toolbar').down('#cbxempgrupo').getRawValue();
-        var produto  = this.up('panel').up('container').up('container').down('toolbar').down('#txtproduto').getValue();
-        var dtinicio = this.up('panel').up('container').up('container').down('toolbar').down('#dtinicio').getRawValue();
-        var dtfinal  = this.up('panel').up('container').up('container').down('toolbar').down('#dtfim').getRawValue();
+        var toolbar = this.up('panel').up('container').up('container').down('toolbar');
+
+        var pemp      = toolbar.down('#cbxempgrupo').getRawValue();
+        var produto   = toolbar.down('#txtproduto').getValue();
+        var pestoque  = toolbar.down('#bxestoque').getValue();
+        var dtinicio  = toolbar.down('#dtinicio').getRawValue();
+        var dtfinal   = toolbar.down('#dtfim').getRawValue();
+        var dtiniciov = toolbar.down('#dtiniciov').getRawValue();
+        var dtfinalv  = toolbar.down('#dtfimv').getRawValue();
+
+        var params = {
+            emp: pemp,
+            produto: produto,
+            estoque: pestoque,
+            dtinicio: dtinicio,
+            dtfinal: dtfinal,
+            dtiniciov: dtiniciov,
+            dtfinalv: dtfinalv,
+            grupoMarca: stringGrupo
+        };
 
         var gridmarca = this.up('panel').up('container').down('#marcagridpanel').down('grid').getStore();
-        gridmarca.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp, produto: produto, dtinicio: dtinicio, dtfinal: dtfinal});
+        gridmarca.getProxy().setExtraParams(params);
         
         var griditem = this.up('panel').up('container').down('#itemgridpanel').down('grid').getStore();
-        griditem.getProxy().setExtraParams({grupoMarca: stringGrupo, emp: pemp, produto: produto, dtinicio: dtinicio, dtfinal: dtfinal});
+        griditem.getProxy().setExtraParams(params);
 
         gridmarca.load(
             function(){

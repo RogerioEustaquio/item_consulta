@@ -87,8 +87,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
 
         $emp        = $this->params()->fromQuery('emp',null);
         $produto    = $this->params()->fromQuery('produto',null);
+        $estoque    = $this->params()->fromQuery('estoque',null);
         $dtinicio   = $this->params()->fromQuery('dtinicio',null);
         $dtfinal    = $this->params()->fromQuery('dtfinal',null);
+        $dtiniciov  = $this->params()->fromQuery('dtiniciov',null);
+        $dtfinalv   = $this->params()->fromQuery('dtfinalv',null);
         
         try {
 
@@ -108,12 +111,29 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                 $andSql .= " or i.descricao like '%$produto%')";
             }
 
+            if($estoque){
+                if($estoque =='N'){
+                    $andSql .= " and nvl(e.estoque,0) = 0";
+                }else{
+                    $andSql .= " and nvl(e.estoque,0) >= 1";
+                }
+                
+            }
+
             if($dtinicio){
-                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+                $andSql .= " and trunc(e.ultima_compra) >= '$dtinicio'";
             }
 
             if($dtfinal){
-                $andSql .= " and e.ultima_compra <= '$dtfinal'";
+                $andSql .= " and trunc(e.ultima_compra) <= '$dtfinal'";
+            }
+
+            if($dtiniciov){
+                $andSql .= " and trunc(e.ultima_venda) >= '$dtiniciov'";
+            }
+
+            if($dtfinalv){
+                $andSql .= " and trunc(e.ultima_venda) <= '$dtfinalv'";
             }
 
             $sql = "select g.id_grupo_marca,
@@ -170,11 +190,14 @@ class ItemGrupoMarcaController extends AbstractRestfulController
     {
         $data = array();
 
-        $emp        = $this->params()->fromQuery('emp',null);
-        $grupomarca = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
-        $produto    = $this->params()->fromQuery('produto',null);
-        $dtinicio   = $this->params()->fromQuery('dtinicio',null);
-        $dtfinal    = $this->params()->fromQuery('dtfinal',null);
+        $emp         = $this->params()->fromQuery('emp',null);
+        $grupomarca  = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
+        $produto     = $this->params()->fromQuery('produto',null);
+        $estoque     = $this->params()->fromQuery('estoque',null);
+        $dtinicio    = $this->params()->fromQuery('dtinicio',null);
+        $dtfinal     = $this->params()->fromQuery('dtfinal',null);
+        $dtiniciov   = $this->params()->fromQuery('dtiniciov',null);
+        $dtfinalv    = $this->params()->fromQuery('dtfinalv',null);
 
         try {
 
@@ -195,12 +218,29 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                 $andSql .= " or i.descricao like '%$produto%')";
             }
 
+            if($estoque){
+                if($estoque =='N'){
+                    $andSql .= " and nvl(e.estoque,0) = 0";
+                }else{
+                    $andSql .= " and nvl(e.estoque,0) >= 1";
+                }
+                
+            }
+
             if($dtinicio){
-                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+                $andSql .= " and trunc(e.ultima_compra) >= '$dtinicio'";
             }
 
             if($dtfinal){
-                $andSql .= " and e.ultima_compra <= '$dtfinal'";
+                $andSql .= " and trunc(e.ultima_compra) <= '$dtfinal'";
+            }
+
+            if($dtiniciov){
+                $andSql .= " and trunc(e.ultima_venda) >= '$dtiniciov'";
+            }
+
+            if($dtfinalv){
+                $andSql .= " and trunc(e.ultima_venda) <= '$dtfinalv'";
             }
 
             $em = $this->getEntityManager();
@@ -264,8 +304,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
         $grupomarca = $this->params()->fromQuery('grupoMarca',null); //Ex: 130,128,131,129,146,136
         $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
         $produto    = $this->params()->fromQuery('produto',null);
-        $dtinicio     = $this->params()->fromQuery('dtinicio',null);
-        $dtfinal      = $this->params()->fromQuery('dtfinal',null);
+        $estoque    = $this->params()->fromQuery('estoque',null);
+        $dtinicio   = $this->params()->fromQuery('dtinicio',null);
+        $dtfinal    = $this->params()->fromQuery('dtfinal',null);
+        $dtiniciov  = $this->params()->fromQuery('dtiniciov',null);
+        $dtfinalv   = $this->params()->fromQuery('dtfinalv',null);
         $inicio     = $this->params()->fromQuery('start',null);
         $final      = $this->params()->fromQuery('limit',null);
         
@@ -290,12 +333,29 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                 $andSql .= " or i.descricao like '%$produto%')";
             }
 
+            if($estoque){
+                if($estoque =='N'){
+                    $andSql .= " and nvl(e.estoque,0) = 0";
+                }else{
+                    $andSql .= " and nvl(e.estoque,0) >= 1";
+                }
+                
+            }
+
             if($dtinicio){
-                $andSql .= " and e.ultima_compra >= '$dtinicio'";
+                $andSql .= " and trunc(e.ultima_compra) >= '$dtinicio'";
             }
 
             if($dtfinal){
-                $andSql .= " and e.ultima_compra <= '$dtfinal'";
+                $andSql .= " and trunc(e.ultima_compra) <= '$dtfinal'";
+            }
+
+            if($dtiniciov){
+                $andSql .= " and trunc(e.ultima_venda) >= '$dtiniciov'";
+            }
+
+            if($dtfinalv){
+                $andSql .= " and trunc(e.ultima_venda) <= '$dtfinalv'";
             }
 
             $em = $this->getEntityManager();

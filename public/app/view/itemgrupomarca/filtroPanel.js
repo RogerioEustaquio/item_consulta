@@ -8,6 +8,7 @@ Ext.define('App.view.itemgrupomarca.filtroPanel', {
     constructor: function() {
         var me = this;
 
+        var btngrupo = Ext.create('');
 
         Ext.applyIf(me, {
 

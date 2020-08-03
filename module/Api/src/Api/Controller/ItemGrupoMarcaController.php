@@ -146,21 +146,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select a.id_empresa, a.id_item, a.id_categoria 
-                            from ( select id_empresa, id_item, id_categoria
-                                     from js.omv_analise_log
-                                    where comentario_aprovacao is not null
-                                      and comentario_aprovacao like 'PROJETO%PORTFOLIO'
-                                      and data_solicitacao not in ('24/07/2020')
-                                      and id_empresa not in (26) ) a,
-                                 ( select id_empresa, id_item, id_categoria
-                                    from js.omv_analise_log 
-                                   where trunc(data_aprovacao) = '01/08/2020'
-                                     and curva_a in ('E','H')
-                                     and id_empresa not in (26) ) b
-                            where a.id_empresa = b.id_empresa
-                            and a.id_item = b.id_item
-                            and a.id_categoria = b.id_categoria) pj 
+                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -276,21 +262,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select a.id_empresa, a.id_item, a.id_categoria 
-                            from ( select id_empresa, id_item, id_categoria
-                                     from js.omv_analise_log
-                                    where comentario_aprovacao is not null
-                                      and comentario_aprovacao like 'PROJETO%PORTFOLIO'
-                                      and data_solicitacao not in ('24/07/2020')
-                                      and id_empresa not in (26) ) a,
-                                 ( select id_empresa, id_item, id_categoria
-                                    from js.omv_analise_log 
-                                   where trunc(data_aprovacao) = '01/08/2020'
-                                     and curva_a in ('E','H')
-                                     and id_empresa not in (26) ) b
-                            where a.id_empresa = b.id_empresa
-                            and a.id_item = b.id_item
-                            and a.id_categoria = b.id_categoria) pj 
+                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -413,21 +385,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select a.id_empresa, a.id_item, a.id_categoria 
-                            from ( select id_empresa, id_item, id_categoria
-                                     from js.omv_analise_log
-                                    where comentario_aprovacao is not null
-                                      and comentario_aprovacao like 'PROJETO%PORTFOLIO'
-                                      and data_solicitacao not in ('24/07/2020')
-                                      and id_empresa not in (26) ) a,
-                                 ( select id_empresa, id_item, id_categoria
-                                    from js.omv_analise_log 
-                                   where trunc(data_aprovacao) = '01/08/2020'
-                                     and curva_a in ('E','H')
-                                     and id_empresa not in (26) ) b
-                            where a.id_empresa = b.id_empresa
-                            and a.id_item = b.id_item
-                            and a.id_categoria = b.id_categoria) pj 
+                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item

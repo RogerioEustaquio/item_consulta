@@ -297,14 +297,12 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             //     handler: function(form) {
 
             //         var panelFilter = Ext.getCmp('filtroPanel');
-                    
             //         if(panelFilter){
             //             panelFilter.destroy();
             //         }else{
             //             panelFilter = Ext.create('App.view.itemgrupomarca.filtroPanel');
             //             me.up('container').down('#containergrids').add(panelFilter);
             //         }
-                    
             //     }
             // });
         }

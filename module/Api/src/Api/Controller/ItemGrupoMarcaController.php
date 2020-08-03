@@ -145,7 +145,16 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_item_categoria ic,
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
-                            ms.empresa em
+                            ms.empresa em,
+                            (SELECT distinct e.id_empresa, e.id_item, e.id_categoria 
+                                from ms.tb_estoque e, js.omv_analise_log a
+                            where e.id_empresa = a.id_empresa(+)
+                            and e.id_item = a.id_item(+)
+                            and e.id_categoria = a.id_categoria(+)
+                            and a.comentario_aprovacao(+) like 'PROJETO%PORTFOLIO%'
+                            and a.data_solicitacao not in ('24/07/2020')
+                            --and a.curva_a(+) not in ('A','B')
+                            and 1=1) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -153,13 +162,18 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     and ic.id_marca = m.id_marca
                     and m.id_grupo_marca = g.id_grupo_marca
                     and e.id_empresa = em.id_empresa
-                    and e.id_curva_abc = 'E'
+                    --and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
+                    and e.id_empresa = pj.id_empresa
+                    and e.id_item = pj.id_item
+                    and e.id_categoria = pj.id_categoria 
                     $andSql
-                    -- and e.estoque > 0
                     group by g.id_grupo_marca,g.descricao
                     order by skus desc
             ";
+
+            // print "$sql";
+            // exit;
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
@@ -255,7 +269,16 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_item_categoria ic,
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
-                            ms.empresa em
+                            ms.empresa em,
+                            (SELECT distinct e.id_empresa, e.id_item, e.id_categoria 
+                                from ms.tb_estoque e, js.omv_analise_log a
+                            where e.id_empresa = a.id_empresa(+)
+                            and e.id_item = a.id_item(+)
+                            and e.id_categoria = a.id_categoria(+)
+                            and a.comentario_aprovacao(+) like 'PROJETO%PORTFOLIO%'
+                            and a.data_solicitacao not in ('24/07/2020')
+                            --and a.curva_a(+) not in ('A','B')
+                            and 1=1) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -263,10 +286,12 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     and ic.id_marca = m.id_marca
                     and m.id_grupo_marca = g.id_grupo_marca
                     and e.id_empresa = em.id_empresa
-                    and e.id_curva_abc = 'E'
+                    --and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
+                    and e.id_empresa = pj.id_empresa
+                    and e.id_item = pj.id_item
+                    and e.id_categoria = pj.id_categoria 
                     $andSql
-                    -- and e.estoque > 0
                     group by g.id_grupo_marca, m.id_marca, m.descricao
                     order by skus desc
             ";
@@ -375,7 +400,15 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_item_categoria ic,
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
-                            ms.empresa em
+                            ms.empresa em,
+                            (SELECT distinct e.id_empresa, e.id_item, e.id_categoria 
+                                from ms.tb_estoque e, js.omv_analise_log a
+                            where e.id_empresa = a.id_empresa(+)
+                            and e.id_item = a.id_item(+)
+                            and e.id_categoria = a.id_categoria(+)
+                            and a.comentario_aprovacao(+) like 'PROJETO%PORTFOLIO%'
+                            and a.data_solicitacao not in ('24/07/2020')
+                            and 1=1) pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -383,11 +416,12 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                     and ic.id_marca = m.id_marca
                     and m.id_grupo_marca = g.id_grupo_marca
                     and e.id_empresa = em.id_empresa
-                    and e.id_curva_abc = 'E'
+                    --and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
+                    and e.id_empresa = pj.id_empresa
+                    and e.id_item = pj.id_item
+                    and e.id_categoria = pj.id_categoria 
                     $andSql
-                    --and rownum <= 100
-                    -- and e.estoque > 0
                     order by emp, grupo_marca, ultima_compra desc, marca
             ";
 

@@ -285,6 +285,20 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             }
         });
 
+        var filtroEc = '';
+        
+        if(USUARIO.empresa == 'EC'){
+
+            // filtroEc = Ext.create('Ext.button.Button',{
+            //     iconCls: 'fa fa-filter',
+            //     tooltip: 'Filtro',
+            //     margin: '1 6 1 1',
+            //     handler: function(form) {
+            //         console.log(form);
+            //     }
+            // });
+        }
+
         Ext.applyIf(me, {
 
             items: [
@@ -296,7 +310,9 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
                 dtiniciov,
                 dtfimv,
                 btnSearch,
-                btnClean
+                btnClean,
+                '->',
+                filtroEc
             ]
 
         });

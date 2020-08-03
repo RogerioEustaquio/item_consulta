@@ -5,6 +5,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
     itemId: 'ItemGrupoMarcaToolbar',
     margin: '2 2 2 2',
     requires: [
+        // 'App.view.itemgrupomarca.filtroPanel'
     ],
     constructor: function() {
         var me = this;
@@ -294,7 +295,16 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
             //     tooltip: 'Filtro',
             //     margin: '1 6 1 1',
             //     handler: function(form) {
-            //         console.log(form);
+
+            //         var panelFilter = Ext.getCmp('filtroPanel');
+                    
+            //         if(panelFilter){
+            //             panelFilter.destroy();
+            //         }else{
+            //             panelFilter = Ext.create('App.view.itemgrupomarca.filtroPanel');
+            //             me.up('container').down('#containergrids').add(panelFilter);
+            //         }
+                    
             //     }
             // });
         }

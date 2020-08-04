@@ -146,7 +146,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
+                            (select distinct id_empresa,
+                                    id_item,
+                                    id_categoria
+                                from PRODUTO_PJ_ADPORTFOLIO 
+                             where subgrupo = 'NOVOS') pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -262,7 +266,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
+                            (select distinct id_empresa,
+                                    id_item,
+                                    id_categoria
+                                from PRODUTO_PJ_ADPORTFOLIO 
+                             where subgrupo = 'NOVOS') pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item
@@ -385,7 +393,11 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             ms.tb_marca m,
                             ms.tb_grupo_marca g,
                             ms.empresa em,
-                            (select distinct id_empresa, id_item, id_categoria from PRODUTO_PJ_ADPORTFOLIO ) pj 
+                            (select distinct id_empresa,
+                                    id_item,
+                                    id_categoria
+                                from PRODUTO_PJ_ADPORTFOLIO 
+                             where subgrupo = 'NOVOS') pj 
                     where e.id_item = i.id_item
                     and e.id_categoria = c.id_categoria
                     and e.id_item = ic.id_item

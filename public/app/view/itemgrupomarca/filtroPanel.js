@@ -8,8 +8,6 @@ Ext.define('App.view.itemgrupomarca.filtroPanel', {
     constructor: function() {
         var me = this;
 
-        var btngrupo = Ext.create('');
-
         Ext.applyIf(me, {
 
             items: [
@@ -28,7 +26,10 @@ Ext.define('App.view.itemgrupomarca.filtroPanel', {
                             fieldLabel: 'Grupo',
                             margin: '2 2 2 2',
                             labelWidth: 40,
-                            labelTextAlign: 'right'
+                            labelTextAlign: 'right',
+                            listens: {
+                                
+                            }
                         },
                         {
                             xtype:'checkboxfield',
@@ -37,7 +38,10 @@ Ext.define('App.view.itemgrupomarca.filtroPanel', {
                             fieldLabel: 'Marca',
                             margin: '2 2 2 2',
                             labelWidth: 40,
-                            labelTextAlign: 'right'
+                            labelTextAlign: 'right',
+                            listens: {
+                                
+                            }
         
                         }
                 

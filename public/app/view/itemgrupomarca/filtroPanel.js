@@ -21,30 +21,53 @@ Ext.define('App.view.itemgrupomarca.filtroPanel', {
                     items: [
                         {
                             xtype: 'checkboxfield',
-                            name : 'grupo',
+                            id : 'grupo',
                             checked: true,
                             fieldLabel: 'Grupo',
                             margin: '2 2 2 2',
                             labelWidth: 40,
-                            labelTextAlign: 'right',
-                            listens: {
-                                
-                            }
+                            labelTextAlign: 'right'
                         },
                         {
                             xtype:'checkboxfield',
-                            name : 'marca',
+                            id : 'marca',
                             checked: true,
                             fieldLabel: 'Marca',
                             margin: '2 2 2 2',
                             labelWidth: 40,
-                            labelTextAlign: 'right',
-                            listens: {
-                                
-                            }
+                            labelTextAlign: 'right'
         
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Salvar',
+                            name: 'salvar',
+                            handler: function(){
+                                var form = this.up('form');
+
+                                var ckgrupo = form.down('#grupo');
+                                var ckmarca = form.down('#marca');
+
+                                var grids = Ext.getCmp('containergrids');
+                                var gridGrupo = grids.down('#grupomarcagridpanel');
+                                var gridMarca = grids.down('#marcagridpanel') ;
+
+                                console.log(gridGrupo);
+
+                                if(ckgrupo.checked == false){
+                                    gridGrupo.setHidden(true);
+                                }else{
+                                    gridGrupo.setHidden(false);
+                                }
+
+                                if(ckmarca.checked == false){
+                                    gridMarca.setHidden(true);
+                                }else{
+                                    gridMarca.setHidden(false);
+                                }
+                            }
                         }
-                
+
                     ]
                 }
             ]

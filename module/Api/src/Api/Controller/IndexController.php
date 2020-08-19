@@ -128,15 +128,10 @@ class IndexController extends AbstractRestfulController
 
     public function logarAction()
     {
-        $AD_SERVER = '10.1.12.11';
 
         $ldap_server = $this->params()->fromPost('server',null);
         $auth_user = $this->params()->fromPost('user',null);
         $auth_pass = $this->params()->fromPost('pass',null);
-
-        if(!$ldap_server){
-            $ldap_server = $AD_SERVER;
-        }
 
         $msg = '';
         $success = true;
@@ -173,13 +168,16 @@ class IndexController extends AbstractRestfulController
                 $success = false;
             }
 
+            $infoExtra = $infoUserAD->description;
+
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             $success = false;
+            $infoExtra = 'Ad';
         }
 		
         return new JsonModel(array(
-            "msg" => $msg . '... ' . $infoUserAD->description,
+            "msg" => $msg . '... ' . $infoExtra,
             "success" => $success
         ));
     }

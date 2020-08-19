@@ -5,7 +5,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
     itemId: 'ItemGrupoMarcaToolbar',
     margin: '2 2 2 2',
     requires: [
-        // 'App.view.itemgrupomarca.filtroPanel'
+        'App.view.itemgrupomarca.filtroPanel'
     ],
     constructor: function() {
         var me = this;
@@ -288,24 +288,26 @@ Ext.define('App.view.itemgrupomarca.ItemGrupoMarcaToolbar', {
 
         var filtroEc = '';
         
-        if(USUARIO.empresa == 'EC'){
+        // if(USUARIO.empresa == 'EC'){
 
-            // filtroEc = Ext.create('Ext.button.Button',{
-            //     iconCls: 'fa fa-filter',
-            //     tooltip: 'Filtro',
-            //     margin: '1 6 1 1',
-            //     handler: function(form) {
+        //     filtroEc = Ext.create('Ext.button.Button',{
+        //         iconCls: 'fa fa-filter',
+        //         tooltip: 'Filtro',
+        //         margin: '1 6 1 1',
+        //         handler: function(form) {
 
-            //         var panelFilter = Ext.getCmp('filtroPanel');
-            //         if(panelFilter){
-            //             panelFilter.destroy();
-            //         }else{
-            //             panelFilter = Ext.create('App.view.itemgrupomarca.filtroPanel');
-            //             me.up('container').down('#containergrids').add(panelFilter);
-            //         }
-            //     }
-            // });
-        }
+        //             var panelFilter = Ext.getCmp('filtroPanel');
+                    
+        //             if(panelFilter){
+        //                 panelFilter.destroy();
+        //             }else{
+        //                 panelFilter = Ext.create('App.view.itemgrupomarca.filtroPanel');
+        //                 me.up('container').down('#containergrids').add(panelFilter);
+        //             }
+                    
+        //         }
+        //     });
+        // }
 
         Ext.applyIf(me, {
 

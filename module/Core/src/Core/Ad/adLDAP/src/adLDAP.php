@@ -109,8 +109,9 @@ class adLDAP {
     * @var array
     */
     //protected $domainControllers = array("brspjsdc01.jspecasad.local.mt");
-	protected $domainControllers = array("srv-ad-03.jspecasad.local.mt");
-	//protected $domainControllers = array("srv-ad-ec.jspecasad.local.mt");
+	// protected $domainControllers = array("srv-ad-03.jspecasad.local.mt");
+    //protected $domainControllers = array("srv-ad-ec.jspecasad.local.mt");
+    protected $domainControllers = array("srv-ad-01.jspecasad.local.mt");
 	
     /**
     * Optional account with higher privileges for searching

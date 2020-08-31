@@ -22,6 +22,7 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
                                     {name:'marca',mapping:'marca'},
                                     {name:'CodItem',mapping:'CodItem'},
                                     {name:'descricao',mapping:'descricao'},
+                                    {name:'idCurvaAbc',mapping:'idCurvaAbc'},
                                     {name:'ultimaCompra',mapping:'ultimaCompra'},
                                     {name:'ultimaVenda',mapping:'ultimaVenda'},
                                     {name:'estoque',mapping:'estoque'}
@@ -69,6 +70,11 @@ Ext.define('App.view.itemgrupomarca.ItemGrid', {
             text: 'Descrição',
             dataIndex: 'descricao',
             flex: 1
+        },
+        {
+            text: 'Curva',
+            dataIndex: 'idCurvaAbc',
+            width: 60
         },
         {
             text: 'Ult. Compra',

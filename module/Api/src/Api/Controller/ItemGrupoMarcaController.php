@@ -383,6 +383,7 @@ class ItemGrupoMarcaController extends AbstractRestfulController
                             m.descricao as marca,
                             i.cod_item||c.descricao as cod_item,
                             i.descricao,
+                            e.id_curva_abc,
                             trunc(e.ultima_compra) as ultima_compra,
                             trunc(e.ultima_venda) as ultima_venda,
                             e.estoque
